@@ -10,6 +10,7 @@ import {
 } from "@ant-design/icons";
 import { useState } from 'react';
 import { Briefcase, CreditCard, GraduationCap, Heart } from 'lucide-react';
+import { useNavigate } from 'react-router';
 
 interface Service {
     id: string;
@@ -98,12 +99,17 @@ const services: Service[] = [
 
 export const LandingGovServices = () => {
     const [searchTerm, setSearchTerm] = useState("");
+    const navigate = useNavigate();
 
     const filteredServices = services.filter(service =>
         service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         service.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         service.category.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    const handleServiceClick = (serviceId: string) => {
+        navigate(`/services/${serviceId}`);
+    };
     return (
         <section className="py-16 bg-gray-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -167,12 +173,13 @@ export const LandingGovServices = () => {
                         <Col xs={24} sm={12} md={8} lg={6} key={service.id}>
                             <Card
                                 hoverable
-                                className="text-center h-full"
+                                className="text-center h-full cursor-pointer"
                                 cover={
                                     <div className={`p-6 ${service.bgColor}`}>
                                         {service.icon}
                                     </div>
                                 }
+                                onClick={() => handleServiceClick(service.id)}
                             >
                                 <Card.Meta
                                     title={service.title}
