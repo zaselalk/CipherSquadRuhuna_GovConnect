@@ -1,6 +1,5 @@
 import { Link } from "react-router";
 import { useEffect, useState } from "react";
-import { DashboardService } from "../services/dashbord.service";
 import {
   Users,
   Building2,
@@ -32,19 +31,12 @@ function LandingPage() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [residentsData, householdsData, divisionsData, diseasesData] =
-          await Promise.all([
-            DashboardService.getresidentCount(),
-            DashboardService.getHouseholdCount(),
-            DashboardService.getDivisionCount(),
-            DashboardService.getDiseaseCount(),
-          ]);
 
         setStats({
-          residents: residentsData || 0,
-          households: householdsData || 0,
-          divisions: divisionsData || 0,
-          diseases: diseasesData || 0,
+          residents: 0,
+          households: 0,
+          divisions: 0,
+          diseases: 0,
         });
       } catch (error) {
         console.error("Error fetching stats:", error);
