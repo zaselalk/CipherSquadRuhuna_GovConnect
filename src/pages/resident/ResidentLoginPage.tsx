@@ -3,8 +3,8 @@ import { Link, useNavigate, useLocation } from "react-router";
 import { loginState } from "../../types/login";
 import { Alert, Button, Form, Input } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
-import { ArrowBigLeft } from "lucide-react";
 import { useResidentAuth } from "../../components/auth/ResidentAuthContext";
+import { LandingHeader } from "../../components/features/landing-page/LandingHeader";
 
 const ResidentLoginPage: FC = () => {
   const [error, setError] = useState<null | string>(null);
@@ -28,97 +28,101 @@ const ResidentLoginPage: FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      {/* Left Section */}
-      <div className="hidden md:flex flex-col justify-center items-center w-1/2 bg-[#008FFB] rounded-r-3xl relative">
-        {/* Logo or Illustration */}
-        <div className="flex flex-col items-center">
-          <img
-            src="/images/resident-login.png"
-            alt="Logo"
-            // className="w-32 h-32 mb-6"
-          />
-          <h3 className="text-2xl text-blue-50">Resident Login</h3>
-          <p className="text-blue-200 text-center mt-2">
-            Access your profile and manage your health records.
-          </p>
-          <Link
-            to="/"
-            className="absolute top-4 left-4 text-white hover:text-blue-200"
-          >
-            <div className="flex items-center">
-              <ArrowBigLeft className="text-2xl" />
-              <span className="ml-2">Back to Home</span>
+    <div>
+      <LandingHeader />
+      <div className="flex min-h-screen  bg-gray-100">
+        {/* Left Section */}
+        {/* <div className="hidden md:flex flex-col justify-center items-center w-1/2 bg-[#008FFB] rounded-r-3xl relative">
+
+          <div className="flex flex-col items-center">
+            <img
+              src="/images/resident-login.png"
+              alt="Citizen Portal"
+              className="w-64 h-64 mb-6 object-contain"
+            />
+            <h3 className="text-3xl font-bold text-white mb-2">Citizen Portal</h3>
+            <p className="text-blue-100 text-center mt-2 max-w-sm text-lg">
+              Access Range of Govement Services by login
+            </p>
+          </div>
+        </div> */}
+
+        {/* Right Section */}
+        <div className="flex-1 flex items-center justify-center bg-gray-100">
+          <div className="bg-white p-10 rounded-3xl shadow-xl w-full max-w-md">
+            <div className="flex justify-center mb-8">
+              <span className="text-2xl font-semibold text-[#008FFB]">
+                Citizen Login
+              </span>
             </div>
-          </Link>
-        </div>
-      </div>
 
-      {/* Right Section */}
-      <div className="flex-1 flex items-center justify-center bg-gray-100">
-        <div className="bg-white p-10 rounded-3xl shadow-xl w-full max-w-md">
-          <div className="flex justify-center mb-8">
-            <span className="text-2xl font-semibold text-[#008FFB]">
-              Resident Login
-            </span>
-          </div>
+            {error && (
+              <Alert message={error} type="error" showIcon className="mb-4" />
+            )}
 
-          {error && (
-            <Alert message={error} type="error" showIcon className="mb-4" />
-          )}
-
-          <Form
-            form={form}
-            layout="vertical"
-            onFinish={onSubmit}
-            initialValues={{ email: "", password: "" }}
-          >
-            <Form.Item
-              label="Email"
-              name="email"
-              rules={[
-                { required: true, message: "Email is required" },
-                { type: "email", message: "Invalid email format" },
-              ]}
+            <Form
+              form={form}
+              layout="vertical"
+              onFinish={onSubmit}
+              initialValues={{ email: "", password: "" }}
             >
-              <Input
-                prefix={<MailOutlined />}
-                placeholder="Enter Your Email Address"
-                size="large"
-              />
-            </Form.Item>
-
-            <Form.Item
-              label="Password"
-              name="password"
-              rules={[{ required: true, message: "Password is required" }]}
-            >
-              <Input.Password
-                prefix={<LockOutlined />}
-                placeholder="Enter Your Password"
-                size="large"
-              />
-            </Form.Item>
-
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                className="w-full"
-                size="large"
-                loading={isLoading}
+              <Form.Item
+                label="Email Address"
+                name="email"
+                rules={[
+                  { required: true, message: "Email is required" },
+                  { type: "email", message: "Invalid email format" },
+                ]}
               >
-                {isLoading ? "Logging in..." : "Login"}
-              </Button>
-            </Form.Item>
-          </Form>
+                <Input
+                  prefix={<MailOutlined />}
+                  placeholder="Enter your registered email address"
+                  size="large"
+                  className="rounded-lg"
+                />
+              </Form.Item>
 
-          <div className="text-center mt-4">
-            Don't have an account? Meet our staff at hospital for registration.
+              <Form.Item
+                label="Password"
+                name="password"
+                rules={[{ required: true, message: "Password is required" }]}
+              >
+                <Input.Password
+                  prefix={<LockOutlined />}
+                  placeholder="Enter your password"
+                  size="large"
+                  className="rounded-lg"
+                />
+              </Form.Item>
+
+              <Form.Item>
+                <Button
+                  type="primary"
+                  size="large"
+                  htmlType="submit"
+                  className="w-full bg-[#008FFB] hover:bg-[#0066CC] border-0 rounded-lg h-12 text-lg font-medium"
+                  loading={isLoading}
+                >
+                  {isLoading ? "Login in..." : "Login as Citizen"}
+                </Button>
+              </Form.Item>
+            </Form>
+
+            <div className="text-center mt-6">
+              <p className="text-gray-600 mb-3">
+                Don't have an account?
+              </p>
+              <Link
+                to="/resident/register"
+                className="inline-flex items-center justify-center w-full px-4 py-3 text-[#008FFB] bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors font-medium"
+              >
+                Register as Citizen
+              </Link>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

@@ -24,7 +24,7 @@ const ResidentDashboard = () => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-            Resident Health Dashboard
+            Citizen Health Dashboard
           </h1>
           <p className="text-gray-600">Welcome back, {resident.firstName}</p>
         </div>
@@ -53,7 +53,7 @@ const ResidentDashboard = () => {
                       label: "Age",
                       value: resident.birthday
                         ? new Date().getFullYear() -
-                          new Date(resident.birthday).getFullYear()
+                        new Date(resident.birthday).getFullYear()
                         : "N/A",
                       icon: "👤",
                     },
@@ -171,11 +171,10 @@ const ResidentDashboard = () => {
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-2xl">{stat.icon}</span>
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-bold ${
-                          stat.color === "green"
+                        className={`px-3 py-1 rounded-full text-xs font-bold ${stat.color === "green"
                             ? "bg-green-100 text-green-700"
                             : "bg-red-100 text-red-700"
-                        }`}
+                          }`}
                       >
                         {stat.status}
                       </span>
