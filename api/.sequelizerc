@@ -1,0 +1,17 @@
+const path = require("path");
+
+// if development, use the TypeScript files
+if (process.env.NODE_ENV !== "production") {
+  module.exports.config = path.resolve("src/config/sequelize.config.js");
+  module.exports["models-path"] = path.resolve("src/models");
+  module.exports["seeders-path"] = path.resolve("src/seeders");
+  module.exports["migrations-path"] = path.resolve("src/migrations");
+}
+
+// if production, use the compiled JS files
+if (process.env.NODE_ENV === "production") {
+  module.exports.config = path.resolve("dist/config/sequelize.config.js");
+  module.exports["models-path"] = path.resolve("dist/models");
+  module.exports["seeders-path"] = path.resolve("dist/seeders");
+  module.exports["migrations-path"] = path.resolve("dist/migrations");
+}

@@ -1,0 +1,29 @@
+name: Run Vitest on Client
+
+on:
+  pull_request:
+    branches:
+      - stage
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.x
+
+      - name: Install dependencies
+        run: |
+          cd src
+          npm install
+
+      - name: Run Vitest
+        run: |
+          cd src
+          npm run test

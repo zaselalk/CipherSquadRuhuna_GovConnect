@@ -1,0 +1,149 @@
+name: Deploy React Frontend to Azure VM
+
+on:
+  push:
+    branches:
+      - main
+
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🔍 Checkout code
+        uses: actions/checkout@v4
+        
+      - name: 🧪 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+          
+      - name: 🚀 Install dependencies
+        run: npm ci
+        
+      - name: 🏗️ Build for production
+        run: npm run build
+        env:
+          NODE_ENV: production
+          # Add your production environment variables here
+          VITE_BACKEND_URL: ${{ secrets.VITE_BACKEND_URL }}
+          # VITE_APP_VERSION: ${{ github.sha }}
+          
+      - name: 📦 Create deployment package
+        run: |
+          mkdir -p deploy-package
+          cp -r dist/* deploy-package/
+          
+          
+      - name: 📤 Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: deploy-package/
+          retention-days: 7
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+          path: ./deploy-package
+          
+      - name: 📝 Setup SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          
+      - name: 🔒 Add host key to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -t rsa,dsa,ecdsa,ed25519 ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts
+          
+      - name: 🗂️ Create deployment directory on VM
+        run: |
+          ssh ${{ secrets.VM_USERNAME }}@${{ secrets.VM_HOST }} "
+            # Create timestamped deployment directory
+            DEPLOY_DIR=/home/azureuser/frontend-deployments/\$(date +%Y%m%d_%H%M%S)
+            mkdir -p \$DEPLOY_DIR
+            
+            # Create symlink for current deployment
+            ln -sfn \$DEPLOY_DIR /home/azureuser/current-frontend-deployment
+            
+            # Ensure nginx directory exists
+            sudo mkdir -p /var/www/rhms-client
+            
+            echo \"Deployment directory created: \$DEPLOY_DIR\"
+          "
+          
+      - name: 📤 Upload build to VM
+        run: |
+          # Upload to the timestamped deployment directory
+          scp -r deploy-package/* ${{ secrets.VM_USERNAME }}@${{ secrets.VM_HOST }}:/home/azureuser/current-frontend-deployment/
+          
+      - name: 🚀 Deploy to nginx
+        run: |
+          ssh ${{ secrets.VM_USERNAME }}@${{ secrets.VM_HOST }} << 'EOF'
+            set -e
+            
+            # Navigate to deployment directory
+            cd /home/azureuser/current-frontend-deployment
+            
+            # Backup current website (if exists)
+            if [ -d "/var/www/rhms-client" ] && [ "$(ls -A /var/www/rhms-client)" ]; then
+              sudo cp -r /var/www/rhms-client /var/www/rhms-client.backup.$(date +%Y%m%d_%H%M%S) || true
+            fi
+            
+            # Copy new build to nginx directory
+            sudo rsync -av --delete ./ /var/www/rhms-client/
+            
+            # Set proper permissions
+            sudo chown -R www-data:www-data /var/www/rhms-client
+            sudo chmod -R 755 /var/www/rhms-client
+            
+            # Test nginx configuration
+            sudo nginx -t
+            
+            # Reload nginx
+            sudo systemctl reload nginx
+            
+            # Verify nginx is running
+            sudo systemctl status nginx --no-pager
+            
+            echo "✅ Frontend deployment completed successfully"
+            echo "🌐 Website should be accessible at your configured domain"
+          EOF
+          
+      - name: 🧹 Cleanup old deployments
+        run: |
+          ssh ${{ secrets.VM_USERNAME }}@${{ secrets.VM_HOST }} "
+            cd /home/azureuser/frontend-deployments
+            
+            # Keep only last 5 deployments
+            ls -t | tail -n +6 | xargs rm -rf 2>/dev/null || true
+            
+            # Clean up old backups (keep last 3)
+            cd /var/www
+            ls -t rhms-client.backup.* 2>/dev/null | tail -n +4 | xargs sudo rm -rf 2>/dev/null || true
+            
+            echo 'Cleanup completed'
+          "
+          
+      - name: 📢 Deployment Status
+        if: always()
+        run: |
+          if [ ${{ job.status }} == 'success' ]; then
+            echo "✅ Frontend deployment completed successfully"
+            echo "🌐 Website deployed to: ${{ secrets.VM_HOST }}"
+            echo "📁 Location: /var/www/rhms-client"
+          else
+            echo "❌ Frontend deployment failed"
+            exit 1
+          fi
