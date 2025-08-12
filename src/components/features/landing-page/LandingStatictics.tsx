@@ -1,17 +1,11 @@
 import { Card, Col, Row, Statistic, Typography } from 'antd';
 import { Activity, Building2, MapPin, Users } from 'lucide-react';
 import { useState } from 'react';
-
-interface Stats {
-    citizens: number;
-    services: number;
-    departments: number;
-    applications: number;
-}
+import { LandingPagestats } from '../../../types/landing-page';
 
 const { Title, Paragraph } = Typography;
 export const LandingStatictics = () => {
-    const [stats, setStats] = useState<Stats>({
+    const [stats, setStats] = useState<LandingPagestats>({
         citizens: 0,
         services: 0,
         departments: 0,
