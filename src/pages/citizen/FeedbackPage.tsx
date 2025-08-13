@@ -1,8 +1,6 @@
 import React, { useState, KeyboardEvent } from "react";
 import { Input, Button, Alert } from "antd";
 import { StarFilled } from "@ant-design/icons";
-import { DashboardContainer } from "../../components/layouts/overlays/DashboardContainer";
-
 const { TextArea } = Input;
 
 const FeedbackForm: React.FC = () => {
