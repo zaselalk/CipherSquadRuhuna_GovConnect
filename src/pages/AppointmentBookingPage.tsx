@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router";
-import { Form, Card, Steps, Row, Col, Button, notification,Typography } from "antd";
+import { Form, Card, Steps, Button, notification, Typography } from "antd";
 import { CalendarOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 
 import { LandingHeader } from "../components/features/landing-page/LandingHeader";
@@ -11,131 +11,131 @@ import StepConfirmation from "../components/features/appointment-booking/Confirm
 import FormNavigation from "../components/common/FormNavigation";
 
 const AppointmentBookingPage = () => {
-  const { serviceId } = useParams<{ serviceId: string }>();
-  const navigate = useNavigate();
-  const [form] = Form.useForm();
-  const [currentStep, setCurrentStep] = useState(0);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [appointmentData, setAppointmentData] = useState<any>({});
-  const [uploadedDocs, setUploadedDocs] = useState<any>({});
+    const { serviceId } = useParams<{ serviceId: string }>();
+    const navigate = useNavigate();
+    const [form] = Form.useForm();
+    const [currentStep, setCurrentStep] = useState(0);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [appointmentData, setAppointmentData] = useState<any>({});
+    const [uploadedDocs, setUploadedDocs] = useState<any>({});
 
-  const serviceNames: Record<string, string> = {
-    documents: "Document Services",
-    tax: "Tax & Payments",
-    vehicle: "Vehicle Services",
-    property: "Property Services",
-    education: "Education Services",
-    healthcare: "Healthcare Services",
-    employment: "Employment Services",
-    social: "Social Services"
-  };
+    const serviceNames: Record<string, string> = {
+        documents: "Document Services",
+        tax: "Tax & Payments",
+        vehicle: "Vehicle Services",
+        property: "Property Services",
+        education: "Education Services",
+        healthcare: "Healthcare Services",
+        employment: "Employment Services",
+        social: "Social Services"
+    };
 
-  const timeSlots = [
-    "09:00 AM","09:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM",
-    "01:00 PM","01:30 PM","02:00 PM","02:30 PM","03:00 PM","03:30 PM"
-  ];
+    const timeSlots = [
+        "09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
+        "01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM", "03:00 PM", "03:30 PM"
+    ];
 
-  const steps = [
-    { title: "Service & Date" },
-    { title: "Personal Information" },
-    { title: "Upload Documents" },
-    { title: "Confirmation" }
-  ];
+    const steps = [
+        { title: "Service & Date" },
+        { title: "Personal Information" },
+        { title: "Upload Documents" },
+        { title: "Confirmation" }
+    ];
 
-  const stepFieldMapping: Record<number, string[]> = {
-    0: ["serviceType", "preferredDate", "preferredTime"],
-    1: ["fullName", "nic", "email", "phone", "address"],
-    2: ["birthCertificate", "nicCopy", "medicalReport"]
-  };
+    const stepFieldMapping: Record<number, string[]> = {
+        0: ["serviceType", "preferredDate", "preferredTime"],
+        1: ["fullName", "nic", "email", "phone", "address"],
+        2: ["birthCertificate", "nicCopy", "medicalReport"]
+    };
 
-  const { Title, Paragraph } = Typography;
+    const { Title, Paragraph } = Typography;
 
-  const handleNext = async () => {
-  try {
-    // Validate only the fields of the current step
-    await form.validateFields(stepFieldMapping[currentStep]);
+    const handleNext = async () => {
+        try {
+            // Validate only the fields of the current step
+            await form.validateFields(stepFieldMapping[currentStep]);
 
-    // Save current form values into appointmentData state
-    const values = form.getFieldsValue();
-    setAppointmentData((prev: any) => ({ ...prev, ...values }));
+            // Save current form values into appointmentData state
+            const values = form.getFieldsValue();
+            setAppointmentData((prev: any) => ({ ...prev, ...values }));
 
-    // Move to the next step
-    setCurrentStep(currentStep + 1);
-  } catch {
-    notification.warning({ message: "Please complete all required fields." });
-  }
-};
+            // Move to the next step
+            setCurrentStep(currentStep + 1);
+        } catch {
+            notification.warning({ message: "Please complete all required fields." });
+        }
+    };
 
 
-  const handlePrev = () => setCurrentStep(currentStep - 1);
+    const handlePrev = () => setCurrentStep(currentStep - 1);
 
-  const handleSubmit = async () => {
-    try {
-      await form.validateFields();
-      setIsSubmitting(true);
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      notification.success({ message: "Appointment Booked Successfully!" });
-      navigate("/");
-    } catch {
-      notification.error({ message: "Please complete all required fields." });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    const handleSubmit = async () => {
+        try {
+            await form.validateFields();
+            setIsSubmitting(true);
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            notification.success({ message: "Appointment Booked Successfully!" });
+            navigate("/");
+        } catch {
+            notification.error({ message: "Please complete all required fields." });
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
-  const handleGoBack = () => navigate(-1);
+    const handleGoBack = () => navigate(-1);
 
-  const renderStepContent = () => {
-    switch (currentStep) {
-      case 0: return <StepServiceDate appointmentData={appointmentData} setAppointmentData={setAppointmentData} serviceNames={serviceNames} timeSlots={timeSlots} form={form} />;
-      case 1: return <StepPersonalInfo form={form} />;
-      case 2: return <StepUploadDocuments uploadedDocs={uploadedDocs} setUploadedDocs={setUploadedDocs} form={form} />;
-      case 3: return <StepConfirmation appointmentData={appointmentData} serviceNames={serviceNames} />;
-      default: return null;
-    }
-  };
+    const renderStepContent = () => {
+        switch (currentStep) {
+            case 0: return <StepServiceDate appointmentData={appointmentData} setAppointmentData={setAppointmentData} serviceNames={serviceNames} timeSlots={timeSlots} form={form} />;
+            case 1: return <StepPersonalInfo form={form} />;
+            case 2: return <StepUploadDocuments uploadedDocs={uploadedDocs} setUploadedDocs={setUploadedDocs} form={form} />;
+            case 3: return <StepConfirmation appointmentData={appointmentData} serviceNames={serviceNames} />;
+            default: return null;
+        }
+    };
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-  <LandingHeader />
-  <div className="mx-auto px-4 py-8" style={{ maxWidth: '1000px' }}>
-    {/* Back Button */}
-    <Button type="text" icon={<ArrowLeftOutlined />} onClick={handleGoBack} className="mb-6">Back</Button>
+    return (
+        <div className="min-h-screen bg-gray-50">
+            <LandingHeader />
+            <div className="mx-auto px-4 py-8" style={{ maxWidth: '1000px' }}>
+                {/* Back Button */}
+                <Button type="text" icon={<ArrowLeftOutlined />} onClick={handleGoBack} className="mb-6">Back</Button>
 
-    {/* Header Card */}
-    <Card className="mb-8 text-center">
-      <CalendarOutlined className="text-5xl text-black mb-4" />
-      <Title level={1} style={{ fontWeight: 'bold', color: 'black' }}>
-        Book an Appointment
-      </Title>
-      <Paragraph className="!text-lg !text-gray-600">
-        Schedule your visit for {serviceNames[serviceId || ""] || "government services"}
-      </Paragraph>
-    </Card>
+                {/* Header Card */}
+                <Card className="mb-8 text-center">
+                    <CalendarOutlined className="text-5xl text-black mb-4" />
+                    <Title level={1} style={{ fontWeight: 'bold', color: 'black' }}>
+                        Book an Appointment
+                    </Title>
+                    <Paragraph className="!text-lg !text-gray-600">
+                        Schedule your visit for {serviceNames[serviceId || ""] || "government services"}
+                    </Paragraph>
+                </Card>
 
-    {/* Steps */}
-    <Card className="mb-8"><Steps current={currentStep} items={steps} /></Card>
+                {/* Steps */}
+                <Card className="mb-8"><Steps current={currentStep} items={steps} /></Card>
 
-    {/* Form */}
-    <Form form={form} layout="vertical" size="large" initialValues={{ serviceType: serviceId }}>
-      {renderStepContent()}
-    </Form>
+                {/* Form */}
+                <Form form={form} layout="vertical" size="large" initialValues={{ serviceType: serviceId }}>
+                    {renderStepContent()}
+                </Form>
 
-    {/* Navigation */}
-    <Card className="mt-8">
-      <FormNavigation
-        currentStep={currentStep}
-        stepsLength={steps.length}
-        handlePrev={handlePrev}
-        handleNext={handleNext}
-        handleSubmit={handleSubmit}
-        isSubmitting={isSubmitting}
-      />
-    </Card>
-  </div>
-</div>
+                {/* Navigation */}
+                <Card className="mt-8">
+                    <FormNavigation
+                        currentStep={currentStep}
+                        stepsLength={steps.length}
+                        handlePrev={handlePrev}
+                        handleNext={handleNext}
+                        handleSubmit={handleSubmit}
+                        isSubmitting={isSubmitting}
+                    />
+                </Card>
+            </div>
+        </div>
 
-  );
+    );
 };
 
 export default AppointmentBookingPage;
