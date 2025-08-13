@@ -14,6 +14,7 @@ import {
     Col,
     Alert,
     Divider,
+    Upload,
     notification
 } from "antd";
 import {
@@ -23,6 +24,7 @@ import {
     UserOutlined,
     PhoneOutlined,
     MailOutlined,
+    InboxOutlined,
     FileTextOutlined
 } from "@ant-design/icons";
 import { LandingHeader } from "../components/features/landing-page/LandingHeader";
@@ -31,6 +33,7 @@ import dayjs from "dayjs";
 const { Title, Paragraph, Text } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
+const { Dragger } = Upload;
 
 interface AppointmentData {
     serviceType: string;
@@ -78,21 +81,34 @@ const AppointmentBookingPage = () => {
             title: "Personal Information",
             description: "Provide your contact details"
         },
+         {
+            title: "Upload Documents",
+            description: "Upload required supporting documents"
+        },
         {
             title: "Confirmation",
             description: "Review and confirm your appointment"
         }
     ];
 
-    const handleNext = async () => {
-        try {
-            const values = await form.validateFields();
-            setAppointmentData({ ...appointmentData, ...values });
-            setCurrentStep(currentStep + 1);
-        } catch (error) {
-            console.error("Validation failed:", error);
-        }
-    };
+    const stepFieldMapping: Record<number, string[]> = {
+    0: ["serviceType", "preferredDate", "preferredTime"],
+    1: ["fullName", "nic", "email", "phone", "address"],
+    2: ["birthCertificate", "nicCopy", "medicalReport"]
+};
+
+const handleNext = async () => {
+    
+    try {
+        await form.validateFields(stepFieldMapping[currentStep]);
+        setCurrentStep(currentStep + 1);
+    } catch {
+        notification.warning({
+            message: "Please complete all required fields before proceeding."
+        });
+    }
+};
+
 
     const handlePrev = () => {
         setCurrentStep(currentStep - 1);
@@ -137,30 +153,42 @@ const AppointmentBookingPage = () => {
         return current && (current < dayjs().endOf('day') || current.day() === 0 || current.day() === 6);
     };
 
+    // State to manage uploaded documents
+    const [uploadedDocs, setUploadedDocs] = useState<{
+    birthCertificate?: File;
+    nicCopy?: File;
+    medicalReport?: File;
+}>({});
+
+
     const renderStepContent = () => {
         switch (currentStep) {
             case 0:
                 return (
-        <Card title="Select Service & Date">
-            <Row gutter={[24, 24]}>
-                <Col span={24}>
-                    <Form.Item
-                        name="serviceType"
-                        label="Service Type"
-                        rules={[{ required: true, message: "Please select a service type" }]}
-                        initialValue={serviceId}
-                    >
-                        <Select size="large" placeholder="Select service type">
-                            {Object.entries(serviceNames).map(([key, value]) => (
-                                <Option key={key} value={key}>{value}</Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
-                </Col>
+                    <Card title="Select Service & Date">
+                        <Row gutter={[24, 24]}>
+                            <Col span={24}>
+                                <Form.Item
+                                    name="serviceType"
+                                    label="Service Type"
+                                    rules={[{ required: true, message: "Please select a service type" }]}
+                                    initialValue={serviceId}
+                                >
+                                    <Select size="large" placeholder="Select service type">
+                                        {Object.entries(serviceNames).map(([key, value]) => (
+                                            <Option key={key} value={key}>{value}</Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+                            </Col>
 
-                {/* Calendar & Time Slots Side by Side */}
-                <Col xs={24} md={12}>
-                    <Card title="Choose Date" bordered>
+                        {/* Calendar & Time Slots Side by Side */}
+                        <Col xs={24} md={12}>
+                            <Card title="Choose Date" bordered>
+                                <Form.Item
+                                    name="preferredDate"
+                                    rules={[{ required: true, message: "Please select a date" }]}
+                                    ></Form.Item>
                         <Calendar
                             fullscreen={false} // works here for Calendar
                             disabledDate={disabledDate}
@@ -316,6 +344,141 @@ const AppointmentBookingPage = () => {
                 );
 
             case 2:
+                    return (
+                        <Card title="Upload Required Documents">
+                            <Paragraph>
+                                Please upload the required documents.  
+                                Accepted formats: <b>PDF, JPG, PNG</b> — Maximum size per file: <b>5 MB</b>.
+                            </Paragraph>
+
+                            <Row gutter={[16, 16]}>
+                                {/* Birth Certificate */}
+                                <Col xs={24} md={8}>
+                                    <Card title="Birth Certificate" bordered hoverable>
+                                        <Dragger
+                                            accept=".pdf,.jpg,.jpeg,.png"
+                                            maxCount={1}
+                                            beforeUpload={(file) => {
+                                                const isAllowedType = [
+                                                    "application/pdf",
+                                                    "image/jpeg",
+                                                    "image/png"
+                                                ].includes(file.type);
+                                                if (!isAllowedType) {
+                                                    notification.error({
+                                                        message: "Invalid File Type",
+                                                        description: "Only PDF, JPG, or PNG are allowed."
+                                                    });
+                                                    return Upload.LIST_IGNORE;
+                                                }
+                                                if (file.size / 1024 / 1024 > 5) {
+                                                    notification.error({
+                                                        message: "File Too Large",
+                                                        description: "File size must be under 5MB."
+                                                    });
+                                                    return Upload.LIST_IGNORE;
+                                                }
+                                                setUploadedDocs(prev => ({ ...prev, birthCertificate: file }));
+                                                form.setFieldsValue({ birthCertificate: file });
+                                                return false; // prevent auto-upload
+                                            }}
+                                        >
+                                            <p className="ant-upload-drag-icon">
+                                                <InboxOutlined />
+                                            </p>
+                                            <p className="ant-upload-text">
+                                                Click or drag file to upload
+                                            </p>
+                                        </Dragger>
+                                    </Card>
+                                </Col>
+
+                                {/* NIC Copy */}
+                                <Col xs={24} md={8}>
+                                    <Card title="National ID Copy" bordered hoverable>
+                                        <Dragger
+                                            accept=".pdf,.jpg,.jpeg,.png"
+                                            maxCount={1}
+                                            beforeUpload={(file) => {
+                                                const isAllowedType = [
+                                                    "application/pdf",
+                                                    "image/jpeg",
+                                                    "image/png"
+                                                ].includes(file.type);
+                                                if (!isAllowedType) {
+                                                    notification.error({
+                                                        message: "Invalid File Type",
+                                                        description: "Only PDF, JPG, or PNG are allowed."
+                                                    });
+                                                    return Upload.LIST_IGNORE;
+                                                }
+                                                if (file.size / 1024 / 1024 > 5) {
+                                                    notification.error({
+                                                        message: "File Too Large",
+                                                        description: "File size must be under 5MB."
+                                                    });
+                                                    return Upload.LIST_IGNORE;
+                                                }
+                                                setUploadedDocs(prev => ({ ...prev, nicCopy: file }));
+                                                form.setFieldsValue({ nicCopy: file });
+                                                return false;
+                                            }}
+                                        >
+                                            <p className="ant-upload-drag-icon">
+                                                <InboxOutlined />
+                                            </p>
+                                            <p className="ant-upload-text">
+                                                Click or drag file to upload
+                                            </p>
+                                        </Dragger>
+                                    </Card>
+                                </Col>
+
+                                {/* Medical Report */}
+                                <Col xs={24} md={8}>
+                                    <Card title="Medical Report" bordered hoverable>
+                                        <Dragger
+                                            accept=".pdf,.jpg,.jpeg,.png"
+                                            maxCount={1}
+                                            beforeUpload={(file) => {
+                                                const isAllowedType = [
+                                                    "application/pdf",
+                                                    "image/jpeg",
+                                                    "image/png"
+                                                ].includes(file.type);
+                                                if (!isAllowedType) {
+                                                    notification.error({
+                                                        message: "Invalid File Type",
+                                                        description: "Only PDF, JPG, or PNG are allowed."
+                                                    });
+                                                    return Upload.LIST_IGNORE;
+                                                }
+                                                if (file.size / 1024 / 1024 > 5) {
+                                                    notification.error({
+                                                        message: "File Too Large",
+                                                        description: "File size must be under 5MB."
+                                                    });
+                                                    return Upload.LIST_IGNORE;
+                                                }
+                                                setUploadedDocs(prev => ({ ...prev, medicalReport: file }));
+                                                form.setFieldsValue({ medicalReport: file });
+                                                return false;
+                                            }}
+                                        >
+                                            <p className="ant-upload-drag-icon">
+                                                <InboxOutlined />
+                                            </p>
+                                            <p className="ant-upload-text">
+                                                Click or drag file to upload
+                                            </p>
+                                        </Dragger>
+                                    </Card>
+                                </Col>
+                            </Row>
+                        </Card>
+                 );
+
+            case 3:
                 return (
                     <Card title="Confirmation Details">
                         <Row gutter={[24, 24]}>
