@@ -15,25 +15,6 @@ interface Service {
   capacity: number;
 }
 
-const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const documentOptions = [
-  "National Identity Card (NIC)",
-  "Passport",
-  "Driving License",
-  "Birth Certificate",
-  "Marriage Certificate",
-  "Death Certificate",
-  "School Leaving Certificate (OL/AL)",
-  "Degree/Diploma Certificates",
-  "Academic Transcripts / Mark Sheets",
-  "Land Deeds / Title Documents",
-  "Court Orders / Affidavits",
-  "Medical Certificates",
-  "Vaccination Records",
-  "Tax Clearance Certificate",
-  "Police Clearance Certificate",
-  "Bank Statements",
-];
 
 const DepartmentServicesPage: React.FC = () => {
   const [services, setServices] = useState<Service[]>([
