@@ -9,7 +9,7 @@ interface Props {
   isConfirmed: boolean;
 }
 
-const AppointmentSuccess = ({ appointmentData, serviceNames, isConfirmed }: Props) => {
+const AppointmentSuccess = ({ appointmentData, serviceNames}: Props) => {
   const { Title, Paragraph } = Typography;
 
   const referenceNumber = `REF-${Date.now().toString().slice(-6)}-${Math.floor(Math.random() * 1000)}`;
