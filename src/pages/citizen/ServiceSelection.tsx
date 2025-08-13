@@ -1,7 +1,8 @@
  // adjust path
 
+import CommonNav from "../../components/common/CommonNav";
 import { LandingGovServices } from "../../components/features/landing-page/LandingGovServices";
-import { LandingHeader } from "../../components/features/landing-page/LandingHeader";
+//import { LandingHeader } from "../../components/features/landing-page/LandingHeader";
 
 /**
  * Service Selection Page wrapper
@@ -12,7 +13,7 @@ function ServiceSelectionWrapper() {
   return (
     
     <div className="min-h-screen bg-gray-50">
-        <LandingHeader />
+        <CommonNav/>
       <LandingGovServices />
     </div>
   );

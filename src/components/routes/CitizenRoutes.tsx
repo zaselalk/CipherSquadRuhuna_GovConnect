@@ -9,7 +9,7 @@ import FeedbackForm from "../../pages/citizen/FeedbackPage";
 import ServiceSelectionPage from "../../pages/citizen/ServiceSelection";
 import AboutPage from "../../pages/citizen/About";
 import Dashboard from "../../pages/citizen/roster/dashboard";
-
+import DepartmentPage from "../../pages/citizen/DepartmentPage";
 
 export const ResidentRoutes = () => {
   return (
@@ -42,12 +42,9 @@ export const ResidentRoutes = () => {
           }
         />
         <Route path="resident/feedback" element={<FeedbackForm />} />
-
         <Route path="resident/roster/dashboard" element={<Dashboard/>} />
         
-
-      </Routes>
-
+        </Routes>
 
     </ResidentAuthProvider>
   );
