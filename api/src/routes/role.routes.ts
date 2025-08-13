@@ -12,18 +12,18 @@ const roleController: RoleController = new RoleController();
  */
 
 // POST /api/roles - Create a new role
-RoleRouter.post("/", isSuperAdmin, catchAsync(roleController.createRole));
+RoleRouter.post("/", catchAsync(roleController.createRole));
 
 // GET /api/roles - Retrieve all roles
-RoleRouter.get("/", isSuperAdmin, catchAsync(roleController.getAllRoles));
+RoleRouter.get("/", catchAsync(roleController.getAllRoles));
 
 // GET /api/roles/:id - Retrieve a role by ID
-RoleRouter.get("/:id", isSuperAdmin, catchAsync(roleController.getRoleById));
+RoleRouter.get("/:id", catchAsync(roleController.getRoleById));
 
 // PATCH /api/roles/:id - Update a role by ID
-RoleRouter.patch("/:id", isSuperAdmin, catchAsync(roleController.updateRole));
+RoleRouter.patch("/:id", catchAsync(roleController.updateRole));
 
 // DELETE /api/roles/:id - Delete a role by ID
-RoleRouter.delete("/:id", isSuperAdmin, catchAsync(roleController.deleteRole));
+RoleRouter.delete("/:id", catchAsync(roleController.deleteRole));
 
 export default RoleRouter;
