@@ -7,51 +7,22 @@ import {
   UserOutlined,
   InfoCircleOutlined,
   MessageOutlined,
-
+  ClockCircleOutlined,
 } from "@ant-design/icons";
-import { useNavigate } from "react-router";
+import { NavLink } from "react-router-dom";
 
 const { Header } = Layout;
 const { Text } = Typography;
 
 const CommonNav = () => {
-  const navigate = useNavigate();
-
-  const handleMenuClick = (key: string) => {
-    switch (key) {
-      case "dashboard":
-        navigate("/dashboard");
-        break;
-      case "departments":
-        navigate("/departments");
-        break;
-      case "appointments":
-        navigate("/appointments");
-        break;
-      case "documents":
-        navigate("/documents");
-        break;
-      case "about":
-        navigate("/about");
-        break;
-      case "feedback":
-        navigate("/feedback");
-        break;
-      case "logout":
-        navigate("/login");
-        break;
-      case "profile":
-        navigate("/profile");
-        break;
-      default:
-        break;
-    }
-  };
-
   const profileMenu = (
-    <Menu onClick={(e) => handleMenuClick(e.key)}>
-      <Menu.Item key="profile">Profile</Menu.Item>
-      <Menu.Item key="logout">Logout</Menu.Item>
+    <Menu>
+      <Menu.Item key="profile">
+        <NavLink to="/profile">Profile</NavLink>
+      </Menu.Item>
+      <Menu.Item key="logout">
+        <NavLink to="/login">Logout</NavLink>
+      </Menu.Item>
     </Menu>
   );
 
@@ -83,25 +54,27 @@ const CommonNav = () => {
           mode="horizontal"
           defaultSelectedKeys={["dashboard"]}
           style={{ background: "transparent", lineHeight: "80px" }}
-          onClick={(e) => handleMenuClick(e.key)}
         >
           <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
-            Dashboard
+            <NavLink to="/dashboard">Dashboard</NavLink>
           </Menu.Item>
           <Menu.Item key="departments" icon={<AppstoreOutlined />}>
-            Departments
+            <NavLink to="/departments">Departments</NavLink>
           </Menu.Item>
           <Menu.Item key="appointments" icon={<CalendarOutlined />}>
-            Appointments
+            <NavLink to="/appointments">Appointments</NavLink>
           </Menu.Item>
           <Menu.Item key="documents" icon={<FileTextOutlined />}>
-            Documents
+            <NavLink to="/documents">Documents</NavLink>
+          </Menu.Item>
+          <Menu.Item key="roster" icon={<ClockCircleOutlined />}>
+            <NavLink to="/roster">Roster</NavLink>
           </Menu.Item>
           <Menu.Item key="about" icon={<InfoCircleOutlined />}>
-            About Us
+            <NavLink to="/about">About Us</NavLink>
           </Menu.Item>
           <Menu.Item key="feedback" icon={<MessageOutlined />}>
-            Feedback
+            <NavLink to="/feedback">Feedback</NavLink>
           </Menu.Item>
         </Menu>
 
