@@ -19,7 +19,6 @@ const AdminSidebar: FC = () => {
     "py-3 text-sm font-medium flex items-center text-gray-700 hover:text-white rounded-xl px-4 transition-all duration-200 transform hover:scale-105";
 
   useEffect(() => {
-
     if (!user?.permissions) return;
 
     if (user?.permissions.length > 0) {
@@ -53,12 +52,17 @@ const AdminSidebar: FC = () => {
       permission: "citizen:view",
     },
     {
+      path: "/admin/citizen",
+      label: "Citizens",
+      icon: <FaHouseUser size={20} />,
+      permission: "citizen:view",
+    },
+    {
       path: "/admin/officerdashboard",
       label: "Officers",
       icon: <FaHouseUser size={20} />,
       permission: "citizen:view",
     },
-
   ];
 
   return (
@@ -67,10 +71,20 @@ const AdminSidebar: FC = () => {
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-6">
           <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="#fff"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z"
+              />
             </svg>
-
           </div>
           <div>
             <h2 className="text-lg font-bold text-gray-900">GovConnect</h2>
@@ -85,9 +99,10 @@ const AdminSidebar: FC = () => {
             <NavLink
               to="/admin/dashboard"
               className={({ isActive }) =>
-                `${navItemClass} ${isActive
-                  ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg"
-                  : "hover:bg-gradient-to-r hover:from-cyan-500 hover:to-blue-600 hover:text-white"
+                `${navItemClass} ${
+                  isActive
+                    ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg"
+                    : "hover:bg-gradient-to-r hover:from-cyan-500 hover:to-blue-600 hover:text-white"
                 } `
               }
             >
@@ -107,9 +122,10 @@ const AdminSidebar: FC = () => {
                 <NavLink
                   to={item.path}
                   className={({ isActive }) =>
-                    `${navItemClass} ${isActive
-                      ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg"
-                      : "hover:bg-gradient-to-r hover:from-cyan-500 hover:to-blue-600 hover:text-white"
+                    `${navItemClass} ${
+                      isActive
+                        ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg"
+                        : "hover:bg-gradient-to-r hover:from-cyan-500 hover:to-blue-600 hover:text-white"
                     }`
                   }
                 >
@@ -127,9 +143,10 @@ const AdminSidebar: FC = () => {
             <NavLink
               to="/admin/users"
               className={({ isActive }) =>
-                `${navItemClass} ${isActive
-                  ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg"
-                  : "hover:bg-gradient-to-r hover:from-cyan-500 hover:to-blue-600 hover:text-white"
+                `${navItemClass} ${
+                  isActive
+                    ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg"
+                    : "hover:bg-gradient-to-r hover:from-cyan-500 hover:to-blue-600 hover:text-white"
                 }`
               }
             >
@@ -141,7 +158,6 @@ const AdminSidebar: FC = () => {
               </div>
             </NavLink>
           </li>
-
         </ul>
       </div>
       {/* User Profile Section */}
