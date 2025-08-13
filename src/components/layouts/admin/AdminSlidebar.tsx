@@ -4,7 +4,7 @@ import { MdDashboard } from "react-icons/md";
 import { FaHouseUser } from "react-icons/fa";
 import { UserOutlined } from "@ant-design/icons";
 import { HiUsers } from "react-icons/hi";
-import { Heart, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/state/hooks";
 import { logout } from "../../../store/slices/authSlices";
 

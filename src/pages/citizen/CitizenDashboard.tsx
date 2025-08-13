@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
-import { Layout, Spin, Typography, Divider } from "antd";
+import { Layout, Spin, Typography } from "antd";
 import {
   ClockCircleOutlined,
   HistoryOutlined,
@@ -12,6 +12,8 @@ import DashboardHeader from "../../components/features/citizen-dashboard/Dashboa
 import NotificationList from "../../components/features/citizen-dashboard/NotificationList";
 import AppointmentList from "../../components/features/citizen-dashboard/AppointmentList";
 import DocumentSubmissionCard from "../../components/features/citizen-dashboard/DocumentSubmissionCard";
+//import LandingFooter from "../../components/features/citizen-dashboard/DashboardFooter";
+import Footer from "../../components/common/Footer";
 
 const { Content } = Layout;
 const { Title, Text, Paragraph } = Typography;
@@ -206,6 +208,7 @@ const CitizenDashboard = () => {
           </section>
         </div>
       </Content>
+      <Footer />
     </Layout>
   );
 };
