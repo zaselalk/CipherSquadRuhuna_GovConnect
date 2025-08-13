@@ -9,6 +9,7 @@ import StepPersonalInfo from "../components/features/appointment-booking/Persona
 import StepUploadDocuments from "../components/features/appointment-booking/UploadDocs";
 import StepConfirmation from "../components/features/appointment-booking/Confirmation";
 import FormNavigation from "../components/common/FormNavigation";
+import AppointmentSuccess from "../components/features/appointment-booking/AppointmentSuccess";
 
 const AppointmentBookingPage = () => {
   const { serviceId } = useParams<{ serviceId: string }>();
@@ -91,6 +92,7 @@ const AppointmentBookingPage = () => {
       case 1: return <StepPersonalInfo form={form} />;
       case 2: return <StepUploadDocuments uploadedDocs={uploadedDocs} setUploadedDocs={setUploadedDocs} form={form} />;
       case 3: return <StepConfirmation appointmentData={appointmentData} serviceNames={serviceNames} />;
+      case 4: return <AppointmentSuccess appointmentData={appointmentData} serviceNames={serviceNames} />;
       default: return null;
     }
   };
