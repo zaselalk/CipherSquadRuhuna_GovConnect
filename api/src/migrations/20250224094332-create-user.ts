@@ -26,6 +26,10 @@ module.exports = {
           allowNull: false,
           unique: true,
         },
+        phone_number: {
+          type: DataType.STRING,
+          allowNull: false,
+        },
         password: {
           type: DataType.STRING,
           allowNull: false,
@@ -50,6 +54,10 @@ module.exports = {
         updatedAt: {
           allowNull: false,
           type: DataType.DATE,
+        },
+        deletedAt: {
+          type: DataType.DATE,
+          allowNull: true,
         },
       });
     } catch (error) {

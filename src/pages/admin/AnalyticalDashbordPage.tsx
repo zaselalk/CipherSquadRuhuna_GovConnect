@@ -29,7 +29,7 @@ Chart.register(
 const AnalyticsDashboard: React.FC = () => {
     return (
         <DashboardContainer>
-            <div className="max-w-[1000px] mx-auto bg-[#f7f9fc] p-6 min-h-screen">
+            <div className="max-w-[1000px] mx-auto  p-6 min-h-screen">
                 <h1 className="text-[#0052cc] text-3xl font-bold mb-8">
                     Analytics Dashboard
                 </h1>
