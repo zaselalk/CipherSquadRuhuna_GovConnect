@@ -1,14 +1,18 @@
-import { Card, Row, Col, Divider, Space, Typography, Alert } from "antd";
+import { Card, Row, Col, Divider, Space, Typography, Alert, Button } from "antd";
 import { CalendarOutlined, ClockCircleOutlined } from "@ant-design/icons";
 
 const { Text } = Typography;
 
 interface Props {
+
   appointmentData: any;
   serviceNames: Record<string, string>;
+  onConfirm: () => void;
+  onPrev: () => void;
+  isSubmitting: boolean;
 }
 
-const StepConfirmation = ({ appointmentData, serviceNames }: Props) => (
+const StepConfirmation = ({ appointmentData, serviceNames, onConfirm, onPrev, isSubmitting }: Props) => (
   <Card title="Confirmation Details">
     <Row gutter={[24, 24]}>
       <Col xs={24} md={12}>
@@ -38,7 +42,22 @@ const StepConfirmation = ({ appointmentData, serviceNames }: Props) => (
       </Col>
     </Row>
 
-    <Alert message="Review carefully. Changes require contact at 1919." type="warning" showIcon className="mt-4" />
+    <Alert
+      message="Check whether the all data you inserted is correct before confirming."
+      type="warning"
+      showIcon
+      className="mt-4"
+    />
+
+    <div className="mt-6 flex justify-between">
+      <Button onClick={onPrev}>
+        Previous
+      </Button>
+      
+      <Button type="primary" onClick={onConfirm} loading={isSubmitting}>
+        Confirm Booking
+      </Button>
+    </div>
   </Card>
 );
 
