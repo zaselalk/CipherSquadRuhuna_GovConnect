@@ -5,12 +5,12 @@ import ProfilePage from "../../pages/admin/ProfilePage";
 import UsersPage from "../../pages/admin/UsersPage";
 import AdminDashboard from "../../pages/admin/AdminDashboardPage";
 import AuthProvider from "../auth/AuthProvider";
-import { useAppSelector } from "../../hooks/state/hooks";
+// import { useAppSelector } from "../../hooks/state/hooks";
 import AnalyticsDashboard from "../../pages/admin/AnalyticalDashbordPage";
 import OfficerDashboard from "../../pages/admin/Officerdashbord";
 
 export const AdminRoutes = () => {
-  const user = useAppSelector((state) => state.auth.user);
+  // const user = useAppSelector((state) => state.auth.user);
 
   return (
     <AuthProvider>
