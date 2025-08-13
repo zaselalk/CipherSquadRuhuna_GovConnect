@@ -1,6 +1,6 @@
 "use strict";
 
-import { QueryInterface } from "sequelize";
+import { QueryInterface, where } from "sequelize";
 import Role from "../models/role";
 import { UserAttributes } from "../models/user";
 
@@ -8,15 +8,22 @@ import { UserAttributes } from "../models/user";
 module.exports = {
   async up(queryInterface: QueryInterface) {
     try {
-      const roles = await Role.findAll();
-      const roleId = roles.map((role) => role.id);
+      const role = await Role.findOne({
+        attributes: ["id"],
+        where: {
+          role: "Citizen",
+        },
+      });
+      if (!role) {
+        throw new Error("Role 'Citizen' not found");
+      }
       const users: UserAttributes[] = [
         {
           name: "Nimasha Jayasinghe",
           email: "nish45@gmail.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -24,8 +31,8 @@ module.exports = {
           name: "Ravindu Madushanka",
           email: "ravilk@gmail.com",
           password:
-            "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+            "$2b$1roleId$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -34,7 +41,7 @@ module.exports = {
           email: "kamal@outlook.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -43,7 +50,7 @@ module.exports = {
           email: "dilu@msn.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -52,7 +59,7 @@ module.exports = {
           email: "pabahathu56@gmail.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -61,7 +68,7 @@ module.exports = {
           email: "chamii@gmail.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -70,7 +77,7 @@ module.exports = {
           email: "sonali@gmail.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -79,7 +86,7 @@ module.exports = {
           email: "malithrs@gmail.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -88,7 +95,7 @@ module.exports = {
           email: "hiruniran@gmail.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -97,7 +104,7 @@ module.exports = {
           email: "jayapasi@gmail.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -106,7 +113,7 @@ module.exports = {
           email: "nadimara@gmail.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -115,7 +122,7 @@ module.exports = {
           email: "gayagee@gmail.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -124,7 +131,7 @@ module.exports = {
           email: "nirosh@gmail.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -133,7 +140,7 @@ module.exports = {
           email: "kavii@gmail.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -142,7 +149,7 @@ module.exports = {
           email: "athula@gmail.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -151,7 +158,7 @@ module.exports = {
           email: "pgihan@gmail.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -160,7 +167,7 @@ module.exports = {
           email: "menumal45@gmail.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -169,7 +176,7 @@ module.exports = {
           email: "luckchami@gmail.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -178,7 +185,7 @@ module.exports = {
           email: "mahii@gmail.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -187,7 +194,7 @@ module.exports = {
           email: "myth45@gmail.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -196,7 +203,7 @@ module.exports = {
           email: "malpabi56@gmail.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -205,7 +212,7 @@ module.exports = {
           email: "shajay2001@gmail.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -214,7 +221,7 @@ module.exports = {
           email: "pasijaya34@gmail.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -223,17 +230,11 @@ module.exports = {
           email: "nirjaya69@gmail.com",
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu",
-          roleId: 0,
+          roleId: role.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
       ];
-
-      // Assign roles to the users
-      // if users lenght is more that roles, assign one role to each user
-      for (let i = 0; i < users.length; i++) {
-        users[i].roleId = roleId[i % roleId.length];
-      }
 
       await queryInterface.bulkInsert("users", users);
     } catch (error) {}
