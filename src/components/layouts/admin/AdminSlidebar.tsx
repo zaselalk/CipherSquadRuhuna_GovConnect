@@ -40,12 +40,6 @@ const AdminSidebar: FC = () => {
 
   const navItems = [
     {
-      path: "/admin/residents",
-      label: "Citizens",
-      icon: <FaHouseUser size={20} />,
-      permission: "citizen:view",
-    },
-    {
       path: "/admin/analytics",
       label: "Analytics",
       icon: <FaHouseUser size={20} />,
@@ -95,26 +89,6 @@ const AdminSidebar: FC = () => {
       {/* Navigation */}
       <div className="flex-1">
         <ul className="space-y-3">
-          <li>
-            <NavLink
-              to="/admin/dashboard"
-              className={({ isActive }) =>
-                `${navItemClass} ${
-                  isActive
-                    ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg"
-                    : "hover:bg-gradient-to-r hover:from-cyan-500 hover:to-blue-600 hover:text-white"
-                } `
-              }
-            >
-              <div className="flex items-center gap-3">
-                <div className="p-1">
-                  <MdDashboard size={20} />
-                </div>
-                <div>Dashboard</div>
-              </div>
-            </NavLink>
-          </li>
-
           {navItems
             .filter((item) => navbarArray.includes(item.permission))
             .map((item) => (
