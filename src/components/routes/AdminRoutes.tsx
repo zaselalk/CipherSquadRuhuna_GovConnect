@@ -74,13 +74,14 @@ export const AdminRoutes = () => {
             </ProtectedRoutesGuard>
           }
         />
+        {/* /admin/department/:id */}
 
         <Route
-          path="admin/departmentservices"
+          path="admin/department/:id"
           element={
-            // <ProtectedRoutesGuard>
+            <ProtectedRoutesGuard>
               <DepartmentServicesPage />
-            // </ProtectedRoutesGuard>
+            </ProtectedRoutesGuard>
           }
         />
 
