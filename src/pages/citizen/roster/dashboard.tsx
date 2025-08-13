@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { CalendarOutlined, ClockCircleOutlined, ScheduleOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import DashboardHeader from "../../../components/features/roster/dashboardHeader";
-import OffDaysCard from "../../../components/features/roster/offdaysCard";
 import AvailableShiftsCard from "../../../components/features/roster/availableShiftsCard";
 import ShiftApplyModal from "../../../components/features/roster/shiftApplyModal";
 import LeaveForm from "../../../components/features/roster/leaveForm";
