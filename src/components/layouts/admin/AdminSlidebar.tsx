@@ -4,7 +4,7 @@ import { MdDashboard } from "react-icons/md";
 import { FaHouseUser } from "react-icons/fa";
 import { UserOutlined } from "@ant-design/icons";
 import { HiUsers } from "react-icons/hi";
-import { Heart, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/state/hooks";
 import { logout } from "../../../store/slices/authSlices";
 
@@ -42,9 +42,21 @@ const AdminSidebar: FC = () => {
   const navItems = [
     {
       path: "/admin/residents",
-      label: "Residents",
+      label: "Citizens",
       icon: <FaHouseUser size={20} />,
-      permission: "resident:view",
+      permission: "citizen:view",
+    },
+    {
+      path: "/admin/analytics",
+      label: "Analytics",
+      icon: <FaHouseUser size={20} />,
+      permission: "citizen:view",
+    },
+    {
+      path: "/admin/officerdashboard",
+      label: "Officers",
+      icon: <FaHouseUser size={20} />,
+      permission: "citizen:view",
     },
 
   ];
@@ -110,26 +122,26 @@ const AdminSidebar: FC = () => {
             ))}
 
           {/* show user management only for super_admin */}
-          {user?.role === "super_admin" && (
-            <li>
-              <NavLink
-                to="/admin/users"
-                className={({ isActive }) =>
-                  `${navItemClass} ${isActive
-                    ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg"
-                    : "hover:bg-gradient-to-r hover:from-cyan-500 hover:to-blue-600 hover:text-white"
-                  }`
-                }
-              >
-                <div className="flex items-center gap-3">
-                  <div className="p-1">
-                    <HiUsers size={20} />
-                  </div>
-                  <div>Users</div>
+
+          <li>
+            <NavLink
+              to="/admin/users"
+              className={({ isActive }) =>
+                `${navItemClass} ${isActive
+                  ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg"
+                  : "hover:bg-gradient-to-r hover:from-cyan-500 hover:to-blue-600 hover:text-white"
+                }`
+              }
+            >
+              <div className="flex items-center gap-3">
+                <div className="p-1">
+                  <HiUsers size={20} />
                 </div>
-              </NavLink>
-            </li>
-          )}
+                <div>Users</div>
+              </div>
+            </NavLink>
+          </li>
+
         </ul>
       </div>
       {/* User Profile Section */}

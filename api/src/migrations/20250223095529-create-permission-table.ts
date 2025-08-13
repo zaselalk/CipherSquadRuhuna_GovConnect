@@ -26,6 +26,10 @@ module.exports = {
           allowNull: false,
           type: DataTypes.DATE,
         },
+        deletedAt: {
+          type: DataTypes.DATE,
+          allowNull: true,
+        },
       });
     } catch (error) {
       console.log(error);

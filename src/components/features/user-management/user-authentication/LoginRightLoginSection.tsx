@@ -64,10 +64,11 @@ export const LoginRightLoginSection: FC<UserLoginSectionProps> = ({
               <Building2 className="w-8 h-8 text-white" />
             </div>
             <Title level={3} className="text-gray-900 mb-2">
-              Staff Portal
+              Officer Login Portal
             </Title>
             <p className="text-gray-600">
-              Sign in to access the healthcare management system
+              Sign in to view bookings, manage requests, and access your
+              dashboard.
             </p>
           </div>
 

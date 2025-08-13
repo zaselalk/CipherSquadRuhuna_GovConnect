@@ -5,10 +5,13 @@ import ProfilePage from "../../pages/admin/ProfilePage";
 import UsersPage from "../../pages/admin/UsersPage";
 import AdminDashboard from "../../pages/admin/AdminDashboardPage";
 import AuthProvider from "../auth/AuthProvider";
-import { useAppSelector } from "../../hooks/state/hooks";
+// import { useAppSelector } from "../../hooks/state/hooks";
+import AnalyticsDashboard from "../../pages/admin/AnalyticalDashbordPage";
+import OfficerDashboard from "../../pages/admin/Officerdashbord";
+import DepartmentPage from "../../pages/admin/DepartmentPage";
 
 export const AdminRoutes = () => {
-  const user = useAppSelector((state) => state.auth.user);
+  // const user = useAppSelector((state) => state.auth.user);
 
   return (
     <AuthProvider>
@@ -25,6 +28,32 @@ export const AdminRoutes = () => {
             </ProtectedRoutesGuard>
           }
         />
+        <Route
+          path="admin/analytics"
+          element={
+            // <ProtectedRoutesGuard>
+            <AnalyticsDashboard />
+            // </ProtectedRoutesGuard>
+          }
+        />
+
+        <Route
+          path="admin/officerdashboard"
+          element={
+            // <ProtectedRoutesGuard>
+            <OfficerDashboard />
+            // </ProtectedRoutesGuard>
+          }
+        />
+
+        <Route
+          path="admin/department"
+          element={
+            // <ProtectedRoutesGuard>
+              <DepartmentPage />
+            // </ProtectedRoutesGuard>
+          }
+        />
 
         {/* /admin/profile */}
         <Route
@@ -36,23 +65,18 @@ export const AdminRoutes = () => {
           }
         />
 
-
         {/* /admin/users routs */}
         {/* // if the user is super_admin */}
-        {user?.role === "super_admin" && (
-          <Route path="admin/users">
-            <Route
-              path=""
-              element={
-                <ProtectedRoutesGuard>
-                  <UsersPage />
-                </ProtectedRoutesGuard>
-              }
-            />
-          </Route>
-        )}
-
-
+        <Route path="admin/users">
+          <Route
+            path=""
+            element={
+              <ProtectedRoutesGuard>
+                <UsersPage />
+              </ProtectedRoutesGuard>
+            }
+          />
+        </Route>
       </Routes>
     </AuthProvider>
   );
