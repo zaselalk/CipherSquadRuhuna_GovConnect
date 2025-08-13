@@ -5,6 +5,7 @@ import { ResidentAuthProvider } from "../auth/ResidentAuthContext";
 import ResidentLoginPage from "../../pages/citizen/CitizenLoginPage";
 import ResidentRegisterPage from "../../pages/citizen/CitizenRegisterPage";
 import CitizenDashboard from "../../pages/citizen/CitizenDashboard";
+import FeedbackForm from "../../pages/citizen/FeedbackPage";
 import ServiceSelectionPage from "../../pages/citizen/ServiceSelection";
 
 export const ResidentRoutes = () => {
@@ -29,6 +30,7 @@ export const ResidentRoutes = () => {
             // </ResidentProtectedRoute>
           }
         />
+        <Route path="resident/feedback" element={<FeedbackForm />} />
       </Routes>
 
 
