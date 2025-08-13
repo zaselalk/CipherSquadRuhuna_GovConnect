@@ -51,13 +51,21 @@ const AppointmentBookingPage = () => {
   const { Title, Paragraph } = Typography;
 
   const handleNext = async () => {
-    try {
-      await form.validateFields(stepFieldMapping[currentStep]);
-      setCurrentStep(currentStep + 1);
-    } catch {
-      notification.warning({ message: "Please complete all required fields." });
-    }
-  };
+  try {
+    // Validate only the fields of the current step
+    await form.validateFields(stepFieldMapping[currentStep]);
+
+    // Save current form values into appointmentData state
+    const values = form.getFieldsValue();
+    setAppointmentData((prev: any) => ({ ...prev, ...values }));
+
+    // Move to the next step
+    setCurrentStep(currentStep + 1);
+  } catch {
+    notification.warning({ message: "Please complete all required fields." });
+  }
+};
+
 
   const handlePrev = () => setCurrentStep(currentStep - 1);
 
@@ -90,7 +98,7 @@ const AppointmentBookingPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
   <LandingHeader />
-  <div className="mx-auto px-4 py-8" style={{ maxWidth: '800px' }}>
+  <div className="mx-auto px-4 py-8" style={{ maxWidth: '1000px' }}>
     {/* Back Button */}
     <Button type="text" icon={<ArrowLeftOutlined />} onClick={handleGoBack} className="mb-6">Back</Button>
 

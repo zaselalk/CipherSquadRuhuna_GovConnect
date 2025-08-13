@@ -1,7 +1,7 @@
-import { Card, Row, Col, Upload, notification, Typography } from "antd";
-import { InboxOutlined } from "@ant-design/icons";
+import { Card, Row, Col, Upload, Button, notification, Typography, Space } from "antd";
+import { InboxOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
-const { Paragraph } = Typography;
+const { Paragraph, Text } = Typography;
 const { Dragger } = Upload;
 
 interface Props {
@@ -26,6 +26,11 @@ const StepUploadDocuments = ({ uploadedDocs, setUploadedDocs, form }: Props) => 
     return false;
   };
 
+  const removeFile = (key: string) => {
+    setUploadedDocs((prev: any) => ({ ...prev, [key]: undefined }));
+    form.setFieldsValue({ [key]: undefined });
+  };
+
   return (
     <Card title="Upload Required Documents">
       <Paragraph>Accepted formats: PDF, JPG, PNG — Max size 5MB.</Paragraph>
@@ -33,14 +38,36 @@ const StepUploadDocuments = ({ uploadedDocs, setUploadedDocs, form }: Props) => 
         {["birthCertificate", "nicCopy", "medicalReport"].map((docKey) => (
           <Col xs={24} md={8} key={docKey}>
             <Card title={docKey.replace(/([A-Z])/g, ' $1')} bordered hoverable>
-              <Dragger
-                accept=".pdf,.jpg,.jpeg,.png"
-                maxCount={1}
-                beforeUpload={(file) => beforeUploadHandler(file, docKey)}
-              >
-                <p className="ant-upload-drag-icon"><InboxOutlined /></p>
-                <p className="ant-upload-text">Click or drag file to upload</p>
-              </Dragger>
+              {uploadedDocs[docKey] ? (
+                <Space direction="vertical" className="w-full">
+                  <Text strong>{uploadedDocs[docKey].name}</Text>
+                  <Space>
+                    <Button
+                      icon={<EditOutlined />}
+                      onClick={() => removeFile(docKey)}
+                      type="default"
+                    >
+                      Replace
+                    </Button>
+                    <Button
+                      icon={<DeleteOutlined />}
+                      onClick={() => removeFile(docKey)}
+                      danger
+                    >
+                      Remove
+                    </Button>
+                  </Space>
+                </Space>
+              ) : (
+                <Dragger
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  maxCount={1}
+                  beforeUpload={(file) => beforeUploadHandler(file, docKey)}
+                >
+                  <p className="ant-upload-drag-icon"><InboxOutlined /></p>
+                  <p className="ant-upload-text">Click or drag file to upload</p>
+                </Dragger>
+              )}
             </Card>
           </Col>
         ))}
