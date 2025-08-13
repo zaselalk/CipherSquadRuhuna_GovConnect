@@ -8,6 +8,7 @@ import AuthProvider from "../auth/AuthProvider";
 // import { useAppSelector } from "../../hooks/state/hooks";
 import AnalyticsDashboard from "../../pages/admin/AnalyticalDashbordPage";
 import OfficerDashboard from "../../pages/admin/Officerdashbord";
+import DepartmentPage from "../../pages/admin/DepartmentPage";
 
 export const AdminRoutes = () => {
   // const user = useAppSelector((state) => state.auth.user);
@@ -41,6 +42,15 @@ export const AdminRoutes = () => {
           element={
             // <ProtectedRoutesGuard>
             <OfficerDashboard />
+            // </ProtectedRoutesGuard>
+          }
+        />
+
+        <Route
+          path="admin/department"
+          element={
+            // <ProtectedRoutesGuard>
+              <DepartmentPage />
             // </ProtectedRoutesGuard>
           }
         />
