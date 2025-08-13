@@ -30,7 +30,7 @@ const Footer = () => {
                         </Title>
                         <ul className="space-y-2 text-gray-400">
                             <li>
-                                <a href="#services" className="hover:text-white transition">
+                                <a href="/resident/dashboard/service-selection" className="hover:text-white transition">
                                     Services
                                 </a>
                             </li>

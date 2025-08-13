@@ -7,7 +7,7 @@ const AboutPage: React.FC = () => {
     <div className="w-screen min-h-screen bg-gray-50 flex flex-col">
       
       {/* Header */}
-      <LandingHeader className="w-full" />
+      <LandingHeader />
 
       {/* Hero Section */}
 <section className="w-full bg-gray-100 text-gray-900 py-28 px-4 flex flex-col items-center text-center">
