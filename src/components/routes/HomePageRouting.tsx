@@ -5,7 +5,7 @@ import TermsPage from "../../pages/TermsPage";
 import PrivacyPage from "../../pages/PrivacyPage";
 import ServiceDetailPage from "../../pages/ServiceDetailPage";
 import AppointmentBookingPage from "../../pages/AppointmentBookingPage";
-import ReviewPage from "../../pages/ReviewPage";
+import ReviewPage from "../../pages/FeedbackPage";
 
 export const HomePageRouting: React.FC = () => {
   return (
