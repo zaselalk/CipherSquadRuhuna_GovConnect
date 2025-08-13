@@ -6,6 +6,7 @@ import ResidentLoginPage from "../../pages/citizen/CitizenLoginPage";
 import ResidentRegisterPage from "../../pages/citizen/CitizenRegisterPage";
 import CitizenDashboard from "../../pages/citizen/CitizenDashboard";
 import ServiceSelectionPage from "../../pages/citizen/ServiceSelection";
+import AboutPage from "../../pages/citizen/About";
 
 export const ResidentRoutes = () => {
   return (
@@ -26,6 +27,14 @@ export const ResidentRoutes = () => {
           element={
             // <ResidentProtectedRoute>
               <ServiceSelectionPage />
+            // </ResidentProtectedRoute>
+          }
+        />
+        <Route
+          path="/resident/dashboard/about-govconnect"
+          element={
+            // <ResidentProtectedRoute>
+              <AboutPage />
             // </ResidentProtectedRoute>
           }
         />
