@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   CalendarOutlined,
   BellOutlined,
@@ -27,6 +27,8 @@ const CitizenDashboard = () => {
   const [upcomingAppointments, setUpcomingAppointments] = useState<Appointment[]>([]);
   const [pastAppointments, setPastAppointments] = useState<Appointment[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const notifRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setTimeout(() => {
@@ -96,6 +98,23 @@ const CitizenDashboard = () => {
     }, 1000);
   }, []);
 
+  // Close popup if click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
+        setNotifOpen(false);
+      }
+    };
+    if (notifOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [notifOpen]);
+
   const statusColor = (status: string) => {
     switch (status) {
       case "Confirmed":
@@ -128,18 +147,71 @@ const CitizenDashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
       {/* Header */}
-      <header className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-10 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-3xl shadow-lg p-8">
+      <header className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-10 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-3xl shadow-lg p-8 relative">
         <div>
           <h1 className="text-4xl font-extrabold mb-2">Citizen Dashboard</h1>
           <p className="text-blue-200 text-lg opacity-90">Manage your appointments and notifications</p>
         </div>
-        <button
-          type="button"
-          className="mt-6 md:mt-0 inline-flex items-center gap-2 bg-white text-blue-700 font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-gray-100 transition"
-          onClick={handleBookNew}
-        >
-          <PlusOutlined /> Book New Appointment
-        </button>
+
+        <div className="flex items-center gap-6 mt-6 md:mt-0 relative" ref={notifRef}>
+          {/* Notification Bell */}
+          <button
+            type="button"
+            onClick={() => setNotifOpen((open) => !open)}
+            className="relative text-white hover:text-yellow-300 transition text-3xl focus:outline-none"
+            aria-label="Toggle notifications"
+          >
+            <BellOutlined />
+            {notifications.length > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center font-semibold">
+                {notifications.length}
+              </span>
+            )}
+          </button>
+
+          {/* Notifications Popup */}
+          {notifOpen && (
+            <div className="absolute right-0 top-full mt-3 w-80 max-h-96 overflow-y-auto bg-white rounded-xl shadow-lg border border-gray-200 z-50 p-4">
+              <h3 className="text-lg font-bold mb-3 text-gray-900">Notifications</h3>
+              {notifications.length === 0 ? (
+                <p className="text-gray-500 text-center">No notifications.</p>
+              ) : (
+                <ul className="space-y-3">
+                  {notifications.map(({ id, message, date, type }) => {
+                    const iconColor =
+                      type === "reminder" ? "text-green-600" :
+                      type === "change" ? "text-orange-600" :
+                      "text-red-600";
+
+                    return (
+                      <li
+                        key={id}
+                        className="flex items-start gap-3 p-3 border border-gray-200 rounded-lg bg-gray-50"
+                      >
+                        <span className={`text-2xl ${iconColor}`}>
+                          {type === "reminder" ? "🔔" : type === "change" ? "⚠️" : "❌"}
+                        </span>
+                        <div>
+                          <p className="text-gray-800 font-medium">{message}</p>
+                          <p className="text-gray-500 text-xs mt-1">Date: {date}</p>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+          )}
+
+          {/* Book New Appointment Button */}
+          <button
+            type="button"
+            className="inline-flex items-center gap-2 bg-white text-blue-700 font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-gray-100 transition"
+            onClick={handleBookNew}
+          >
+            <PlusOutlined /> Book New Appointment
+          </button>
+        </div>
       </header>
 
       <main className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -204,43 +276,9 @@ const CitizenDashboard = () => {
           )}
         </section>
 
-        {/* Notifications & Document Pre-submission */}
+        {/* Document Pre-submission */}
         <section className="bg-white rounded-3xl shadow-lg p-6 flex flex-col justify-between">
           <div>
-            <h2 className="text-2xl font-bold flex items-center gap-3 mb-6 text-gray-900">
-              <BellOutlined className="text-yellow-600 text-3xl" /> Notifications
-            </h2>
-
-            {notifications.length === 0 ? (
-              <p className="text-gray-500">No notifications.</p>
-            ) : (
-              <ul className="space-y-3 max-h-64 overflow-y-auto">
-                {notifications.map(({ id, message, date, type }) => {
-                  const iconColor =
-                    type === "reminder" ? "text-green-600" :
-                    type === "change" ? "text-orange-600" :
-                    "text-red-600";
-
-                  return (
-                    <li
-                      key={id}
-                      className="flex items-start gap-3 p-3 border border-gray-200 rounded-lg bg-gray-50"
-                    >
-                      <span className={`text-2xl ${iconColor}`}>
-                        {type === "reminder" ? "🔔" : type === "change" ? "⚠️" : "❌"}
-                      </span>
-                      <div>
-                        <p className="text-gray-800 font-medium">{message}</p>
-                        <p className="text-gray-500 text-xs mt-1">Date: {date}</p>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-          </div>
-
-          <div className="mt-8">
             <h3 className="text-xl font-semibold mb-3 flex items-center gap-2 text-gray-900">
               <FileAddOutlined className="text-indigo-600 text-2xl" /> Document Pre-submission
             </h3>
