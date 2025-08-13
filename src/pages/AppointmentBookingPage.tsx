@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { Form, Card, Steps, Button, notification, Typography } from "antd";
 import { CalendarOutlined, ArrowLeftOutlined } from "@ant-design/icons";
-
 import { LandingHeader } from "../components/features/landing-page/LandingHeader";
 import StepServiceDate from "../components/features/appointment-booking/ServiceDate";
 import StepPersonalInfo from "../components/features/appointment-booking/PersonalInfo";

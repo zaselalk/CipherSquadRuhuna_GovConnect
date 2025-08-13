@@ -3,11 +3,8 @@ import { UserOutlined, MailOutlined, PhoneOutlined, FileTextOutlined } from "@an
 
 const { TextArea } = Input;
 
-interface Props {
-  form: any;
-}
 
-const StepPersonalInfo = ({ form }: Props) => (
+const StepPersonalInfo = () => (
   <Card title="Personal Information">
     <Row gutter={[24, 24]}>
       <Col xs={24} md={12}>
