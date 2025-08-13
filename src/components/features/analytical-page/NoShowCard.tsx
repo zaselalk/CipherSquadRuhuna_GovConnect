@@ -1,41 +1,72 @@
 import React from "react";
-import { Card, Progress, Tooltip } from "antd";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { Card, Progress } from "antd";
 
 const NoShowRateCard: React.FC = () => {
-  const noShowRate = 35; // Example value
+  // Example data
+  const totalAppointments = 100;
+  const missedCount = 35;
+  const successCount = 50;
+  const pendingCount = totalAppointments - missedCount - successCount;
+
+  const getPercent = (count: number) => Math.round((count / totalAppointments) * 100);
 
   return (
     <Card
       bordered={false}
       style={{ borderRadius: 12 }}
       className="shadow-lg"
-      bodyStyle={{ padding: "16px 20px" }}
+      bodyStyle={{ padding: "16px 20px 12px 20px" }} // reduced bottom padding
     >
-      <div className="flex justify-between items-center mb-2">
+      <div className="flex justify-between items-center mb-3">
         <h2 className="text-[#0052cc] text-lg font-semibold m-0">
-          No-Show Rate
+          Breakdown of Appointment Status
         </h2>
-        <Tooltip title="Percentage of missed appointments">
-          <InfoCircleOutlined className="text-gray-400" />
-        </Tooltip>
+        <span className="text-sm text-gray-500">
+          Total: <strong>{totalAppointments}</strong>
+        </span>
       </div>
 
-      <p className="text-base mb-2">
-        Current No-Show Rate:{" "}
-        <strong className="text-[#d9534f]">{noShowRate}%</strong>
-      </p>
+      {/* Missed */}
+      <div className="mb-3">
+        <p className="text-base mb-1">
+          Missed: <strong className="text-[#d9534f]">{missedCount}</strong>
+        </p>
+        <Progress
+          percent={getPercent(missedCount)}
+          strokeColor="#d9534f"
+          trailColor="#f5f5f5"
+          strokeWidth={12}
+          showInfo={false}
+        />
+      </div>
 
-      <Progress
-        percent={noShowRate}
-        strokeColor={{
-          from: "#ff7f7f",
-          to: "#d9534f",
-        }}
-        trailColor="#f5f5f5"
-        strokeWidth={12}
-        showInfo={false}
-      />
+      {/* Success */}
+      <div className="mb-3">
+        <p className="text-base mb-1">
+          Success: <strong className="text-[#28a745]">{successCount}</strong>
+        </p>
+        <Progress
+          percent={getPercent(successCount)}
+          strokeColor="#28a745"
+          trailColor="#f5f5f5"
+          strokeWidth={12}
+          showInfo={false}
+        />
+      </div>
+
+      {/* Pending */}
+      <div>
+        <p className="text-base mb-1">
+          Pending: <strong className="text-[#f0ad4e]">{pendingCount}</strong>
+        </p>
+        <Progress
+          percent={getPercent(pendingCount)}
+          strokeColor="#f0ad4e"
+          trailColor="#f5f5f5"
+          strokeWidth={12}
+          showInfo={false}
+        />
+      </div>
     </Card>
   );
 };
