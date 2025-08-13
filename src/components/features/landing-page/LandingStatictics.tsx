@@ -1,6 +1,6 @@
 import { Card, Col, Row, Statistic, Typography } from 'antd';
 import { Activity, Building2, MapPin, Users } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LandingPagestats } from '../../../types/landing-page';
 
 const { Title, Paragraph } = Typography;
@@ -11,6 +11,16 @@ export const LandingStatictics = () => {
         departments: 0,
         applications: 0,
     });
+
+    useEffect(() => {
+        setStats({
+            citizens: 50000,
+            services: 120,
+            departments: 30,
+            applications: 200000,
+        });
+    }, []);
+
     return (
         <section className="py-16 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
