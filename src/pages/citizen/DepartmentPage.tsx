@@ -3,7 +3,6 @@ import { Card, Col, Row, Typography, Button } from "antd";
 import {
   FileTextOutlined,
   CarOutlined,
-  HomeOutlined,
   CreditCardOutlined,
 } from "@ant-design/icons";
 import CommonNav from "../../components/common/CommonNav";
