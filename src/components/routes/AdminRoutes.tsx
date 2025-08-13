@@ -6,6 +6,7 @@ import UsersPage from "../../pages/admin/UsersPage";
 import AdminDashboard from "../../pages/admin/AdminDashboardPage";
 import AuthProvider from "../auth/AuthProvider";
 import { useAppSelector } from "../../hooks/state/hooks";
+import AnalyticsDashboard from "../../pages/admin/AnalyticalDashbordPage";
 
 export const AdminRoutes = () => {
   const user = useAppSelector((state) => state.auth.user);
@@ -23,6 +24,14 @@ export const AdminRoutes = () => {
             <ProtectedRoutesGuard>
               <AdminDashboard />
             </ProtectedRoutesGuard>
+          }
+        />
+        <Route
+          path="admin/analytics"
+          element={
+            // <ProtectedRoutesGuard>
+              <AnalyticsDashboard />
+            // </ProtectedRoutesGuard>
           }
         />
 
