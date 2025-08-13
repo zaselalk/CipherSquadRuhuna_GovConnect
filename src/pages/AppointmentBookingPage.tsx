@@ -2,13 +2,13 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { Form, Card, Steps, Button, notification, Typography } from "antd";
 import { CalendarOutlined, ArrowLeftOutlined } from "@ant-design/icons";
-import { LandingHeader } from "../components/features/landing-page/LandingHeader";
 import StepServiceDate from "../components/features/appointment-booking/ServiceDate";
 import StepPersonalInfo from "../components/features/appointment-booking/PersonalInfo";
 import StepUploadDocuments from "../components/features/appointment-booking/UploadDocs";
 import StepConfirmation from "../components/features/appointment-booking/Confirmation";
 import FormNavigation from "../components/common/FormNavigation";
 import AppointmentSuccess from "../components/features/appointment-booking/AppointmentSuccess";
+import CommonNav from "../components/common/CommonNav";
 
 const AppointmentBookingPage = () => {
   const { serviceId } = useParams<{ serviceId: string }>();
@@ -95,7 +95,7 @@ const AppointmentBookingPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <LandingHeader />
+      <CommonNav />
       <div className="mx-auto px-4 py-8" style={{ maxWidth: '1000px' }}>
         <Button type="text" icon={<ArrowLeftOutlined />} onClick={handleGoBack} className="mb-6">Back</Button>
 

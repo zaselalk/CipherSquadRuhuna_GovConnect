@@ -23,6 +23,7 @@ import {
     InfoCircleOutlined
 } from "@ant-design/icons";
 import { LandingHeader } from "../components/features/landing-page/LandingHeader";
+import CommonNav from "../components/common/CommonNav";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -294,7 +295,7 @@ const ServiceDetailPage = () => {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <LandingHeader />
+            <CommonNav />
 
             <div className="max-w-6xl mx-auto px-4 py-8">
                 {/* Back Button */}
