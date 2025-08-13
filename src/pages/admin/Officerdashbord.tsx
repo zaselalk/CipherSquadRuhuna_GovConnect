@@ -90,9 +90,7 @@ const OfficerDashboard: React.FC = () => {
 
   const updateStatus = (id: number, newStatus: Appointment["status"]) => {
     setAppointments((prev) =>
-      prev.map((a) =>
-        a.id === id ? { ...a, status: newStatus } : a
-      )
+      prev.map((a) => (a.id === id ? { ...a, status: newStatus } : a))
     );
     setSelected((prev) => (prev ? { ...prev, status: newStatus } : prev));
     message.success(`Appointment status updated to "${newStatus}".`);
@@ -136,172 +134,177 @@ const OfficerDashboard: React.FC = () => {
       dataIndex: "status",
       filters: Object.keys(statusColors).map((s) => ({ text: s, value: s })),
       onFilter: (value, record) => record.status === value,
-      render: (status) => (
-        <Tag color={statusColors[status]}>{status}</Tag>
-      ),
+      render: (status) => <Tag color={statusColors[status]}>{status}</Tag>,
     },
   ];
 
   return (
     <DashboardContainer>
-        <div className="max-w-[1100px] mx-auto p-6 bg-[#f7f9fc] min-h-screen">
-      <h1 className="text-[#0052cc] text-2xl font-bold mb-4">
-        Officer Dashboard
-      </h1>
+      <div className="max-w-[1100px] mx-auto  min-h-screen">
+        <h1 className="text-[#0052cc] text-2xl font-bold mb-4">
+          Officer Dashboard
+        </h1>
 
-      {/* Filters */}
-      <Card className="mb-4">
-        <Space wrap size="middle">
-          <DatePicker
-            placeholder="Select Date"
-            onChange={(date) =>
-              setFilters((f) => ({
-                ...f,
-                date: date ? dayjs(date).format("YYYY-MM-DD") : null,
-              }))
-            }
-          />
-          <Select
-            placeholder="Service"
-            className="w-48"
-            allowClear
-            onChange={(val) => setFilters((f) => ({ ...f, service: val || "" }))}
-            options={[
-              { value: "Driving License", label: "Driving License" },
-              { value: "Passport Renewal", label: "Passport Renewal" },
-              { value: "Medical Certification", label: "Medical Certification" },
-            ]}
-          />
-          <Select
-            placeholder="Status"
-            className="w-48"
-            allowClear
-            onChange={(val) => setFilters((f) => ({ ...f, status: val || "" }))}
-            options={Object.keys(statusColors).map((status) => ({
-              value: status,
-              label: status,
-            }))}
-          />
-          <Input
-            placeholder="Search by name"
-            prefix={<SearchOutlined />}
-            onChange={(e) =>
-              setFilters((f) => ({ ...f, name: e.target.value }))
-            }
-          />
-          <Button
-            icon={<ReloadOutlined />}
-            onClick={() =>
-              setFilters({ date: null, service: "", status: "", name: "" })
-            }
-          >
-            Reset
-          </Button>
-        </Space>
-      </Card>
+        {/* Filters */}
+        <Card className="mb-4">
+          <Space wrap size="middle">
+            <DatePicker
+              placeholder="Select Date"
+              onChange={(date) =>
+                setFilters((f) => ({
+                  ...f,
+                  date: date ? dayjs(date).format("YYYY-MM-DD") : null,
+                }))
+              }
+            />
+            <Select
+              placeholder="Service"
+              className="w-48"
+              allowClear
+              onChange={(val) =>
+                setFilters((f) => ({ ...f, service: val || "" }))
+              }
+              options={[
+                { value: "Driving License", label: "Driving License" },
+                { value: "Passport Renewal", label: "Passport Renewal" },
+                {
+                  value: "Medical Certification",
+                  label: "Medical Certification",
+                },
+              ]}
+            />
+            <Select
+              placeholder="Status"
+              className="w-48"
+              allowClear
+              onChange={(val) =>
+                setFilters((f) => ({ ...f, status: val || "" }))
+              }
+              options={Object.keys(statusColors).map((status) => ({
+                value: status,
+                label: status,
+              }))}
+            />
+            <Input
+              placeholder="Search by name"
+              prefix={<SearchOutlined />}
+              onChange={(e) =>
+                setFilters((f) => ({ ...f, name: e.target.value }))
+              }
+            />
+            <Button
+              icon={<ReloadOutlined />}
+              onClick={() =>
+                setFilters({ date: null, service: "", status: "", name: "" })
+              }
+            >
+              Reset
+            </Button>
+          </Space>
+        </Card>
 
-      {/* Table */}
-      <Table
-        rowKey="id"
-        columns={columns}
-        dataSource={filteredAppointments}
-        pagination={false}
-        onRow={(record) => ({
-          onClick: () => {
-            setSelected(record);
-            setIsModalOpen(true);
-          },
-        })}
-        rowClassName="cursor-pointer hover:bg-blue-50"
-      />
+        {/* Table */}
+        <Table
+          rowKey="id"
+          className="mt-4"
+          columns={columns}
+          dataSource={filteredAppointments}
+          pagination={false}
+          onRow={(record) => ({
+            onClick: () => {
+              setSelected(record);
+              setIsModalOpen(true);
+            },
+          })}
+          rowClassName="cursor-pointer hover:bg-blue-50"
+        />
 
-      {/* Details Modal */}
-      <Modal
-        open={isModalOpen}
-        title="Appointment Details"
-        onCancel={() => setIsModalOpen(false)}
-        footer={null}
-        width={650}
-      >
-        {selected && (
-          <div>
-            <Space direction="vertical" size="middle" className="w-full">
-              <div className="grid grid-cols-2 gap-4">
-                <p>
-                  <strong>Citizen Name:</strong> {selected.citizenName}
-                </p>
-                <p>
-                  <strong>Status:</strong>{" "}
-                  <Tag color={statusColors[selected.status]}>
-                    {selected.status}
-                  </Tag>
-                </p>
-                <p>
-                  <strong>Date & Time:</strong> {selected.date} at {selected.time}
-                </p>
-                <p>
-                  <strong>Service:</strong> {selected.service}
-                </p>
-              </div>
-              <Divider />
-              <p>
-                <strong>Notes:</strong> {selected.notes || "None"}
-              </p>
-              <Divider />
-              <div>
-                <strong>Documents:</strong>
-                <div className="mt-2 flex gap-2 flex-wrap">
-                  {selected.documents.map((doc, idx) => (
-                    <Button
-                      key={idx}
-                      type="link"
-                      icon={<FileOutlined />}
-                      href={doc.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {doc.name}
-                    </Button>
-                  ))}
+        {/* Details Modal */}
+        <Modal
+          open={isModalOpen}
+          title="Appointment Details"
+          onCancel={() => setIsModalOpen(false)}
+          footer={null}
+          width={650}
+        >
+          {selected && (
+            <div>
+              <Space direction="vertical" size="middle" className="w-full">
+                <div className="grid grid-cols-2 gap-4">
+                  <p>
+                    <strong>Citizen Name:</strong> {selected.citizenName}
+                  </p>
+                  <p>
+                    <strong>Status:</strong>{" "}
+                    <Tag color={statusColors[selected.status]}>
+                      {selected.status}
+                    </Tag>
+                  </p>
+                  <p>
+                    <strong>Date & Time:</strong> {selected.date} at{" "}
+                    {selected.time}
+                  </p>
+                  <p>
+                    <strong>Service:</strong> {selected.service}
+                  </p>
                 </div>
-              </div>
-              <Divider />
-              <Space>
-                <Popconfirm
-                  title="Approve Appointment?"
-                  onConfirm={() => updateStatus(selected.id, "Approved")}
-                >
-                  <Button type="primary" icon={<CheckOutlined />}>
-                    Approve
-                  </Button>
-                </Popconfirm>
-                <Popconfirm
-                  title="Request pending?"
-                  onConfirm={() =>
-                    updateStatus(selected.id, "Pending")
-                  }
-                >
-                  <Button
-                    icon={<EditOutlined />}
-                    style={{ backgroundColor: "#f0ad4e", color: "white" }}
+                <Divider />
+                <p>
+                  <strong>Notes:</strong> {selected.notes || "None"}
+                </p>
+                <Divider />
+                <div>
+                  <strong>Documents:</strong>
+                  <div className="mt-2 flex gap-2 flex-wrap">
+                    {selected.documents.map((doc, idx) => (
+                      <Button
+                        key={idx}
+                        type="link"
+                        icon={<FileOutlined />}
+                        href={doc.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {doc.name}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+                <Divider />
+                <Space>
+                  <Popconfirm
+                    title="Approve Appointment?"
+                    onConfirm={() => updateStatus(selected.id, "Approved")}
                   >
-                    Pending
-                  </Button>
-                </Popconfirm>
-                <Popconfirm
-                  title="Cancel Appointment?"
-                  onConfirm={() => updateStatus(selected.id, "Cancelled")}
-                >
-                  <Button danger icon={<CloseOutlined />}>
-                    Cancel
-                  </Button>
-                </Popconfirm>
+                    <Button type="primary" icon={<CheckOutlined />}>
+                      Approve
+                    </Button>
+                  </Popconfirm>
+                  <Popconfirm
+                    title="Request pending?"
+                    onConfirm={() => updateStatus(selected.id, "Pending")}
+                  >
+                    <Button
+                      icon={<EditOutlined />}
+                      style={{ backgroundColor: "#f0ad4e", color: "white" }}
+                    >
+                      Pending
+                    </Button>
+                  </Popconfirm>
+                  <Popconfirm
+                    title="Cancel Appointment?"
+                    onConfirm={() => updateStatus(selected.id, "Cancelled")}
+                  >
+                    <Button danger icon={<CloseOutlined />}>
+                      Cancel
+                    </Button>
+                  </Popconfirm>
+                </Space>
               </Space>
-            </Space>
-          </div>
-        )}
-      </Modal>
-    </div>
+            </div>
+          )}
+        </Modal>
+      </div>
     </DashboardContainer>
   );
 };
