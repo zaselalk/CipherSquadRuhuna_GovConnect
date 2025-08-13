@@ -109,7 +109,7 @@ const CitizenDashboard = () => {
   const handleBookNew = () => navigate("/resident/dashboard/service-selection");
   const handleViewAppointment = (id: string) => alert(`View or reschedule appointment ${id}`);
   const handleFeedback = (id: string) => alert(`Give feedback for appointment ${id}`);
-  const handleUploadDocs = () => alert("Navigate to Document Pre-submission page");
+  //const handleUploadDocs = () => alert("Navigate to Document Pre-submission page");
 
   if (loading) {
     return (
@@ -202,7 +202,7 @@ const CitizenDashboard = () => {
               <FileTextOutlined style={{ color: "#2563eb", fontSize: 26 }} />
               Document Submission
             </Title>
-            <DocumentSubmissionCard onUpload={handleUploadDocs} />
+            <DocumentSubmissionCard />
           </section>
         </div>
       </Content>
