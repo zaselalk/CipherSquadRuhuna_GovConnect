@@ -13,6 +13,7 @@ import NotificationList from "../../components/features/citizen-dashboard/Notifi
 import AppointmentList from "../../components/features/citizen-dashboard/AppointmentList";
 import DocumentSubmissionCard from "../../components/features/citizen-dashboard/DocumentSubmissionCard";
 import Footer from "../../components/common/Footer";
+import CommonNav from "../../components/common/CommonNav";
 
 const { Content } = Layout;
 const { Title, Text, Paragraph } = Typography;
@@ -173,16 +174,7 @@ const CitizenDashboard = () => {
 
   return (
     <Layout className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-600">
-      <DashboardHeader
-        notificationsCount={notifications.length}
-        notificationsContent={
-          <NotificationList notifications={notifications} />
-        }
-        notifOpen={notifOpen}
-        setNotifOpen={setNotifOpen}
-        onBookNew={handleBookNew}
-        notifRef={notifRef}
-      />
+<CommonNav />
 
       <Content  
         className="px-6 sm:px-8 py-12 overflow-auto"
