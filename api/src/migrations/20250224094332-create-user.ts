@@ -33,6 +33,16 @@ module.exports = {
             notEmpty: { msg: "Password cannot be empty" },
           },
         },
+        roleId: {
+          type: DataType.INTEGER,
+          allowNull: false,
+          references: {
+            model: "roles",
+            key: "id",
+          },
+          onUpdate: "CASCADE",
+          onDelete: "RESTRICT",
+        },
         createdAt: {
           allowNull: false,
           type: DataType.DATE,

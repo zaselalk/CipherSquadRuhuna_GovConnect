@@ -1,11 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router";
+import { Layout, Spin, Typography } from "antd";
 import {
-  CalendarOutlined,
-  BellOutlined,
-  FileAddOutlined,
-  MessageOutlined,
-  PlusOutlined,
+  ClockCircleOutlined,
+  HistoryOutlined,
+  FileTextOutlined,
+  SmileOutlined,
 } from "@ant-design/icons";
+
+import DashboardHeader from "../../components/features/citizen-dashboard/DashboardHeader";
+import NotificationList from "../../components/features/citizen-dashboard/NotificationList";
+import AppointmentList from "../../components/features/citizen-dashboard/AppointmentList";
+import DocumentSubmissionCard from "../../components/features/citizen-dashboard/DocumentSubmissionCard";
+//import LandingFooter from "../../components/features/citizen-dashboard/DashboardFooter";
+import Footer from "../../components/common/Footer";
+
+const { Content } = Layout;
+const { Title, Text, Paragraph } = Typography;
 
 interface Appointment {
   id: string;
@@ -22,241 +33,183 @@ interface Notification {
   date: string;
 }
 
+const sectionCardStyle: React.CSSProperties = {
+  backgroundColor: "rgba(255, 255, 255, 0.9)",
+  borderRadius: 12,
+  padding: "24px 32px",
+  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+  marginBottom: 24,
+  height: "100%",
+  display: "flex",
+  flexDirection: "column",
+};
+
+const welcomeStyle: React.CSSProperties = {
+  backgroundColor: "rgba(255, 255, 255, 0.9)",
+  borderRadius: 12,
+  padding: "20px 32px",
+  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+  marginBottom: 32,
+  display: "flex",
+  alignItems: "center",
+  gap: 12,
+};
+
 const CitizenDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [upcomingAppointments, setUpcomingAppointments] = useState<Appointment[]>([]);
   const [pastAppointments, setPastAppointments] = useState<Appointment[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const notifRef = useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate();
 
+  // Simulate API data fetch
   useEffect(() => {
     setTimeout(() => {
       setUpcomingAppointments([
-        {
-          id: "1",
-          serviceName: "Passport Renewal",
-          date: "2025-08-20",
-          time: "10:30 AM",
-          status: "Confirmed",
-        },
-        {
-          id: "2",
-          serviceName: "Driver's License Test",
-          date: "2025-08-25",
-          time: "02:00 PM",
-          status: "Pending",
-        },
-        {
-          id: "3",
-          serviceName: "Birth Certificate Update",
-          date: "2025-09-01",
-          time: "09:00 AM",
-          status: "Rescheduled",
-        },
+        { id: "1", serviceName: "Passport Renewal", date: "2025-08-20", time: "10:30 AM", status: "Confirmed" },
+        { id: "2", serviceName: "Driver's License Test", date: "2025-08-25", time: "02:00 PM", status: "Pending" },
+        { id: "3", serviceName: "Birth Certificate Update", date: "2025-09-01", time: "09:00 AM", status: "Rescheduled" },
       ]);
 
       setPastAppointments([
-        {
-          id: "4",
-          serviceName: "Property Tax Payment",
-          date: "2025-07-10",
-          time: "11:00 AM",
-          status: "Confirmed",
-        },
-        {
-          id: "5",
-          serviceName: "Marriage Certificate Issuance",
-          date: "2025-06-15",
-          time: "09:30 AM",
-          status: "Confirmed",
-        },
+        { id: "4", serviceName: "Property Tax Payment", date: "2025-07-10", time: "11:00 AM", status: "Confirmed" },
+        { id: "5", serviceName: "Marriage Certificate Issuance", date: "2025-06-15", time: "09:30 AM", status: "Confirmed" },
       ]);
 
       setNotifications([
-        {
-          id: "n1",
-          message: "Your Passport Renewal appointment is confirmed for Aug 20.",
-          type: "reminder",
-          date: "2025-08-12",
-        },
-        {
-          id: "n2",
-          message: "Driver's License Test rescheduled to Aug 25.",
-          type: "change",
-          date: "2025-08-10",
-        },
-        {
-          id: "n3",
-          message: "Please submit your documents before the Passport Renewal appointment.",
-          type: "reminder",
-          date: "2025-08-11",
-        },
+        { id: "n1", message: "Your Passport Renewal appointment is confirmed for Aug 20.", type: "reminder", date: "2025-08-12" },
+        { id: "n2", message: "Driver's License Test rescheduled to Aug 25.", type: "change", date: "2025-08-10" },
+        { id: "n3", message: "Please submit your documents before the Passport Renewal appointment.", type: "reminder", date: "2025-08-11" },
       ]);
 
       setLoading(false);
     }, 1000);
   }, []);
 
-  const statusColor = (status: string) => {
-    switch (status) {
-      case "Confirmed":
-        return "bg-green-100 text-green-700";
-      case "Pending":
-        return "bg-yellow-100 text-yellow-800";
-      case "Rescheduled":
-        return "bg-blue-100 text-blue-700";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
+  // Close notifications popup when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
+        setNotifOpen(false);
+      }
+    };
 
-  const handleBookNew = () => alert("Navigate to Book New Appointment");
+    if (notifOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [notifOpen]);
+
+  // Handlers
+  const handleBookNew = () => navigate("/resident/dashboard/service-selection");
   const handleViewAppointment = (id: string) => alert(`View or reschedule appointment ${id}`);
   const handleFeedback = (id: string) => alert(`Give feedback for appointment ${id}`);
-  const handleUploadDocs = () => alert("Navigate to Document Pre-submission page");
+  //const handleUploadDocs = () => alert("Navigate to Document Pre-submission page");
 
   if (loading) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="text-center">
-          <CalendarOutlined className="text-6xl text-blue-500 mb-4 animate-pulse" />
-          <p className="text-lg font-semibold text-blue-700">Loading your dashboard...</p>
-        </div>
+      <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-blue-100 to-indigo-700">
+        <Spin size="large" tip="Loading your dashboard..." />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
-      {/* Header */}
-      <header className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-10 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-3xl shadow-lg p-8">
-        <div>
-          <h1 className="text-4xl font-extrabold mb-2">Citizen Dashboard</h1>
-          <p className="text-blue-200 text-lg opacity-90">Manage your appointments and notifications</p>
-        </div>
-        <button
-          type="button"
-          className="mt-6 md:mt-0 inline-flex items-center gap-2 bg-white text-blue-700 font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-gray-100 transition"
-          onClick={handleBookNew}
-        >
-          <PlusOutlined /> Book New Appointment
-        </button>
-      </header>
+    <Layout className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-600">
+      <DashboardHeader
+        notificationsCount={notifications.length}
+        notificationsContent={<NotificationList notifications={notifications} />}
+        notifOpen={notifOpen}
+        setNotifOpen={setNotifOpen}
+        onBookNew={handleBookNew}
+        notifRef={notifRef}
+      />
 
-      <main className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Upcoming Appointments */}
-        <section className="bg-white rounded-3xl shadow-lg p-6">
-          <h2 className="text-2xl font-bold flex items-center gap-3 mb-6 text-gray-900">
-            <CalendarOutlined className="text-blue-600 text-3xl" /> Upcoming Appointments
-          </h2>
-
-          {upcomingAppointments.length === 0 ? (
-            <p className="text-gray-500">No upcoming appointments.</p>
-          ) : (
-            <ul className="space-y-4">
-              {upcomingAppointments.map(({ id, serviceName, date, time, status }) => (
-                <li
-                  key={id}
-                  className="flex justify-between items-center p-4 border border-gray-200 rounded-xl cursor-pointer hover:shadow-md transition"
-                  onClick={() => handleViewAppointment(id)}
-                >
-                  <div>
-                    <p className="font-semibold text-gray-900">{serviceName}</p>
-                    <p className="text-gray-600">{date} at {time}</p>
-                  </div>
-                  <span className={`px-3 py-1 rounded-full text-sm font-semibold ${statusColor(status)}`}>
-                    {status}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-
-        {/* Past Appointments */}
-        <section className="bg-white rounded-3xl shadow-lg p-6">
-          <h2 className="text-2xl font-bold flex items-center gap-3 mb-6 text-gray-900">
-            <MessageOutlined className="text-orange-600 text-3xl" /> Past Appointments
-          </h2>
-
-          {pastAppointments.length === 0 ? (
-            <p className="text-gray-500">No past appointments.</p>
-          ) : (
-            <ul className="space-y-4">
-              {pastAppointments.map(({ id, serviceName, date }) => (
-                <li
-                  key={id}
-                  className="flex justify-between items-center p-4 border border-gray-200 rounded-xl"
-                >
-                  <div>
-                    <p className="font-semibold text-gray-900">{serviceName}</p>
-                    <p className="text-gray-600">{date}</p>
-                  </div>
-                  <button
-                    type="button"
-                    className="bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg px-4 py-2 transition"
-                    onClick={() => handleFeedback(id)}
-                  >
-                    Give Feedback
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-
-        {/* Notifications & Document Pre-submission */}
-        <section className="bg-white rounded-3xl shadow-lg p-6 flex flex-col justify-between">
+      <Content
+        className="max-w-7xl mx-auto px-6 sm:px-8 py-12 overflow-auto"
+        aria-label="Citizen Dashboard Content"
+      >
+        {/* Welcome Message */}
+        <div style={welcomeStyle} role="region" aria-label="Welcome message">
+          <SmileOutlined style={{ fontSize: 32, color: "#2563eb" }} />
           <div>
-            <h2 className="text-2xl font-bold flex items-center gap-3 mb-6 text-gray-900">
-              <BellOutlined className="text-yellow-600 text-3xl" /> Notifications
-            </h2>
-
-            {notifications.length === 0 ? (
-              <p className="text-gray-500">No notifications.</p>
-            ) : (
-              <ul className="space-y-3 max-h-64 overflow-y-auto">
-                {notifications.map(({ id, message, date, type }) => {
-                  const iconColor =
-                    type === "reminder" ? "text-green-600" :
-                    type === "change" ? "text-orange-600" :
-                    "text-red-600";
-
-                  return (
-                    <li
-                      key={id}
-                      className="flex items-start gap-3 p-3 border border-gray-200 rounded-lg bg-gray-50"
-                    >
-                      <span className={`text-2xl ${iconColor}`}>
-                        {type === "reminder" ? "🔔" : type === "change" ? "⚠️" : "❌"}
-                      </span>
-                      <div>
-                        <p className="text-gray-800 font-medium">{message}</p>
-                        <p className="text-gray-500 text-xs mt-1">Date: {date}</p>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
+            <Title level={4} style={{ margin: 0, color: "#1e293b" }}>
+              Welcome Back!
+            </Title>
+            <Paragraph style={{ margin: 0, color: "#4b5563" }}>
+              We're glad to see you. Manage your appointments and notifications below.
+            </Paragraph>
           </div>
+        </div>
 
-          <div className="mt-8">
-            <h3 className="text-xl font-semibold mb-3 flex items-center gap-2 text-gray-900">
-              <FileAddOutlined className="text-indigo-600 text-2xl" /> Document Pre-submission
-            </h3>
-            <p className="mb-4 text-gray-700">
-              Upload your documents in advance to save time on appointment day.
-            </p>
-            <button
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl py-3 transition"
-              onClick={handleUploadDocs}
+        {/* Responsive grid container for sections */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Upcoming Appointments Section */}
+          <section style={sectionCardStyle} aria-labelledby="upcoming-appointments-title">
+            <Title
+              level={3}
+              id="upcoming-appointments-title"
+              className="mb-6"
+              style={{ display: "flex", alignItems: "center", gap: 8, color: "#1e293b" }}
             >
-              Upload Documents
-            </button>
-          </div>
-        </section>
-      </main>
-    </div>
+              <ClockCircleOutlined style={{ color: "#2563eb", fontSize: 26 }} />
+              Upcoming Appointments
+            </Title>
+            <AppointmentList
+              appointments={upcomingAppointments}
+              type="upcoming"
+              onViewAppointment={handleViewAppointment}
+            />
+            {upcomingAppointments.length === 0 && (
+              <Text className="text-gray-500 italic">You have no upcoming appointments.</Text>
+            )}
+          </section>
+
+          {/* Past Appointments Section */}
+          <section style={sectionCardStyle} aria-labelledby="past-appointments-title">
+            <Title
+              level={3}
+              id="past-appointments-title"
+              className="mb-6"
+              style={{ display: "flex", alignItems: "center", gap: 8, color: "#1e293b" }}
+            >
+              <HistoryOutlined style={{ color: "#2563eb", fontSize: 26 }} />
+              Past Appointments
+            </Title>
+            <AppointmentList
+              appointments={pastAppointments}
+              type="past"
+              onGiveFeedback={handleFeedback}
+            />
+            {pastAppointments.length === 0 && (
+              <Text className="text-gray-500 italic">No past appointments available.</Text>
+            )}
+          </section>
+
+          {/* Document Submission Section */}
+          <section style={sectionCardStyle} aria-labelledby="document-submission-title">
+            <Title
+              level={3}
+              id="document-submission-title"
+              className="mb-6"
+              style={{ display: "flex", alignItems: "center", gap: 8, color: "#1e293b" }}
+            >
+              <FileTextOutlined style={{ color: "#2563eb", fontSize: 26 }} />
+              Document Submission
+            </Title>
+            <DocumentSubmissionCard />
+          </section>
+        </div>
+      </Content>
+      <Footer />
+    </Layout>
   );
 };
 
