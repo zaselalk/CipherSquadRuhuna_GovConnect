@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from "react-router";
 import { useAppSelector } from "../hooks/state/hooks";
 import { LoginLeftImageSection } from "../components/features/user-management/user-authentication/LoginLeftImageSection";
 import { LoginRightLoginSection } from "../components/features/user-management/user-authentication/LoginRightLoginSection";
-import { Link } from "react-router";
 import { LandingHeader } from "../components/features/landing-page/LandingHeader";
 
 const LoginPage: FC = () => {
