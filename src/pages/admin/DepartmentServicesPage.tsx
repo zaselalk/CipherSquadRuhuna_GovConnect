@@ -1,30 +1,8 @@
 import React, { useState } from "react";
-import {
-  Card,
-  Button,
-  Modal,
-  Input,
-  Form,
-  Row,
-  Col,
-  Checkbox,
-  InputNumber,
-  Popconfirm,
-  message,
-  Tag,
-  Tooltip,
-  Space,
-  Divider,
-} from "antd";
-import {
-  EditOutlined,
-  DeleteOutlined,
-  PlusOutlined,
-  FileOutlined,
-  CalendarOutlined,
-  ClockCircleOutlined,
-  TeamOutlined,
-} from "@ant-design/icons";
+import { Form, message } from "antd";
+import DepartmentServicesHeader from "../../components/department/DepartmentServicesHeader";
+import DepartmentServicesGrid from "../../components/department/DepartmentServicesGrid";
+import DepartmentServicesModal from "../../components/department/DepartmentServicesModal";
 
 interface Service {
   id: number;
@@ -135,165 +113,19 @@ const DepartmentServicesPage: React.FC = () => {
 
   return (
     <div className="p-6 max-w-[1200px] mx-auto">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-[#0052cc] text-2xl font-bold">Department Services</h1>
-        <Button type="primary" icon={<PlusOutlined />} onClick={openAddModal}>
-          Add Service
-        </Button>
-      </div>
-
-      {/* Services Grid */}
-      <Row gutter={[16, 16]}>
-        {services.map((service) => (
-          <Col key={service.id} xs={24} sm={12} md={8}>
-            <Card
-              className="shadow-md hover:shadow-xl transition-all rounded-lg"
-              title={<span className="font-semibold">{service.name}</span>}
-              extra={
-                <Space>
-                  <Tooltip title="Edit Service">
-                    <EditOutlined
-                      style={{ color: "#0052cc" }}
-                      onClick={() => openEditModal(service)}
-                    />
-                  </Tooltip>
-                  <Tooltip title="Delete Service">
-                    <Popconfirm
-                      title="Are you sure to delete this service?"
-                      onConfirm={() => handleDelete(service.id)}
-                    >
-                      <DeleteOutlined style={{ color: "#d9534f" }} />
-                    </Popconfirm>
-                  </Tooltip>
-                </Space>
-              }
-            >
-              <p className="text-gray-600">{service.description}</p>
-              <Divider style={{ margin: "10px 0" }} />
-              <p>
-                <FileOutlined /> <strong>Required Documents:</strong>
-              </p>
-              <Space wrap>
-                {service.documents.map((doc, idx) => (
-                  <Tag color="blue" key={idx}>
-                    {doc}
-                  </Tag>
-                ))}
-              </Space>
-              <p className="mt-3">
-                <CalendarOutlined /> <strong>Available Days:</strong>{" "}
-                {service.availableDays.join(", ")}
-              </p>
-              <p>
-                <ClockCircleOutlined /> <strong>Service Duration:</strong>{" "}
-                {service.duration} hours/slot
-              </p>
-              <p>
-                <TeamOutlined /> <strong>Capacity:</strong> {service.capacity} per slot
-              </p>
-            </Card>
-          </Col>
-        ))}
-      </Row>
-
-      {/* Add/Edit Modal */}
-      <Modal
-        title={
-          <span style={{ fontWeight: 600, color: "#0052cc" }}>
-            {editingService ? "Edit Service" : "Add Service"}
-          </span>
-        }
-        open={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
-        onOk={handleSave}
-        okText={editingService ? "Update" : "Add"}
-        width={700}
-        
-      >
-        <Form form={form} layout="vertical">
-          <Form.Item
-            name="name"
-            label="Service Name"
-            rules={[{ required: true, message: "Please enter service name" }]}
-          >
-            <Input placeholder="Enter service name" />
-          </Form.Item>
-
-          <Form.Item
-            name="documents"
-            label="Required Documents"
-            rules={[{ required: true, message: "Select at least one document" }]}
-          >
-            <div
-              style={{
-                border: "1px solid #d9d9d9",
-                borderRadius: 6,
-                padding: "12px",
-                maxHeight: 180,
-                overflowY: "auto",
-              }}
-            >
-              <Checkbox.Group>
-                <Row gutter={[8, 8]}>
-                  {documentOptions.map((doc) => (
-                    <Col span={12} key={doc}>
-                      <Checkbox value={doc}>{doc}</Checkbox>
-                    </Col>
-                  ))}
-                </Row>
-              </Checkbox.Group>
-            </div>
-          </Form.Item>
-
-          <Form.Item name="description" label="Description">
-            <Input.TextArea rows={3} placeholder="Enter service description" />
-          </Form.Item>
-
-          <Form.Item name="availableDays" label="Available Days">
-            <Checkbox.Group>
-              <Row gutter={[8, 8]}>
-                {daysOfWeek.map((day) => (
-                  <Col key={day}>
-                    <Checkbox value={day}>{day}</Checkbox>
-                  </Col>
-                ))}
-              </Row>
-            </Checkbox.Group>
-          </Form.Item>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="duration"
-                label="Service Duration (hours/slot)"
-                rules={[{ required: true, message: "Enter service duration" }]}
-              >
-                <InputNumber
-                  min={0.1}
-                  step={0.25}
-                  placeholder="e.g., 0.5"
-                  className="w-full"
-                />
-              </Form.Item>
-            </Col>
-
-            <Col span={12}>
-              <Form.Item
-                name="capacity"
-                label="Service Capacity"
-                rules={[{ required: true, message: "Enter service capacity" }]}
-              >
-                <InputNumber
-                  min={1}
-                  placeholder="Max per slot"
-                  className="w-full"
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </Modal>
+      <DepartmentServicesHeader openAddModal={openAddModal} />
+      <DepartmentServicesGrid
+        services={services}
+        openEditModal={openEditModal}
+        handleDelete={handleDelete}
+      />
+      <DepartmentServicesModal
+        isModalOpen={isModalOpen}
+        editingService={editingService}
+        form={form}
+        setIsModalOpen={setIsModalOpen}
+        handleSave={handleSave}
+      />
     </div>
   );
 };
