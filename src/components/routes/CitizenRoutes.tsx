@@ -5,6 +5,7 @@ import ResidentDashboard from "../../pages/citizen/ResidentDashboard";
 import ResidentLoginPage from "../../pages/citizen/CitizenLoginPage";
 import ResidentRegisterPage from "../../pages/citizen/CitizenRegisterPage";
 import CitizenDashboard from "../../pages/citizen/CitizenDashboard";
+import FeedbackForm from "../../pages/citizen/FeedbackPage";
 
 export const ResidentRoutes = () => {
   return (
@@ -20,6 +21,7 @@ export const ResidentRoutes = () => {
             // </ResidentProtectedRoute>
           }
         />
+        <Route path="resident/feedback" element={<FeedbackForm />} />
       </Routes>
     </ResidentAuthProvider>
   );

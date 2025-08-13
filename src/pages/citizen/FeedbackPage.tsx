@@ -1,6 +1,7 @@
 import React, { useState, KeyboardEvent } from "react";
 import { Input, Button, Alert } from "antd";
 import { StarFilled } from "@ant-design/icons";
+import { DashboardContainer } from "../../components/layouts/overlays/DashboardContainer";
 
 const { TextArea } = Input;
 
@@ -75,8 +76,8 @@ const FeedbackForm: React.FC = () => {
                 >
                     <StarFilled
                         className={`text-5xl transition-colors duration-200 cursor-pointer ${hoverRating >= index || selectedRating >= index
-                                ? "text-yellow-400"
-                                : "text-gray-300"
+                            ? "text-yellow-400"
+                            : "text-gray-300"
                             }`}
                     />
                 </span>
@@ -147,6 +148,7 @@ const FeedbackForm: React.FC = () => {
                 </div>
             )}
         </div>
+
     );
 };
 

@@ -5,7 +5,6 @@ import TermsPage from "../../pages/TermsPage";
 import PrivacyPage from "../../pages/PrivacyPage";
 import ServiceDetailPage from "../../pages/ServiceDetailPage";
 import AppointmentBookingPage from "../../pages/AppointmentBookingPage";
-import ReviewPage from "../../pages/FeedbackPage";
 import NotificationsPage from "../../pages/NotificationsPage";
 
 export const HomePageRouting: React.FC = () => {
@@ -16,7 +15,7 @@ export const HomePageRouting: React.FC = () => {
       <Route path="/privacy" element={<PrivacyPage />} />
       <Route path="/services/:serviceId" element={<ServiceDetailPage />} />
       <Route path="/services/:serviceId/book-appointment" element={<AppointmentBookingPage />} />
-      <Route path="/review" element={<ReviewPage />} />
+      
       <Route path="/notifications" element={<NotificationsPage />} />
     </Routes>
   );
