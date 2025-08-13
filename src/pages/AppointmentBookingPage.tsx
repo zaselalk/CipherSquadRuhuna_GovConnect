@@ -6,7 +6,7 @@ import {
     Typography,
     Form,
     Input,
-    DatePicker,
+    Calendar,
     Select,
     Space,
     Steps,
@@ -141,63 +141,88 @@ const AppointmentBookingPage = () => {
         switch (currentStep) {
             case 0:
                 return (
-                    <Card title="Select Service & Date">
-                        <Row gutter={[24, 24]}>
-                            <Col span={24}>
-                                <Form.Item
-                                    name="serviceType"
-                                    label="Service Type"
-                                    rules={[{ required: true, message: "Please select a service type" }]}
-                                    initialValue={serviceId}
-                                >
-                                    <Select size="large" placeholder="Select service type">
-                                        {Object.entries(serviceNames).map(([key, value]) => (
-                                            <Option key={key} value={key}>{value}</Option>
-                                        ))}
-                                    </Select>
-                                </Form.Item>
-                            </Col>
+        <Card title="Select Service & Date">
+            <Row gutter={[24, 24]}>
+                <Col span={24}>
+                    <Form.Item
+                        name="serviceType"
+                        label="Service Type"
+                        rules={[{ required: true, message: "Please select a service type" }]}
+                        initialValue={serviceId}
+                    >
+                        <Select size="large" placeholder="Select service type">
+                            {Object.entries(serviceNames).map(([key, value]) => (
+                                <Option key={key} value={key}>{value}</Option>
+                            ))}
+                        </Select>
+                    </Form.Item>
+                </Col>
 
-                            <Col xs={24} md={12}>
-                                <Form.Item
-                                    name="preferredDate"
-                                    label="Preferred Date"
-                                    rules={[{ required: true, message: "Please select a date" }]}
-                                >
-                                    <DatePicker
-                                        size="large"
-                                        className="w-full"
-                                        format="YYYY-MM-DD"
-                                        disabledDate={disabledDate}
-                                        placeholder="Select appointment date"
-                                    />
-                                </Form.Item>
-                            </Col>
-
-                            <Col xs={24} md={12}>
-                                <Form.Item
-                                    name="preferredTime"
-                                    label="Preferred Time"
-                                    rules={[{ required: true, message: "Please select a time" }]}
-                                >
-                                    <Select size="large" placeholder="Select time slot">
-                                        {timeSlots.map(time => (
-                                            <Option key={time} value={time}>{time}</Option>
-                                        ))}
-                                    </Select>
-                                </Form.Item>
-                            </Col>
-                        </Row>
-
-                        <Alert
-                            message="Appointment Guidelines"
-                            description="Please arrive 15 minutes before your scheduled time. Bring all required documents mentioned in the service details."
-                            type="info"
-                            showIcon
-                            className="mt-4"
+                {/* Calendar & Time Slots Side by Side */}
+                <Col xs={24} md={12}>
+                    <Card title="Choose Date" bordered>
+                        <Calendar
+                            fullscreen={false} // works here for Calendar
+                            disabledDate={disabledDate}
+                            value={
+                                appointmentData.preferredDate
+                                    ? dayjs(appointmentData.preferredDate)
+                                    : undefined
+                            }
+                            onSelect={(date) => {
+                                const formatted = date.format("YYYY-MM-DD");
+                                setAppointmentData(prev => ({
+                                    ...prev,
+                                    preferredDate: formatted
+                                }));
+                                form.setFieldsValue({ preferredDate: formatted });
+                            }}
                         />
                     </Card>
-                );
+                </Col>
+
+                {/* Time slots */}
+
+                <Col xs={24} md={12}>
+                    <Card title="Available Time Slots" bordered>
+                        {appointmentData.preferredDate ? (
+                        <Space wrap>
+                            {timeSlots.map(time => (
+                                <Button
+                                    key={time}
+                                    type={appointmentData.preferredTime === time ? "primary" : "default"}
+                                    onClick={() => {
+                                        setAppointmentData(prev => ({
+                                            ...prev,
+                                            preferredTime: time
+                                        }));
+                                        form.setFieldsValue({ preferredTime: time });
+                                    }}
+                                >
+                                    {time}
+                                </Button>
+                            ))}
+                        </Space>
+                        ) : (
+                            <Alert
+                                message="Please select a date first to see available time slots."
+                                type="info"
+                                showIcon
+                            />
+                        )}
+                    </Card>
+                </Col>
+            </Row>
+
+            <Alert
+                message="Appointment Guidelines"
+                description="Please arrive 15 minutes before your scheduled time. Bring all required documents mentioned in the service details."
+                type="info"
+                showIcon
+                className="mt-4"
+            />
+        </Card>
+    );
 
             case 1:
                 return (
