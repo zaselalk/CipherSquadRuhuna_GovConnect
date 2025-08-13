@@ -24,11 +24,11 @@ export const LoginLeftImageSection: FC = () => {
               Welcome to
             </h2>
             <h3 className="text-xl lg:text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-600">
-              Katugahahena Hospital
+              GovConnect Officer Portal
             </h3>
             <p className="text-gray-600 leading-relaxed">
-              Resident Health Monitoring System - Secure staff portal for
-              comprehensive healthcare management
+              Connect with citizens, manage requests, and streamline your
+              administrative tasks efficiently.
             </p>
           </div>
         </div>
