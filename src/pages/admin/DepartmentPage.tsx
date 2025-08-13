@@ -17,16 +17,17 @@ import { DashboardContainer } from "../../components/layouts/overlays/DashboardC
 import { Link } from "react-router";
 
 interface Department {
+    serviceCount: number;
     id: number;
     name: string;
 }
 
 const DepartmentPage: React.FC = () => {
     const [departments, setDepartments] = useState<Department[]>([
-        { id: 1, name: "IT" },
-        { id: 2, name: "HR" },
-        { id: 3, name: "Finance" },
-        { id: 4, name: "Support" },
+        { id: 1, name: "IT", serviceCount: 4 },
+        { id: 2, name: "HR", serviceCount: 2 },
+        { id: 3, name: "Finance", serviceCount: 3 },
+        { id: 4, name: "Support", serviceCount: 1 },
     ]);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -68,6 +69,7 @@ const DepartmentPage: React.FC = () => {
                     const newDept: Department = {
                         id: Date.now(),
                         name: values.name,
+                        serviceCount: 0,
                     };
                     setDepartments((prev) => [...prev, newDept]);
                     message.success("Department added successfully");
@@ -98,48 +100,51 @@ const DepartmentPage: React.FC = () => {
                 <Row gutter={[16, 16]}>
                     {departments.map((dept) => (
                         <Col key={dept.id} xs={24} sm={12} md={8} lg={6}>
-                            <Link to={`/admin/department/${dept.id}`}>
-                                <Card
-                                    className="shadow-lg hover:shadow-2xl transition-transform transform hover:scale-105"
-                                    bodyStyle={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
-                                        flexDirection: "column",
-                                        gap: "12px",
-                                        padding: "24px 16px",
-                                        borderRadius: "12px",
-                                        background:
-                                            "linear-gradient(135deg, #e0f2ff 0%, #bae6fd 100%)",
-                                    }}
 
-                                    actions={[
-                                        <Tooltip key="edit" title="Edit Department">
-                                            <EditOutlined
-                                                style={{ color: "#0052cc" }}
-                                                onClick={() => openEditModal(dept)}
-                                            />
-                                        </Tooltip>,
-                                        <Tooltip key="delete" title="Delete Department">
-                                            <Popconfirm
-                                                title="Are you sure to delete this department?"
-                                                onConfirm={() => handleDelete(dept.id)}
-                                            >
-                                                <DeleteOutlined style={{ color: "#d9534f" }} />
-                                            </Popconfirm>
-                                        </Tooltip>,
-                                    ]}
-                                >
+                            <Card
+                                className="shadow-lg hover:shadow-2xl transition-transform transform hover:scale-105"
+                                bodyStyle={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                    flexDirection: "column",
+                                    gap: "12px",
+                                    padding: "24px 16px",
+                                    borderRadius: "12px",
+                                    background:
+                                        "linear-gradient(135deg, #e0f2ff 0%, #bae6fd 100%)",
+                                }}
+
+                                actions={[
+                                    <Tooltip key="edit" title="Edit Department">
+                                        <EditOutlined
+                                            style={{ color: "#0052cc" }}
+                                            onClick={() => openEditModal(dept)}
+                                        />
+                                    </Tooltip>,
+                                    <Tooltip key="delete" title="Delete Department">
+                                        <Popconfirm
+                                            title="Are you sure to delete this department?"
+                                            onConfirm={() => handleDelete(dept.id)}
+                                        >
+                                            <DeleteOutlined style={{ color: "#d9534f" }} />
+                                        </Popconfirm>
+                                    </Tooltip>,
+                                ]}
+                            >
+                                <Link to={`/admin/department/${dept.id}`}>
                                     <Badge
-                                        count={Math.floor(Math.random() * 100)} // Example workload
-                                        style={{ backgroundColor: "#0052cc" }}
+
                                     >
                                         <h3 className="text-lg font-semibold text-center mt-2">
                                             {dept.name}
                                         </h3>
+                                        <p className="text-gray-500 text-sm text-center">
+                                            Available Services: {dept.serviceCount}
+                                        </p>
                                     </Badge>
-                                </Card>
-                            </Link>
+                                </Link>
+                            </Card>
                         </Col>
                     ))}
                 </Row>
@@ -165,7 +170,7 @@ const DepartmentPage: React.FC = () => {
                     </Form>
                 </Modal>
             </div>
-        </DashboardContainer>
+        </DashboardContainer >
     );
 };
 
