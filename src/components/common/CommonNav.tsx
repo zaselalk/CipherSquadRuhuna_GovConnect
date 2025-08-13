@@ -9,7 +9,7 @@ import {
   MessageOutlined,
   ClockCircleOutlined,
 } from "@ant-design/icons";
-import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router";
 
 const { Header } = Layout;
 const { Text } = Typography;
