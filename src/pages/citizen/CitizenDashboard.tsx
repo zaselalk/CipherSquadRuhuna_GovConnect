@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { Layout, Spin, Typography, Badge, Button, Popover } from "antd";
 import {
   ClockCircleOutlined,
@@ -64,6 +64,7 @@ const CitizenDashboard = () => {
   const [notifOpen, setNotifOpen] = useState(false);
   const notifRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     setTimeout(() => {
@@ -88,6 +89,7 @@ const CitizenDashboard = () => {
     }, 1000);
   }, []);
 
+  // Handle notifications popover
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
@@ -98,6 +100,16 @@ const CitizenDashboard = () => {
     else document.removeEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [notifOpen]);
+
+  // Scroll to document section if URL hash matches
+  useEffect(() => {
+    if (location.hash === "#document-submission-section") {
+      const section = document.getElementById("document-submission-section");
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [location]);
 
   const handleBookNew = () => navigate("/resident/dashboard/service-selection");
   const handleViewAppointment = (id: string) => alert(`View or reschedule appointment ${id}`);
@@ -113,7 +125,7 @@ const CitizenDashboard = () => {
 
   return (
     <Layout className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-600">
-      <CommonNav />
+      <CommonNav /> {/* Nav bar will handle hash-based navigation */}
 
       <Content className="px-6 sm:px-8 py-12 overflow-auto" aria-label="Citizen Dashboard Content">
         {/* Welcome Message with Notifications + Book Appointment */}
@@ -214,7 +226,12 @@ const CitizenDashboard = () => {
         </div>
 
         {/* Document Submission */}
-        <section style={sectionCardStyle} aria-labelledby="document-submission-title" className="mt-8 lg:col-span-3">
+        <section
+          id="document-submission-section"
+          style={sectionCardStyle}
+          aria-labelledby="document-submission-title"
+          className="mt-8 lg:col-span-3"
+        >
           <Title
             level={3}
             id="document-submission-title"

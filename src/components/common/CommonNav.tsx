@@ -20,6 +20,7 @@ import {
   ClockCircleOutlined,
   MenuOutlined,
 } from "@ant-design/icons";
+import { useNavigate, useLocation } from "react-router";
 import { NavLink } from "react-router";
 
 const { Header } = Layout;
@@ -28,6 +29,8 @@ const { Text } = Typography;
 const CommonNav = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleResize = () => {
@@ -49,6 +52,19 @@ const CommonNav = () => {
     </Menu>
   );
 
+  const handleDocumentsClick = () => {
+    if (location.pathname === "/resident/dashboard") {
+      // Already on dashboard → scroll to section
+      const section = document.getElementById("document-submission-section");
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+      }
+    } else {
+      // Navigate to dashboard with hash
+      navigate("/resident/dashboard#document-submission-section");
+    }
+  };
+
   const menuItems = (
     <Menu
       mode={isMobile ? "vertical" : "horizontal"}
@@ -67,8 +83,12 @@ const CommonNav = () => {
       <Menu.Item key="appointments" icon={<CalendarOutlined />}>
         <NavLink to="/appointments">Appointments</NavLink>
       </Menu.Item>
-      <Menu.Item key="documents" icon={<FileTextOutlined />}>
-        <NavLink to="/documents">Documents</NavLink>
+      <Menu.Item
+        key="documents"
+        icon={<FileTextOutlined />}
+        onClick={handleDocumentsClick}
+      >
+        Documents
       </Menu.Item>
       <Menu.Item key="roster" icon={<ClockCircleOutlined />}>
         <NavLink to="/roster">Roster</NavLink>
