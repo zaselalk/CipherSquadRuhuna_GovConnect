@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { Card, Col, Row, Typography, Button } from "antd";
-import { FileTextOutlined, CarOutlined, HomeOutlined, CreditCardOutlined } from "@ant-design/icons";
-//import { Briefcase, GraduationCap, Heart, Team } from "lucide-react";
+import {
+  FileTextOutlined,
+  CarOutlined,
+  HomeOutlined,
+  CreditCardOutlined,
+} from "@ant-design/icons";
+import CommonNav from "../../components/common/CommonNav";
 
 const { Title, Paragraph } = Typography;
 
@@ -98,13 +103,17 @@ export const DepartmentPage = () => {
     : [];
 
   return (
-    <
-    <section className="py-16 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4">
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      {/* Navigation Bar */}
+      <CommonNav />
+
+      {/* Page Content */}
+      <div className="flex-1 px-6 py-8">
         <Title level={2} className="text-center mb-8">
           Government Departments
         </Title>
 
+        {/* Department List */}
         {!selectedDept && (
           <Row gutter={[24, 24]}>
             {departments.map((dept) => (
@@ -122,6 +131,7 @@ export const DepartmentPage = () => {
           </Row>
         )}
 
+        {/* Department Services */}
         {selectedDept && (
           <div>
             <Button
@@ -162,7 +172,8 @@ export const DepartmentPage = () => {
           </div>
         )}
       </div>
-    </section>
+    </div>
   );
 };
+
 export default DepartmentPage;
