@@ -1,6 +1,6 @@
 import { BrowserRouter } from "react-router";
 import { AdminRoutes } from "./components/routes/AdminRoutes";
-import { ResidentRoutes } from "./components/routes/ResidentRoutes";
+import { ResidentRoutes } from "./components/routes/CitizenRoutes";
 import { HomePageRouting } from "./components/routes/HomePageRouting";
 
 function App() {
