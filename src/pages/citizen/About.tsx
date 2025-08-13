@@ -67,7 +67,7 @@ const AboutPage: React.FC = () => {
       </section>
 
       {/* Footer - full width */}
-      <Footer className="w-full" />
+      <Footer />
     </div>
   );
 };
