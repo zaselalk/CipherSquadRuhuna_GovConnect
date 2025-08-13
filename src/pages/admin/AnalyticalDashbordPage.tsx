@@ -41,12 +41,16 @@ const AnalyticsDashboard: React.FC = () => {
                     {/* Departmental Load Heatmap */}
                     <DepartmentalLoadHeatmap />
 
-                    {/* No-Show Rate */}
-                    <NoShowRateCard />
 
-                    {/* Average Processing Times */}
+
+                </div>
+                <div className="grid grid-cols-1 md:grid gap-8 mt-8">
+
+                    <NoShowRateCard />
                     <AverageProcessingTimesCard />
                 </div>
+
+
             </div>
         </DashboardContainer>
     );
