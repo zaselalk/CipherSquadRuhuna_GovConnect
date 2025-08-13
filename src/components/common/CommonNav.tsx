@@ -94,7 +94,7 @@ const CommonNav = () => {
         <NavLink to="/roster">Roster</NavLink>
       </Menu.Item>
       <Menu.Item key="about" icon={<InfoCircleOutlined />}>
-        <NavLink to="/about">About Us</NavLink>
+        <NavLink to="/resident/dashboard/About">About Us</NavLink>
       </Menu.Item>
       <Menu.Item key="feedback" icon={<MessageOutlined />}>
         <NavLink to="/feedback">Feedback</NavLink>

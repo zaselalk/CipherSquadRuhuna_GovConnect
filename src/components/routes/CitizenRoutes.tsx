@@ -49,7 +49,15 @@ export const ResidentRoutes = () => {
             // </ResidentProtectedRoute>
           }
         />
-        
+                <Route path="resident/feedback" element={<FeedbackForm />} />
+                <Route
+          path="/resident/dashboard/About"
+          element={
+            // <ResidentProtectedRoute>
+              < AboutPage />
+            // </ResidentProtectedRoute>
+          }
+        />
       </Routes>
 
 
