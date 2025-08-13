@@ -35,7 +35,7 @@ const Footer = () => {
                                 </a>
                             </li>
                             <li>
-                                <a href="#about" className="hover:text-white transition">
+                                <a href="/resident/dashboard/about-govconnect" className="hover:text-white transition">
                                     About Us
                                 </a>
                             </li>
