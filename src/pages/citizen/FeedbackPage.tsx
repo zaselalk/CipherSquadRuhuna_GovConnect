@@ -1,6 +1,7 @@
 import React, { useState, KeyboardEvent } from "react";
 import { Input, Button, Alert } from "antd";
 import { StarFilled } from "@ant-design/icons";
+import { LandingHeader } from "../../components/features/landing-page/LandingHeader";
 const { TextArea } = Input;
 
 const FeedbackForm: React.FC = () => {
@@ -53,6 +54,7 @@ const FeedbackForm: React.FC = () => {
             const index = i + 1;
 
             return (
+
                 <span
                     key={index}
                     id={`star-${index}`}
@@ -84,69 +86,73 @@ const FeedbackForm: React.FC = () => {
 
 
     return (
-        <div className="max-w-xl mx-auto mt-10 p-6 rounded-lg ">
-            <h1 className="text-2xl font-bold text-center text-[#0052cc] mb-6">
-                Rate Your Appointment
-            </h1>
+        <>
 
-            <form onSubmit={handleSubmit} noValidate>
-                <div
-                    className="flex justify-center mb-4 gap-2"
-                    role="radiogroup"
-                    aria-label="Star rating"
-                >
-                    {renderStars()}
-                </div>
 
-                <TextArea
-                    id="comment"
-                    placeholder="Leave your comments here (optional)"
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    className="mb-4 text-base font-sans"
-                    style={{
-                        height: "120px",
-                        resize: "vertical",
-                        borderRadius: "6px",
-                        fontFamily: "Arial, sans-serif",
-                    }}
-                />
+            <LandingHeader />
+            <div className="max-w-xl mx-auto mt-10 p-6 rounded-lg ">
+                <h1 className="text-2xl font-bold text-center text-[#0052cc] mb-6">
+                    Rate Your Appointment
+                </h1>
 
-                {error && (
-                    <Alert
-                        message={error}
-                        type="error"
-                        showIcon
-                        className="mb-4 text-center"
-                        role="alert"
-                    />
-                )}
-
-                <div className="flex justify-center mt-5">
-
-                    <div className="text-center">
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                            className="bg-[#0052cc] hover:bg-[#003d99] px-8 py-2 text-lg rounded"
-                        >
-                            Submit Feedback
-                        </Button>
+                <form onSubmit={handleSubmit} noValidate>
+                    <div
+                        className="flex justify-center mb-4 gap-2"
+                        role="radiogroup"
+                        aria-label="Star rating"
+                    >
+                        {renderStars()}
                     </div>
-                </div>
-            </form>
 
-            {submitted && (
-                <div
-                    id="success-msg"
-                    aria-live="polite"
-                    className="text-center mt-4 font-bold text-green-600"
-                >
-                    Thank you for your feedback!
-                </div>
-            )}
-        </div>
+                    <TextArea
+                        id="comment"
+                        placeholder="Leave your comments here (optional)"
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        className="mb-4 text-base font-sans"
+                        style={{
+                            height: "120px",
+                            resize: "vertical",
+                            borderRadius: "6px",
+                            fontFamily: "Arial, sans-serif",
+                        }}
+                    />
 
+                    {error && (
+                        <Alert
+                            message={error}
+                            type="error"
+                            showIcon
+                            className="mb-4 text-center"
+                            role="alert"
+                        />
+                    )}
+
+                    <div className="flex justify-center mt-5">
+
+                        <div className="text-center">
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                className="bg-[#0052cc] hover:bg-[#003d99] px-8 py-2 text-lg rounded"
+                            >
+                                Submit Feedback
+                            </Button>
+                        </div>
+                    </div>
+                </form>
+
+                {submitted && (
+                    <div
+                        id="success-msg"
+                        aria-live="polite"
+                        className="text-center mt-4 font-bold text-green-600"
+                    >
+                        Thank you for your feedback!
+                    </div>
+                )}
+            </div>
+        </>
     );
 };
 
