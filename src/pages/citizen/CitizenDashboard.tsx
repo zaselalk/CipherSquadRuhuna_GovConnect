@@ -8,8 +8,8 @@ import {
   SmileOutlined,
 } from "@ant-design/icons";
 
-import DashboardHeader from "../../components/features/citizen-dashboard/DashboardHeader";
-import NotificationList from "../../components/features/citizen-dashboard/NotificationList";
+//import DashboardHeader from "../../components/features/citizen-dashboard/DashboardHeader";
+//import NotificationList from "../../components/features/citizen-dashboard/NotificationList";
 import AppointmentList from "../../components/features/citizen-dashboard/AppointmentList";
 import DocumentSubmissionCard from "../../components/features/citizen-dashboard/DocumentSubmissionCard";
 import Footer from "../../components/common/Footer";
@@ -60,10 +60,10 @@ const CitizenDashboard = () => {
     Appointment[]
   >([]);
   const [pastAppointments, setPastAppointments] = useState<Appointment[]>([]);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [, setNotifications] = useState<Notification[]>([]);
   const [notifOpen, setNotifOpen] = useState(false);
   const notifRef = useRef<HTMLDivElement | null>(null);
-  const navigate = useNavigate();
+//  const navigate = useNavigate();
 
   // Simulate API data fetch
   useEffect(() => {
@@ -158,7 +158,7 @@ const CitizenDashboard = () => {
   }, [notifOpen]);
 
   // Handlers
-  const handleBookNew = () => navigate("/resident/dashboard/service-selection");
+  //const handleBookNew = () => navigate("/resident/dashboard/service-selection");
   const handleViewAppointment = (id: string) =>
     alert(`View or reschedule appointment ${id}`);
   const handleFeedback = (id: string) =>
