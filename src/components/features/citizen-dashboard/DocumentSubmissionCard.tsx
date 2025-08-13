@@ -71,7 +71,7 @@ const DocumentSubmissionCard: React.FC<DocumentSubmissionCardProps> = ({ onUploa
       title={
         <div className="flex items-center gap-3 text-gray-900 font-extrabold text-xl select-none">
           <FileAddOutlined className="text-indigo-600 text-3xl" />
-          Document Pre-submission
+          Pre-submission
         </div>
       }
       className="rounded-3xl shadow-2xl hover:shadow-3xl transition-shadow duration-300 flex flex-col justify-between"
@@ -136,9 +136,11 @@ const DocumentSubmissionCard: React.FC<DocumentSubmissionCardProps> = ({ onUploa
           onChange={(value) => setSelectedType(value)}
           style={{ width: "100%" }}
         >
-          <Option value="ID Card">ID Card</Option>
+          <Option value="ID Card">National Identity Card (NIC) </Option>
           <Option value="Birth Certificate">Birth Certificate</Option>
           <Option value="Passport">Passport</Option>
+          <Option value="Marriage Certificate">Marriage Certificate</Option>
+          <Option value="Police Clearance Certificate">Police Clearance Certificate</Option>
         </Select>
       </Modal>
     </Card>
