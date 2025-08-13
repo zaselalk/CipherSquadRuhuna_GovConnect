@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
-import { Layout, Spin, Typography, Divider } from "antd";
+import { Layout, Spin, Typography } from "antd";
 import {
   ClockCircleOutlined,
   HistoryOutlined,
@@ -208,7 +208,7 @@ const CitizenDashboard = () => {
           </section>
         </div>
       </Content>
-      <Footer/>
+      <Footer />
     </Layout>
   );
 };
