@@ -18,6 +18,11 @@ module.exports = {
           allowNull: false,
           unique: true,
         },
+        permission: {
+          type: DataTypes.TEXT,
+          allowNull: false,
+          defaultValue: {},
+        },
         createdAt: {
           allowNull: false,
           type: DataTypes.DATE,
