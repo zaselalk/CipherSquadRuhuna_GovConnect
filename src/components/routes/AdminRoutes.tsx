@@ -9,6 +9,8 @@ import AuthProvider from "../auth/AuthProvider";
 import AnalyticsDashboard from "../../pages/admin/AnalyticalDashbordPage";
 import OfficerDashboard from "../../pages/admin/Officerdashbord";
 import DepartmentServicesPage from "../../pages/admin/DepartmentServicesPage";
+import { CitizenListPage } from "../../pages/admin/CitizenListPage";
+import DepartmentPage from "../../pages/admin/DepartmentPage";
 
 export const AdminRoutes = () => {
   // const user = useAppSelector((state) => state.auth.user);
@@ -42,6 +44,23 @@ export const AdminRoutes = () => {
           element={
             // <ProtectedRoutesGuard>
             <OfficerDashboard />
+            // </ProtectedRoutesGuard>
+          }
+        />
+        <Route
+          path="admin/citizen"
+          element={
+            // <ProtectedRoutesGuard>
+            <CitizenListPage />
+            // </ProtectedRoutesGuard>
+          }
+        />
+
+        <Route
+          path="admin/department"
+          element={
+            // <ProtectedRoutesGuard>
+              <DepartmentPage />
             // </ProtectedRoutesGuard>
           }
         />
