@@ -3,6 +3,7 @@ import { Form, message } from "antd";
 import DepartmentServicesHeader from "../../components/department/DepartmentServicesHeader";
 import DepartmentServicesGrid from "../../components/department/DepartmentServicesGrid";
 import DepartmentServicesModal from "../../components/department/DepartmentServicesModal";
+import { DashboardContainer } from "../../components/layouts/overlays/DashboardContainer";
 
 interface Service {
   id: number;
@@ -112,7 +113,7 @@ const DepartmentServicesPage: React.FC = () => {
   };
 
   return (
-    <div className="p-6 max-w-[1200px] mx-auto">
+    <DashboardContainer>
       <DepartmentServicesHeader openAddModal={openAddModal} />
       <DepartmentServicesGrid
         services={services}
@@ -126,7 +127,8 @@ const DepartmentServicesPage: React.FC = () => {
         setIsModalOpen={setIsModalOpen}
         handleSave={handleSave}
       />
-    </div>
+
+    </DashboardContainer>
   );
 };
 
