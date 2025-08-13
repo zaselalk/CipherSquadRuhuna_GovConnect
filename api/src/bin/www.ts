@@ -1,42 +1,43 @@
-/**
- * Module dependencies.
- */
-import { debug } from "console";
+import debug from "debug";
 import app from "../server";
 import http from "http";
+import sequelize from "../models";
 
-let sequelize;
-
-/**
- * Get port from environment and store in Express.
- */
-
+// get port from environment and store in Express
 const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
-
-/**
- * Create HTTP server.
- */
 
 const server = http.createServer(app);
 
 /**Connect to a database */
 async function connectToDatabase() {
-  let alter = false;
-  // if (process.env.NODE_ENV === "development") {
-  //   alter = true;
-  // }
+  try {
+    await sequelize.authenticate();
+    console.log("Database connection has been established successfully.");
 
-  // db.sequelize..then(() => {
-  //   console.log("Connection has been established successfully.");
-  // });
+    // Sync models with database (use { alter: true } in development)
+    await sequelize.sync();
+    console.log("Database models synced successfully.");
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
+    process.exit(1);
+  }
 }
 
-connectToDatabase().then(() => {
-  server.listen(port, () => console.log(`http://localhost:${port}`));
-  server.on("error", onError);
-  server.on("listening", onListening);
-});
+// Start server with database connection
+connectToDatabase()
+  .then(() => {
+    server.listen(port, () => {
+      console.log(`Server is running on http://localhost:${port}`);
+      console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
+    });
+    server.on("error", onError);
+    server.on("listening", onListening);
+  })
+  .catch((error) => {
+    console.error("Failed to start server:", error);
+    process.exit(1);
+  });
 
 /**
  * Normalize a port into a number, string, or false.
@@ -87,11 +88,12 @@ function onError(error: any) {
 /**
  * Event listener for HTTP server "listening" event.
  */
+const debugServer = debug("govconnect:server");
 
 function onListening() {
   const addr = server.address();
   const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr?.port;
-  debug("Listening on " + bind);
+  debugServer("Listening on " + bind);
 }
 
 exports.sequelize = sequelize;

@@ -2,13 +2,12 @@ import express, { Application, Request, Response } from "express";
 import { auditLogger } from "./middleware/auditLogger.middleware";
 import dotenv from "dotenv";
 import AuthRouter from "./routes/auth.routes";
-import sequelize from "./models";
 import cors from "cors";
 import RoleRouter from "./routes/role.routes";
 import UserRouter from "./routes/user.routes";
 import serializeUser from "./middleware/serializeuser.middleware";
 import expressErrorHandler from "./util/expressErrorHandler";
-import "./models/association"; // Import associations to ensure they are registered
+// import "./models/association"; // Import associations to ensure they are registered
 
 dotenv.config();
 
@@ -44,14 +43,9 @@ app.use("/role", RoleRouter);
 app.use("/user", UserRouter);
 
 // citizen routes
-// app.use("/resident", ResidentRouter);
+// app.use("/citizen", ResidentRouter);
 
 // error handling middleware
 app.use(expressErrorHandler);
-
-app.listen(PORT, async () => {
-  sequelize.sync();
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
 
 export default app;
