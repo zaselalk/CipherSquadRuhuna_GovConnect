@@ -8,6 +8,7 @@ import CitizenDashboard from "../../pages/citizen/CitizenDashboard";
 import FeedbackForm from "../../pages/citizen/FeedbackPage";
 import ServiceSelectionPage from "../../pages/citizen/ServiceSelection";
 import AboutPage from "../../pages/citizen/About";
+import DepartmentPage from "../../pages/citizen/DepartmentPage";
 
 export const ResidentRoutes = () => {
   return (
@@ -40,7 +41,23 @@ export const ResidentRoutes = () => {
           }
         />
         <Route path="resident/feedback" element={<FeedbackForm />} />
-
+                <Route
+          path="/resident/dashboard/departments"
+          element={
+            // <ResidentProtectedRoute>
+              <DepartmentPage />
+            // </ResidentProtectedRoute>
+          }
+        />
+                <Route path="resident/feedback" element={<FeedbackForm />} />
+                <Route
+          path="/resident/dashboard/About"
+          element={
+            // <ResidentProtectedRoute>
+              < AboutPage />
+            // </ResidentProtectedRoute>
+          }
+        />
       </Routes>
 
 

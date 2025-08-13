@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router";
+//import { Link } from "react-router";
 import { Badge, Button, Popover } from "antd";
 import { BellOutlined, PlusOutlined } from "@ant-design/icons";
 
@@ -29,7 +29,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between flex-wrap">
         {/* Left: Logo + Title */}
         <div className="flex items-center space-x-3 flex-shrink-0">
-          <Link to="/" className="flex items-center space-x-2">
+          {/* <Link to="/" className="flex items-center space-x-2">
             <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-full flex items-center justify-center">
               <span className="text-white font-bold text-lg select-none">
                 G
@@ -43,7 +43,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                 Manage your appointments and notifications
               </p>
             </div>
-          </Link>
+          </Link> */}
         </div>
 
         {/* Right: Notifications + Book Appointment */}
