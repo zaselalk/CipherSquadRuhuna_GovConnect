@@ -36,25 +36,26 @@ export const ResidentRoutes = () => {
           path="/resident/dashboard/about-govconnect"
           element={
             // <ResidentProtectedRoute>
-              <AboutPage />
+            <AboutPage />
             // </ResidentProtectedRoute>
           }
         />
         <Route path="resident/feedback" element={<FeedbackForm />} />
-                <Route
+        
+        <Route
           path="/resident/dashboard/departments"
           element={
             // <ResidentProtectedRoute>
-              <DepartmentPage />
+            <DepartmentPage />
             // </ResidentProtectedRoute>
           }
         />
-                <Route path="resident/feedback" element={<FeedbackForm />} />
-                <Route
+        <Route path="resident/feedback" element={<FeedbackForm />} />
+        <Route
           path="/resident/dashboard/About"
           element={
             // <ResidentProtectedRoute>
-              < AboutPage />
+            < AboutPage />
             // </ResidentProtectedRoute>
           }
         />
