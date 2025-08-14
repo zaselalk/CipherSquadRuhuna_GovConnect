@@ -7,6 +7,7 @@ import RoleRouter from "./routes/role.routes";
 import UserRouter from "./routes/user.routes";
 import serializeUser from "./middleware/serializeuser.middleware";
 import expressErrorHandler from "./util/expressErrorHandler";
+import CitizenRouter from "./routes/citizen.routes";
 // import "./models/association"; // Import associations to ensure they are registered
 
 dotenv.config();
@@ -41,9 +42,9 @@ app.get("/health", (req: Request, res: Response) => {
 app.use("/auth", AuthRouter);
 app.use("/role", RoleRouter);
 app.use("/user", UserRouter);
+app.use("/citizen", CitizenRouter);
 
 // citizen routes
-// app.use("/citizen", ResidentRouter);
 
 // error handling middleware
 app.use(expressErrorHandler);
