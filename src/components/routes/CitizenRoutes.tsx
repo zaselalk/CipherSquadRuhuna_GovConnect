@@ -10,6 +10,7 @@ import ServiceSelectionPage from "../../pages/citizen/ServiceSelection";
 import AboutPage from "../../pages/citizen/About";
 import Dashboard from "../../pages/citizen/roster/dashboard";
 import DepartmentPage from "../../pages/citizen/DepartmentPage";
+import EmailVerificationPage from "../../pages/citizen/EmailVerificationPage";
 
 export const ResidentRoutes = () => {
   return (
@@ -62,6 +63,9 @@ export const ResidentRoutes = () => {
         />
 
         <Route path="/resident/roster/dashboard" element={<Dashboard />} />
+
+        
+        <Route path="/resident/verifyemail" element={<EmailVerificationPage />} />
       </Routes>
     </ResidentAuthProvider>
   );
