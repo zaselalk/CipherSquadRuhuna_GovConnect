@@ -10,7 +10,7 @@ const LeaveForm = ({ title, type, onClose, onSubmit }: any) => {
   const [form] = Form.useForm();
   const [confirmVisible, setConfirmVisible] = useState(false);
 
-  const handleFinish = (values: any) => {
+  const handleFinish = () => {
     setConfirmVisible(true); // show confirmation popup
   };
 
