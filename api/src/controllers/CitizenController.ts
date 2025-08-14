@@ -1,9 +1,9 @@
 import { CitizenRepository } from "../repositories/CitizenRepository";
 import { Request, Response } from "express";
-import { CitizenAttributes } from "../types/citizen";
+import { CitizenCreationAttributes } from "../types/citizen";
 
 interface createCitizenRequest extends Request {
-  body: CitizenAttributes;
+  body: CitizenCreationAttributes;
 }
 
 export class CitizenController {
@@ -25,7 +25,15 @@ export class CitizenController {
       message: "Citizen created successfully",
       status: 201,
       error: null,
-      data: citizen,
+      data: {
+        id: citizen.id,
+        fullName: citizen.fullName,
+        email: citizen.email,
+        dateOfBirth: citizen.dateOfBirth,
+        address: citizen.address,
+        contactNumber: citizen.contactNumber,
+        NICNumber: citizen.NICNumber,
+      },
     });
   };
 
