@@ -9,7 +9,7 @@ import FeedbackForm from "../../pages/citizen/FeedbackPage";
 import ServiceSelectionPage from "../../pages/citizen/ServiceSelection";
 import AboutPage from "../../pages/citizen/About";
 import Dashboard from "../../pages/citizen/roster/dashboard";
-
+import DepartmentPage from "../../pages/citizen/DepartmentPage";
 
 export const ResidentRoutes = () => {
   return (
@@ -37,15 +37,32 @@ export const ResidentRoutes = () => {
           path="/resident/dashboard/about-govconnect"
           element={
             // <ResidentProtectedRoute>
-              <AboutPage />
+            <AboutPage />
             // </ResidentProtectedRoute>
           }
         />
         <Route path="resident/feedback" element={<FeedbackForm />} />
-        <Route path="resident/roster/dashboard" element={<Dashboard/>} />
-        
-        </Routes>
 
+        <Route
+          path="/resident/dashboard/departments"
+          element={
+            // <ResidentProtectedRoute>
+            <DepartmentPage />
+            // </ResidentProtectedRoute>
+          }
+        />
+        <Route path="resident/feedback" element={<FeedbackForm />} />
+        <Route
+          path="/resident/dashboard/About"
+          element={
+            // <ResidentProtectedRoute>
+            <AboutPage />
+            // </ResidentProtectedRoute>
+          }
+        />
+
+        <Route path="/resident/roster/dashboard" element={<Dashboard />} />
+      </Routes>
     </ResidentAuthProvider>
   );
 };
