@@ -1,5 +1,5 @@
 import { Citizen } from "../models/citizen";
-import { CitizenAttributes } from "../types/citizen";
+import { CitizenAttributes, CitizenCreationAttributes } from "../types/citizen";
 
 export class CitizenRepository {
   private static instance: CitizenRepository;
@@ -18,7 +18,9 @@ export class CitizenRepository {
    * @param citizenData - The data of the citizen to create
    * @return The created citizen
    */
-  public async createCitizen(citizenData: CitizenAttributes): Promise<Citizen> {
+  public async createCitizen(
+    citizenData: CitizenCreationAttributes
+  ): Promise<Citizen> {
     try {
       const citizen = await Citizen.create(citizenData);
       return citizen;

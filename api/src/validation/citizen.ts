@@ -4,7 +4,7 @@ import { Request, RequestHandler, Response, NextFunction } from "express";
 export const citizenRegisterValidation: RequestHandler[] = [
   body("fullName").notEmpty().withMessage("fullName is required"),
   body("email").isEmail().withMessage("Email is not valid"),
-  body("hashPassword").notEmpty().withMessage("Password is required"),
+  body("password").notEmpty().withMessage("Password is required"),
   body("dateOfBirth")
     .optional()
     .isDate()
