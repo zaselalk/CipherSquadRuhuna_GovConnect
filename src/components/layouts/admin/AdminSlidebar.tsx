@@ -56,7 +56,7 @@ const AdminSidebar: FC = () => {
       permission: "citizen:view",
     },
     {
-      path: "admin/feedback",
+      path: "/admin/feedback",
       label: "Feedback", // Added feedback menu
       icon: <FaHouseUser size={20} />,
       permission: "citizen:view",
