@@ -11,12 +11,12 @@ const citizenController = new CitizenController();
 
 CitizenRouter.get("/", catchAsync(citizenController.getAllCitizens));
 CitizenRouter.post(
-  "/register",
+  "/auth/register",
   citizenRegisterValidation,
   catchAsync(citizenController.registerCitizen)
 );
 CitizenRouter.post(
-  "/login",
+  "/auth/login",
   citizeLoginValidation,
   catchAsync(citizenController.loginCitizen)
 );
