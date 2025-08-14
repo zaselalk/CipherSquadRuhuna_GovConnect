@@ -114,4 +114,19 @@ export class CitizenRepository {
       throw new Error("Failed to retrieve citizen count");
     }
   }
+
+  /**
+   * Find a citizen by email
+   * @param email - The email of the citizen to find
+   * @return The found citizen or null if not found
+   */
+  public async findCitizenByEmail(email: string): Promise<Citizen | null> {
+    try {
+      const citizen = await Citizen.findOne({ where: { email } });
+      return citizen;
+    } catch (error) {
+      console.error("Error finding citizen by email:", error);
+      throw new Error("Failed to find citizen by email");
+    }
+  }
 }
