@@ -8,7 +8,8 @@ import CitizenDashboard from "../../pages/citizen/CitizenDashboard";
 import FeedbackForm from "../../pages/citizen/FeedbackPage";
 import ServiceSelectionPage from "../../pages/citizen/ServiceSelection";
 import AboutPage from "../../pages/citizen/About";
-import DepartmentPage from "../../pages/citizen/DepartmentPage";
+import Dashboard from "../../pages/citizen/roster/dashboard";
+
 
 export const ResidentRoutes = () => {
   return (
@@ -60,8 +61,8 @@ export const ResidentRoutes = () => {
           }
         />
       </Routes>
-
-
+        <Route path="/resident/roster/dashboard" element={<Dashboard/>} />
+       </Routes>
     </ResidentAuthProvider>
   );
 };

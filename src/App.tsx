@@ -30,6 +30,7 @@ function App() {
           -  /resident/dashboard - resident dashboard
       */}
       <ResidentRoutes />
+      
     </BrowserRouter>
   );
 }
