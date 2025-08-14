@@ -5,6 +5,7 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "./sequelize";
 import { CitizenAttributes, CitizenCreationAttributes } from "../types/citizen";
+import bcrypt from "bcrypt";
 
 export class Citizen
   extends Model<CitizenAttributes, CitizenCreationAttributes>
@@ -13,14 +14,14 @@ export class Citizen
   public id!: number;
   public fullName!: string;
   public email!: string;
-  public hashPassword!: string;
-  public dateOfBirth?: Date;
-  public address?: string;
-  public contactNumber?: string;
-  public NICNumber?: string;
+  public password!: string;
+  public dateOfBirth!: Date;
+  public address!: string;
+  public contactNumber!: string;
+  public NICNumber!: string;
   public createdAt!: Date;
   public updatedAt!: Date;
-  public deletedAt?: Date | null;
+  public deletedAt!: Date | null;
 }
 
 /**
@@ -43,32 +44,63 @@ Citizen.init(
       allowNull: false,
       unique: true,
     },
-    hashPassword: {
+    password: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     dateOfBirth: {
       type: DataTypes.DATE,
-      allowNull: true,
+      allowNull: false,
     },
     address: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
     },
     contactNumber: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
+      unique: true,
     },
     NICNumber: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
       unique: true,
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    deletedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: null,
+    },
   },
+
   {
     sequelize: sequelize,
     tableName: "citizens",
     timestamps: true,
     paranoid: true,
+    hooks: {
+      beforeCreate: async (citizen) => {
+        if (citizen.password) {
+          const salt = await bcrypt.genSalt(10);
+          citizen.password = await bcrypt.hash(citizen.password, salt);
+        }
+      },
+      beforeUpdate: async (citizen) => {
+        if (citizen.changed("password")) {
+          const salt = await bcrypt.genSalt(10);
+          citizen.password = await bcrypt.hash(citizen.password, salt);
+        }
+      },
+    },
   }
 );

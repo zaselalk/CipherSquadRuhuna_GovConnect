@@ -1,9 +1,7 @@
 "use strict";
 
-import { QueryInterface, where } from "sequelize";
-import Role from "../models/role";
-import { UserAttributes } from "../models/user";
-import { CitizenAttributes, CitizenCreationAttributes } from "../types/citizen";
+import { QueryInterface } from "sequelize";
+import { CitizenAttributes } from "../types/citizen";
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -14,7 +12,8 @@ module.exports = {
           id: 1,
           fullName: "Kamal Perera",
           email: "kamal.perera@example.com",
-          hashPassword: "hashedpassword1",
+          password:
+            "$2b$10$BNcS43kzblI8El1MPGOEieubdvJqZpZmkHVNUsLFu7HCyNRjUf47W", // 123
           dateOfBirth: new Date("1990-05-12"),
           address: "45 Galle Road, Colombo 03",
           contactNumber: "+94771234567",
@@ -27,7 +26,8 @@ module.exports = {
           id: 2,
           fullName: "Nadeesha Fernando",
           email: "nadeesha.fernando@example.com",
-          hashPassword: "hashedpassword2",
+          password:
+            "$2b$10$BNcS43kzblI8El1MPGOEieubdvJqZpZmkHVNUsLFu7HCyNRjUf47W",
           dateOfBirth: new Date("1995-11-20"),
           address: "12 Main Street, Negombo",
           contactNumber: "+94767654321",
@@ -40,7 +40,8 @@ module.exports = {
           id: 3,
           fullName: "Sajith Wijesinghe",
           email: "sajith.wijesinghe@example.com",
-          hashPassword: "hashedpassword3",
+          password:
+            "$2b$10$BNcS43kzblI8El1MPGOEieubdvJqZpZmkHVNUsLFu7HCyNRjUf47W",
           dateOfBirth: new Date("1987-02-03"),
           address: "23 Temple Road, Kandy",
           contactNumber: "+94772349876",
@@ -53,7 +54,8 @@ module.exports = {
           id: 4,
           fullName: "Thilini Abeysekera",
           email: "thilini.abeysekera@example.com",
-          hashPassword: "hashedpassword4",
+          password:
+            "$2b$10$BNcS43kzblI8El1MPGOEieubdvJqZpZmkHVNUsLFu7HCyNRjUf47W",
           dateOfBirth: new Date("1992-07-15"),
           address: "8 Malwatta Road, Gampaha",
           contactNumber: "+94711234987",
@@ -66,7 +68,8 @@ module.exports = {
           id: 5,
           fullName: "Ruwan Jayasinghe",
           email: "ruwan.jayasinghe@example.com",
-          hashPassword: "hashedpassword5",
+          password:
+            "$2b$10$BNcS43kzblI8El1MPGOEieubdvJqZpZmkHVNUsLFu7HCyNRjUf47W",
           dateOfBirth: new Date("1985-10-28"),
           address: "56 Peradeniya Road, Kandy",
           contactNumber: "+94773561234",
@@ -79,7 +82,8 @@ module.exports = {
           id: 6,
           fullName: "Ishara Madushani",
           email: "ishara.madushani@example.com",
-          hashPassword: "hashedpassword6",
+          password:
+            "$2b$10$BNcS43kzblI8El1MPGOEieubdvJqZpZmkHVNUsLFu7HCyNRjUf47W",
           dateOfBirth: new Date("1998-01-14"),
           address: "102 Ananda Mawatha, Matara",
           contactNumber: "+94770098765",
@@ -92,7 +96,8 @@ module.exports = {
           id: 7,
           fullName: "Gayan Silva",
           email: "gayan.silva@example.com",
-          hashPassword: "hashedpassword7",
+          password:
+            "$2b$10$BNcS43kzblI8El1MPGOEieubdvJqZpZmkHVNUsLFu7HCyNRjUf47W",
           dateOfBirth: new Date("1993-08-22"),
           address: "77 High Level Road, Nugegoda",
           contactNumber: "+94716784321",
@@ -105,7 +110,8 @@ module.exports = {
           id: 8,
           fullName: "Chathuri De Silva",
           email: "chathuri.desilva@example.com",
-          hashPassword: "hashedpassword8",
+          password:
+            "$2b$10$BNcS43kzblI8El1MPGOEieubdvJqZpZmkHVNUsLFu7HCyNRjUf47W",
           dateOfBirth: new Date("1991-04-06"),
           address: "34 D S Senanayake Mawatha, Kurunegala",
           contactNumber: "+94712345678",
@@ -118,7 +124,8 @@ module.exports = {
           id: 9,
           fullName: "Kasun Rathnayake",
           email: "kasun.rathnayake@example.com",
-          hashPassword: "hashedpassword9",
+          password:
+            "$2b$10$BNcS43kzblI8El1MPGOEieubdvJqZpZmkHVNUsLFu7HCyNRjUf47W",
           dateOfBirth: new Date("1989-03-30"),
           address: "89 Main Street, Badulla",
           contactNumber: "+94771239876",
@@ -131,7 +138,8 @@ module.exports = {
           id: 10,
           fullName: "Sanduni Wickramasinghe",
           email: "sanduni.wickramasinghe@example.com",
-          hashPassword: "hashedpassword10",
+          password:
+            "$2b$10$BNcS43kzblI8El1MPGOEieubdvJqZpZmkHVNUsLFu7HCyNRjUf47W",
           dateOfBirth: new Date("1996-09-17"),
           address: "4 St. Sebastian Road, Moratuwa",
           contactNumber: "+94765439871",
@@ -144,7 +152,8 @@ module.exports = {
           id: 11,
           fullName: "Pradeep Kumara",
           email: "pradeep.kumara@example.com",
-          hashPassword: "hashedpassword11",
+          password:
+            "$2b$10$BNcS43kzblI8El1MPGOEieubdvJqZpZmkHVNUsLFu7HCyNRjUf47W",
           dateOfBirth: new Date("1984-12-08"),
           address: "45 Station Road, Anuradhapura",
           contactNumber: "+94771239012",
@@ -157,7 +166,8 @@ module.exports = {
           id: 12,
           fullName: "Anushka Jayawardena",
           email: "anushka.jayawardena@example.com",
-          hashPassword: "hashedpassword12",
+          password:
+            "$2b$10$BNcS43kzblI8El1MPGOEieubdvJqZpZmkHVNUsLFu7HCyNRjUf47W",
           dateOfBirth: new Date("1997-06-04"),
           address: "15 Palm Grove, Colombo 04",
           contactNumber: "+94773345678",
@@ -170,7 +180,8 @@ module.exports = {
           id: 13,
           fullName: "Dulmini Senanayake",
           email: "dulmini.senanayake@example.com",
-          hashPassword: "hashedpassword13",
+          password:
+            "$2b$10$BNcS43kzblI8El1MPGOEieubdvJqZpZmkHVNUsLFu7HCyNRjUf47W",
           dateOfBirth: new Date("1994-02-18"),
           address: "67 River Side, Ratnapura",
           contactNumber: "+94769876543",
@@ -183,7 +194,8 @@ module.exports = {
           id: 14,
           fullName: "Chaminda Bandara",
           email: "chaminda.bandara@example.com",
-          hashPassword: "hashedpassword14",
+          password:
+            "$2b$10$BNcS43kzblI8El1MPGOEieubdvJqZpZmkHVNUsLFu7HCyNRjUf47W",
           dateOfBirth: new Date("1982-11-25"),
           address: "101 Hill Street, Hatton",
           contactNumber: "+94776543210",
@@ -196,7 +208,8 @@ module.exports = {
           id: 15,
           fullName: "Menaka Dissanayake",
           email: "menaka.dissanayake@example.com",
-          hashPassword: "hashedpassword15",
+          password:
+            "$2b$10$BNcS43kzblI8El1MPGOEieubdvJqZpZmkHVNUsLFu7HCyNRjUf47W",
           dateOfBirth: new Date("1999-08-09"),
           address: "23 Sea View Road, Matara",
           contactNumber: "+94771234589",
@@ -209,7 +222,8 @@ module.exports = {
           id: 16,
           fullName: "Suresh Rajapaksha",
           email: "suresh.rajapaksha@example.com",
-          hashPassword: "hashedpassword16",
+          password:
+            "$2b$10$BNcS43kzblI8El1MPGOEieubdvJqZpZmkHVNUsLFu7HCyNRjUf47W",
           dateOfBirth: new Date("1988-01-01"),
           address: "12 Lake Road, Polonnaruwa",
           contactNumber: "+94760098712",
@@ -222,7 +236,8 @@ module.exports = {
           id: 17,
           fullName: "Iresha Kariyawasam",
           email: "iresha.kariyawasam@example.com",
-          hashPassword: "hashedpassword17",
+          password:
+            "$2b$10$BNcS43kzblI8El1MPGOEieubdvJqZpZmkHVNUsLFu7HCyNRjUf47W",
           dateOfBirth: new Date("1993-05-29"),
           address: "9 Flower Garden, Galle",
           contactNumber: "+94712340987",
@@ -235,7 +250,8 @@ module.exports = {
           id: 18,
           fullName: "Nimal Peris",
           email: "nimal.peris@example.com",
-          hashPassword: "hashedpassword18",
+          password:
+            "$2b$10$BNcS43kzblI8El1MPGOEieubdvJqZpZmkHVNUsLFu7HCyNRjUf47W",
           dateOfBirth: new Date("1986-04-14"),
           address: "5 Old Road, Hambantota",
           contactNumber: "+94777765432",
@@ -248,7 +264,8 @@ module.exports = {
           id: 19,
           fullName: "Yasodha Peiris",
           email: "yasodha.peiris@example.com",
-          hashPassword: "hashedpassword19",
+          password:
+            "$2b$10$BNcS43kzblI8El1MPGOEieubdvJqZpZmkHVNUsLFu7HCyNRjUf47W",
           dateOfBirth: new Date("1992-12-30"),
           address: "72 Park Road, Jaffna",
           contactNumber: "+94776543289",
@@ -261,7 +278,8 @@ module.exports = {
           id: 20,
           fullName: "Harsha Senarath",
           email: "harsha.senarath@example.com",
-          hashPassword: "hashedpassword20",
+          password:
+            "$2b$10$BNcS43kzblI8El1MPGOEieubdvJqZpZmkHVNUsLFu7HCyNRjUf47W",
           dateOfBirth: new Date("1990-09-05"),
           address: "14 Station Road, Batticaloa",
           contactNumber: "+94761239876",

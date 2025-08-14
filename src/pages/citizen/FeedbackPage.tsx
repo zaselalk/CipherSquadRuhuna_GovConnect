@@ -1,16 +1,18 @@
-import React, { useState, KeyboardEvent } from "react";
+import React, { useState, useEffect, KeyboardEvent } from "react";
 import { Input, Button, Alert } from "antd";
-import { StarFilled } from "@ant-design/icons";
-import { LandingHeader } from "../../components/features/landing-page/LandingHeader";
+import { StarFilled, StarOutlined } from "@ant-design/icons";
+import Footer from "../../components/common/Footer";
+import CommonNav from "../../components/common/CommonNav";
 const { TextArea } = Input;
+import { Spin } from "antd";
 
 const FeedbackForm: React.FC = () => {
-
     const [selectedRating, setSelectedRating] = useState<number>(0);
     const [hoverRating, setHoverRating] = useState<number>(0);
     const [comment, setComment] = useState<string>("");
     const [error, setError] = useState<string>("");
     const [submitted, setSubmitted] = useState<boolean>(false);
+    const [loading, setLoading] = useState(true);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -23,7 +25,6 @@ const FeedbackForm: React.FC = () => {
         setError("");
         setSubmitted(true);
 
-        // Simulated form handling
         console.log("Rating:", selectedRating);
         console.log("Comment:", comment);
 
@@ -52,9 +53,9 @@ const FeedbackForm: React.FC = () => {
     const renderStars = () =>
         Array.from({ length: 5 }, (_, i) => {
             const index = i + 1;
+            const isActive = hoverRating >= index || selectedRating >= index;
 
             return (
-
                 <span
                     key={index}
                     id={`star-${index}`}
@@ -68,31 +69,46 @@ const FeedbackForm: React.FC = () => {
                                 ? 0
                                 : -1
                     }
-                    className="focus:outline-none"
                     onClick={() => setSelectedRating(index)}
                     onMouseEnter={() => setHoverRating(index)}
                     onMouseLeave={() => setHoverRating(0)}
                     onKeyDown={(e) => handleKeyDown(e, index)}
+                    style={{ cursor: "pointer", fontSize: "32px" }}
                 >
-                    <StarFilled
-                        className={`text-5xl transition-colors duration-200 cursor-pointer ${hoverRating >= index || selectedRating >= index
-                            ? "text-yellow-400"
-                            : "text-gray-300"
-                            }`}
-                    />
+                    {isActive ? (
+                        <StarFilled style={{ color: "#facc15" }} /> // yellow-400
+                    ) : (
+                        <StarOutlined style={{ color: "#d1d5db" }} /> // gray-300
+                    )}
                 </span>
             );
         });
 
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            await new Promise((r) => setTimeout(r, 1200)); // simulate API
+            setLoading(false);
+        };
+        fetchData();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-blue-100 to-indigo-700">
+                <Spin size="large" tip="Loading your dashboard..." />
+            </div>
+        );
+    }
+
+
 
     return (
         <>
-
-
-            <LandingHeader />
-            <div className="max-w-xl mx-auto mt-10 p-6 rounded-lg ">
+            <CommonNav />
+            <div className="max-w-xl mx-auto mt-10 p-6 rounded-lg">
                 <h1 className="text-2xl font-bold text-center text-[#0052cc] mb-6">
-                    Rate Your Appointment
+                    Rate the Website
                 </h1>
 
                 <form onSubmit={handleSubmit} noValidate>
@@ -129,16 +145,13 @@ const FeedbackForm: React.FC = () => {
                     )}
 
                     <div className="flex justify-center mt-5">
-
-                        <div className="text-center">
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                                className="bg-[#0052cc] hover:bg-[#003d99] px-8 py-2 text-lg rounded"
-                            >
-                                Submit Feedback
-                            </Button>
-                        </div>
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            className="bg-[#0052cc] hover:bg-[#003d99] px-8 py-2 text-lg rounded"
+                        >
+                            Submit Feedback
+                        </Button>
                     </div>
                 </form>
 
@@ -152,8 +165,10 @@ const FeedbackForm: React.FC = () => {
                     </div>
                 )}
             </div>
+            <Footer />
         </>
     );
 };
 
 export default FeedbackForm;
+
