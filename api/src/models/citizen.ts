@@ -6,6 +6,7 @@ import { Model, DataTypes } from "sequelize";
 import sequelize from "./sequelize";
 import { CitizenAttributes, CitizenCreationAttributes } from "../types/citizen";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export class Citizen
   extends Model<CitizenAttributes, CitizenCreationAttributes>
@@ -22,6 +23,28 @@ export class Citizen
   public createdAt!: Date;
   public updatedAt!: Date;
   public deletedAt!: Date | null;
+
+  /**
+   * Verify the password
+   * @param password - The password to verify
+   * @return A boolean indicating whether the password is valid
+   */
+  public async validatePassword(
+    password: string,
+    hashPassword: string
+  ): Promise<boolean> {
+    return await bcrypt.compare(password, hashPassword);
+  }
+
+  /**
+   * Generate a JWT token for the citizen
+   * @return A JWT token as a string
+   */
+  public async generateToken(): Promise<string> {
+    return jwt.sign({ id: this.id }, process.env.JWT_SECRET as string, {
+      expiresIn: "1h",
+    });
+  }
 }
 
 /**
