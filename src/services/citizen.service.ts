@@ -1,3 +1,4 @@
+import { CitizenData } from "../types/citizen";
 import axiosInstance from "./axios/axiosInstance";
 
 // Define Citizen type inline
@@ -24,18 +25,20 @@ export const CitizenService = {
     return response.data.data;
   },
 
-    async addCitizen(data: Partial<CitizenData>): Promise<void> {
-        try {
-            const response = await axiosInstance.post("/citizen", data);
-            return response.data;
-        } catch (error: any) {
-            console.error("Error adding citizen:", error);
-            throw new Error(error.response?.data?.message || "Unable to add citizen");
-        }
+  async addCitizen(data: Partial<CitizenData>): Promise<void> {
+    try {
+      const response = await axiosInstance.post("/citizen", data);
+      return response.data;
+    } catch (error: any) {
+      console.error("Error adding citizen:", error);
+      throw new Error(error.response?.data?.message || "Unable to add citizen");
     }
-    
+  },
   // Update citizen
-  updateCitizenById: async (id: number, data: Partial<Citizen>): Promise<Citizen> => {
+  updateCitizenById: async (
+    id: number,
+    data: Partial<Citizen>
+  ): Promise<Citizen> => {
     const response = await axiosInstance.put(`/citizen/${id}`, data);
     return response.data.data;
   },

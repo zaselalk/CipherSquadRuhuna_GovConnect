@@ -1,15 +1,31 @@
 import { FC, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import {
-  Alert, Button, Form, Input, Select, DatePicker, Row, Col, Card, Checkbox, Steps, Typography, message
+  Alert,
+  Button,
+  Form,
+  Input,
+  Select,
+  DatePicker,
+  Row,
+  Col,
+  Card,
+  Checkbox,
+  Steps,
+  Typography,
+  message,
 } from "antd";
 import {
-  MailOutlined, LockOutlined, UserOutlined, PhoneOutlined, IdcardOutlined
+  MailOutlined,
+  LockOutlined,
+  UserOutlined,
+  PhoneOutlined,
+  IdcardOutlined,
 } from "@ant-design/icons";
 import { LandingHeader } from "../../components/features/landing-page/LandingHeader";
 import dayjs from "dayjs";
-import citizenService from "../../services/citizen.service";
 import { CitizenData } from "../../types/citizen";
+import { CitizenService } from "../../services/citizen.service";
 
 const { Option } = Select;
 const { Step } = Steps;
@@ -49,7 +65,10 @@ const ResidentRegisterPage: FC = () => {
 
   // Reusable cards (we’ll keep all of them mounted and hide with CSS)
   const PersonalInfo = (
-    <Card bordered={false} style={{ borderRadius: 12, boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}>
+    <Card
+      bordered={false}
+      style={{ borderRadius: 12, boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}
+    >
       <Row gutter={16}>
         <Col xs={24} md={12}>
           <Form.Item
@@ -57,7 +76,10 @@ const ResidentRegisterPage: FC = () => {
             name="firstName"
             rules={[{ required: true, message: "First name is required" }]}
           >
-            <Input prefix={<UserOutlined />} placeholder="Enter your first name" />
+            <Input
+              prefix={<UserOutlined />}
+              placeholder="Enter your first name"
+            />
           </Form.Item>
         </Col>
         <Col xs={24} md={12}>
@@ -66,7 +88,10 @@ const ResidentRegisterPage: FC = () => {
             name="lastName"
             rules={[{ required: true, message: "Last name is required" }]}
           >
-            <Input prefix={<UserOutlined />} placeholder="Enter your last name" />
+            <Input
+              prefix={<UserOutlined />}
+              placeholder="Enter your last name"
+            />
           </Form.Item>
         </Col>
       </Row>
@@ -108,7 +133,9 @@ const ResidentRegisterPage: FC = () => {
           >
             <DatePicker
               className="w-full"
-              disabledDate={(current) => current && current > dayjs().endOf("day")}
+              disabledDate={(current) =>
+                current && current > dayjs().endOf("day")
+              }
             />
           </Form.Item>
         </Col>
@@ -133,7 +160,10 @@ const ResidentRegisterPage: FC = () => {
   );
 
   const ContactInfo = (
-    <Card bordered={false} style={{ borderRadius: 12, boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}>
+    <Card
+      bordered={false}
+      style={{ borderRadius: 12, boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}
+    >
       <Row gutter={16}>
         <Col xs={24} md={12}>
           <Form.Item
@@ -156,7 +186,8 @@ const ResidentRegisterPage: FC = () => {
               { required: true, message: "Mobile number is required" },
               {
                 pattern: /^(?:0|\+94)?7\d{8}$/,
-                message: "Enter valid Sri Lankan mobile (07XXXXXXXX or +947XXXXXXXX)",
+                message:
+                  "Enter valid Sri Lankan mobile (07XXXXXXXX or +947XXXXXXXX)",
               },
             ]}
           >
@@ -176,7 +207,10 @@ const ResidentRegisterPage: FC = () => {
   );
 
   const SecurityTerms = (
-    <Card bordered={false} style={{ borderRadius: 12, boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}>
+    <Card
+      bordered={false}
+      style={{ borderRadius: 12, boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}
+    >
       <Row gutter={16}>
         <Col xs={24} md={12}>
           <Form.Item
@@ -207,7 +241,10 @@ const ResidentRegisterPage: FC = () => {
               }),
             ]}
           >
-            <Input.Password prefix={<LockOutlined />} placeholder="Confirm password" />
+            <Input.Password
+              prefix={<LockOutlined />}
+              placeholder="Confirm password"
+            />
           </Form.Item>
         </Col>
       </Row>
@@ -218,12 +255,15 @@ const ResidentRegisterPage: FC = () => {
         rules={[
           {
             validator: (_, value) =>
-              value ? Promise.resolve() : Promise.reject(new Error("You must agree before continuing")),
+              value
+                ? Promise.resolve()
+                : Promise.reject(new Error("You must agree before continuing")),
           },
         ]}
       >
         <Checkbox>
-          I agree to the <Link to="/terms">Terms</Link> and <Link to="/privacy">Privacy Policy</Link>
+          I agree to the <Link to="/terms">Terms</Link> and{" "}
+          <Link to="/privacy">Privacy Policy</Link>
         </Checkbox>
       </Form.Item>
     </Card>
@@ -231,9 +271,15 @@ const ResidentRegisterPage: FC = () => {
 
   // 👉 Keep all steps mounted; hide inactive ones to preserve registration reliably
   const StepPanels = [
-    <div key="step0" style={{ display: current === 0 ? "block" : "none" }}>{PersonalInfo}</div>,
-    <div key="step1" style={{ display: current === 1 ? "block" : "none" }}>{ContactInfo}</div>,
-    <div key="step2" style={{ display: current === 2 ? "block" : "none" }}>{SecurityTerms}</div>,
+    <div key="step0" style={{ display: current === 0 ? "block" : "none" }}>
+      {PersonalInfo}
+    </div>,
+    <div key="step1" style={{ display: current === 1 ? "block" : "none" }}>
+      {ContactInfo}
+    </div>,
+    <div key="step2" style={{ display: current === 2 ? "block" : "none" }}>
+      {SecurityTerms}
+    </div>,
   ];
 
   const next = async () => {
@@ -242,7 +288,10 @@ const ResidentRegisterPage: FC = () => {
       setCurrent((prev) => prev + 1);
     } catch {
       message.error("Please fix the highlighted fields.");
-      form.scrollToField(stepFieldNames[current][0], { behavior: "smooth", block: "center" });
+      form.scrollToField(stepFieldNames[current][0], {
+        behavior: "smooth",
+        block: "center",
+      });
     }
   };
 
@@ -254,23 +303,24 @@ const ResidentRegisterPage: FC = () => {
 
     try {
       // Defensive date handling
-      const bday = values.birthday && dayjs.isDayjs(values.birthday)
-        ? values.birthday.format("YYYY-MM-DD")
-        : null;
+      const bday =
+        values.birthday && dayjs.isDayjs(values.birthday)
+          ? values.birthday.format("YYYY-MM-DD")
+          : null;
 
       const residentData: Partial<CitizenData> = {
         fullName: `${values.firstName || ""} ${values.lastName || ""}`.trim(),
         NICNumber: values.NICNumber || undefined,
         email: values.email || undefined,
-        hashPassword: values.password || undefined,
-        birthday: bday,
+        password: values.password || undefined,
+        dateOfBirth: bday,
         gender: values.gender || undefined,
         contactNumber: values.contactNumber || undefined,
         address: values.address || undefined,
       };
 
       console.log("Submitting resident data:", residentData);
-      await citizenService.addCitizen(residentData);
+      await CitizenService.addCitizen(residentData);
 
       setSuccess("Registration successful!");
       form.resetFields();
@@ -290,8 +340,12 @@ const ResidentRegisterPage: FC = () => {
           Resident Registration
         </Title>
 
-        {error && <Alert message={error} type="error" showIcon className="mb-4" />}
-        {success && <Alert message={success} type="success" showIcon className="mb-4" />}
+        {error && (
+          <Alert message={error} type="error" showIcon className="mb-4" />
+        )}
+        {success && (
+          <Alert message={success} type="success" showIcon className="mb-4" />
+        )}
 
         <Steps current={current} className="mb-6">
           <Step title="Personal Info" />
@@ -309,12 +363,20 @@ const ResidentRegisterPage: FC = () => {
           {/* ✅ All steps are mounted; only the active one is visible */}
           {StepPanels}
 
-          <div style={{ display: "flex", justifyContent: "space-between", marginTop: 24 }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginTop: 24,
+            }}
+          >
             {current > 0 ? (
               <Button onClick={prev} className="rounded-lg">
                 Previous
               </Button>
-            ) : <div />}
+            ) : (
+              <div />
+            )}
 
             {current < 2 && (
               <Button type="primary" onClick={next} className="rounded-lg">
@@ -323,7 +385,12 @@ const ResidentRegisterPage: FC = () => {
             )}
 
             {current === 2 && (
-              <Button type="primary" htmlType="submit" loading={isLoading} className="rounded-lg">
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={isLoading}
+                className="rounded-lg"
+              >
                 Register
               </Button>
             )}
