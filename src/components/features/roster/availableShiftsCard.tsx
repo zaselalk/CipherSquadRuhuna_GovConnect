@@ -5,7 +5,7 @@ import ShiftsTable from "./shiftstable";
 const AvailableShiftsCard = ({ shifts, onApply, onOverlayChange }: any) => {
   return (
     <Card
-      title="Schedule Off Days"
+      title="Apply for a Vacant Shift !"
       extra={
         <Button type="link" icon={<CalendarOutlined />} onClick={() => onOverlayChange("allShifts")}>
           View All

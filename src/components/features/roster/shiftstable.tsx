@@ -13,7 +13,7 @@ interface Props {
 
 const ShiftsTable = ({ shifts, onApply }: Props) => {
   const columns = [
-    { title: "ID", dataIndex: "id", key: "id" },
+    { title: "Date", dataIndex: "id", key: "id" },
     { title: "Day", dataIndex: "day", key: "day" },
     {
       title: "Type",

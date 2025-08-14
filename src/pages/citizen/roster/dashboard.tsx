@@ -140,7 +140,7 @@ const Dashboard = () => {
           <div className="bg-white rounded-xl shadow-lg p-6">
             <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
               <ClockCircleOutlined className="text-green-500 mr-2" />
-              Upcoming Shifts
+              Available Shifts
             </h2>
             <AvailableShiftsCard
               shifts={shifts}
