@@ -51,6 +51,20 @@ module.exports = {
           allowNull: true,
           unique: true,
         },
+        createdAt: {
+          type: DataTypes.DATE,
+          allowNull: false,
+          defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+        },
+        updatedAt: {
+          type: DataTypes.DATE,
+          allowNull: false,
+          defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+        },
+        deletedAt: {
+          type: DataTypes.DATE,
+          allowNull: true,
+        },
       });
     } catch (error: unknown) {
       console.log(error);
