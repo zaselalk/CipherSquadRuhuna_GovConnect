@@ -1,0 +1,144 @@
+import { CitizenRepository } from "../repositories/CitizenRepository";
+import { Request, Response } from "express";
+import { CitizenAttributes } from "../types/citizen";
+
+interface createCitizenRequest extends Request {
+  body: CitizenAttributes;
+}
+
+export class CitizenController {
+  constructor(private citizenRepository = CitizenRepository.getInstance()) {}
+
+  /**
+   * Create a new citizen
+   * @param req - The HTTP request object containing citizen data
+   * @param res - The HTTP response object
+   */
+  createCitizen = async (
+    req: createCitizenRequest,
+    res: Response
+  ): Promise<Response> => {
+    const citizenData = req.body;
+    const citizen = await this.citizenRepository.createCitizen(citizenData);
+
+    return res.status(201).json({
+      message: "Citizen created successfully",
+      status: 201,
+      error: null,
+      data: citizen,
+    });
+  };
+
+  /**
+   * Find a citizen by ID
+   * @param req - The HTTP request object containing the citizen ID
+   * @param res - The HTTP response object
+   */
+  findCitizenById = async (
+    req: Request,
+    res: Response
+  ): Promise<Response | void> => {
+    const { id } = req.params;
+    const citizen = await this.citizenRepository.findCitizenById(parseInt(id));
+    if (!citizen) {
+      return res.status(404).json({
+        message: "Citizen not found",
+        status: 404,
+        error: null,
+        data: null,
+      });
+    }
+    return res.status(200).json({
+      message: "Citizen found",
+      status: 200,
+      error: null,
+      data: citizen,
+    });
+  };
+
+  /**
+   * Update a citizen by ID
+   * @param req - The HTTP request object containing the citizen ID and data to update
+   * @param res - The HTTP response object
+   */
+  updateCitizenById = async (
+    req: Request,
+    res: Response
+  ): Promise<Response | void> => {
+    const { id } = req.params;
+    const citizenData = req.body;
+    const updatedCitizen = await this.citizenRepository.updateCitizenById(
+      parseInt(id),
+      citizenData
+    );
+
+    if (!updatedCitizen) {
+      return res.status(404).json({
+        message: "Citizen not found",
+        status: 404,
+        error: null,
+        data: null,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Citizen updated successfully",
+      status: 200,
+      error: null,
+      data: updatedCitizen,
+    });
+  };
+
+  /**
+   * Delete a citizen by ID
+   * @param req - The HTTP request object containing the citizen ID
+   * @param res - The HTTP response object
+   */
+  deleteCitizenById = async (
+    req: Request,
+    res: Response
+  ): Promise<Response | void> => {
+    const { id } = req.params;
+    const deleted = await this.citizenRepository.deleteCitizenById(
+      parseInt(id)
+    );
+
+    if (!deleted) {
+      return res.status(404).json({
+        message: "Citizen not found",
+        status: 404,
+        error: null,
+        data: null,
+      });
+    }
+
+    return res.status(200).json({
+      message: "Citizen deleted successfully",
+      status: 200,
+      error: null,
+      data: null,
+    });
+  };
+
+  /**
+   * Get all citizens
+   * @param req - The HTTP request object
+   * @param res - The HTTP response object
+   */
+  getAllCitizens = async (req: Request, res: Response): Promise<Response> => {
+    const citizens = await this.citizenRepository.getAllCitizens();
+    return res.status(200).json({
+      message: "Citizens retrieved successfully",
+      status: 200,
+      error: null,
+      data: citizens,
+    });
+  };
+}
+
+/***
+ * Note for Developers: This controller is responsible for handling requests related to citizens,
+ * But the methods are not handling errors instead they are returning the error messages directly
+ * which are coming from the repository methods. Error are expected to handle by
+ * catchAsyncError in the routes.
+ */
