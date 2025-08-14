@@ -26,6 +26,7 @@ import { LandingHeader } from "../../components/features/landing-page/LandingHea
 import dayjs from "dayjs";
 import { CitizenData } from "../../types/citizen";
 import { CitizenService } from "../../services/citizen.service";
+import { LandingFooter } from "../../components/features/landing-page/LandingFooter";
 
 const { Option } = Select;
 const { Step } = Steps;
@@ -324,7 +325,7 @@ const ResidentRegisterPage: FC = () => {
 
       setSuccess("Registration successful!");
       form.resetFields();
-      setTimeout(() => navigate("/resident/login"), 1500);
+      setTimeout(() => navigate("/resident/verifyemail"), 1500);
     } catch (err: any) {
       setError(err?.message || "Registration failed");
     } finally {
@@ -397,6 +398,7 @@ const ResidentRegisterPage: FC = () => {
           </div>
         </Form>
       </div>
+   <LandingFooter />
     </>
   );
 };
