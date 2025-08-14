@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CalendarOutlined, ClockCircleOutlined, ScheduleOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { CalendarOutlined, ClockCircleOutlined, ScheduleOutlined, PlusCircleOutlined, CloseOutlined } from "@ant-design/icons";
 import AvailableShiftsCard from "../../../components/features/roster/availableShiftsCard";
 import ShiftApplyModal from "../../../components/features/roster/shiftApplyModal";
 import LeaveForm from "../../../components/features/roster/leaveForm";
@@ -27,25 +27,53 @@ const Dashboard = () => {
     { id: "27", day: "Wednesday", type: "Day" },
   ];
 
-  const leaveRequests = [
+  // Dynamic state for requests
+  const [leaveRequests, setLeaveRequests] = useState([
     { type: "Annual Leave", status: "Approved" },
     { type: "Casual Leave", status: "Pending" },
-  ];
+  ]);
 
-  const shiftRequests = [
+  const [shiftRequests, setShiftRequests] = useState([
     { shift: "Day Shift 25th", status: "Rejected" },
     { shift: "Night Shift 27th", status: "Approved" },
-  ];
+  ]);
 
-  // Calendar date renderer with colored dots
-  const dateCellRender = (value: any) => {
+  // Handle leave submission
+  const handleLeaveSubmit = (values: any, leaveType: string) => {
+    setLeaveRequests(prev => [
+      ...prev,
+      { type: leaveType === "annual" ? "Annual Leave" : "Casual Leave", status: "Pending" },
+    ]);
+    setActiveOverlay(null); // close form
+  };
+
+  // Handle shift application
+  const handleShiftApply = (shift: any) => {
+    setShiftRequests(prev => [
+      ...prev,
+      { shift: `${shift.type} Shift ${shift.id}th`, status: "Pending" },
+    ]);
+    setSelectedShift(null); // close modal
+  };
+
+// Remove handlers
+const handleRemoveLeave = (index: number) => {
+  setLeaveRequests(prev => prev.filter((_, i) => i !== index));
+};
+
+const handleRemoveShift = (index: number) => {
+  setShiftRequests(prev => prev.filter((_, i) => i !== index));
+};
+
+// Calendar date renderer with colored dots
+const dateCellRender = (value: any) => {
   const date = value.date();
   const off = offDays.find(d => parseInt(d.date) === date);
   const dayShift = shifts.find(s => s.type === "Day" && parseInt(s.id) === date);
   const nightShift = shifts.find(s => s.type === "Night" && parseInt(s.id) === date);
 
   // Return empty content, we'll style via wrapper
-    const className = off
+  const className = off
     ? "bg-gray-300 text-gray-800 font-bold rounded-full w-full h-full flex items-center justify-center"
     : dayShift
     ? "bg-green-300 text-green-900 font-bold rounded-full w-full h-full flex items-center justify-center"
@@ -53,11 +81,7 @@ const Dashboard = () => {
     ? "bg-blue-300 text-blue-900 font-bold rounded-full w-full h-full flex items-center justify-center"
     : "";
 
-
-  return <div
-      className={className} >  
-    </div>;
-  
+  return <div className={className}></div>;
 };
 
 
@@ -150,43 +174,58 @@ const Dashboard = () => {
           </div>
 
           <div className="bg-white rounded-xl shadow-lg p-6">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Request Status</h2>
-            <div className="grid grid-cols-1 gap-4">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-700 mb-2">Leave Requests</h3>
-                <ul className="space-y-2">
-                  {leaveRequests.map((req, idx) => (
-                    <li
-                      key={idx}
-                      className={`p-2 rounded-md ${
-                        req.status === "Approved"
-                          ? "bg-green-100 text-green-800"
-                          : req.status === "Rejected"
-                          ? "bg-red-100 text-red-800"
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}
-                    >
-                      {req.type} - {req.status}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+  <h2 className="text-xl font-bold text-gray-800 mb-4">Request Status</h2>
+  <div className="grid grid-cols-1 gap-4">
 
-              <div>
-                <h3 className="text-lg font-semibold text-gray-700 mb-2">Shift Requests</h3>
-                <ul className="space-y-2">
-                  {shiftRequests.map((req, idx) => (
-                    <li
-                      key={idx}
-                      className={`p-2 rounded-md ${
-                        req.status === "Approved"
-                          ? "bg-green-100 text-green-800"
-                          : req.status === "Rejected"
-                          ? "bg-red-100 text-red-800"
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}
-                    >
-                      {req.shift} - {req.status}
+    {/* Leave Requests */}
+    <div>
+      <h3 className="text-lg font-semibold text-gray-700 mb-2">Leave Requests</h3>
+      <ul className="space-y-2">
+        {leaveRequests.map((req, idx) => (
+          <li
+            key={idx}
+            className={`flex items-center justify-between p-2 rounded-md ${
+              req.status === "Approved"
+                ? "bg-green-100 text-green-800"
+                : req.status === "Rejected"
+                ? "bg-red-100 text-red-800"
+                : "bg-yellow-100 text-yellow-800"
+            }`}
+          >
+            <span>{req.type} - {req.status}</span>
+            {req.status === "Approved" && (
+              <CloseOutlined
+                className="cursor-pointer text-red-500 hover:text-red-700"
+                onClick={() => handleRemoveLeave(idx)}
+              />
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    {/* Shift Requests */}
+    <div>
+      <h3 className="text-lg font-semibold text-gray-700 mb-2">Shift Requests</h3>
+      <ul className="space-y-2">
+        {shiftRequests.map((req, idx) => (
+          <li
+            key={idx}
+            className={`flex items-center justify-between p-2 rounded-md ${
+              req.status === "Approved"
+                ? "bg-green-100 text-green-800"
+                : req.status === "Rejected"
+                ? "bg-red-100 text-red-800"
+                : "bg-yellow-100 text-yellow-800"
+            }`}
+          >
+            <span>{req.shift} - {req.status}</span>
+            {req.status === "Approved" && (
+              <CloseOutlined
+                className="cursor-pointer text-red-500 hover:text-red-700"
+                onClick={() => handleRemoveShift(idx)}
+              />  
+            )}
                     </li>
                   ))}
                 </ul>
@@ -201,19 +240,16 @@ const Dashboard = () => {
         <ShiftApplyModal
           shift={selectedShift}
           onClose={() => setSelectedShift(null)}
-          onConfirm={() => {
-            console.log("Applied shift:", selectedShift);
-            setSelectedShift(null);
-          }}
+          onConfirm={() => handleShiftApply(selectedShift)}
         />
       )}
 
       {activeOverlay === "annualLeave" && (
-        <LeaveForm title="Annual Leave" type="annual" onClose={() => setActiveOverlay(null)} onSubmit={(v: any) => console.log(v)} />
+        <LeaveForm title="Annual Leave" type="annual" onClose={() => setActiveOverlay(null)} onSubmit={(v: any) => handleLeaveSubmit(v, "annual")} />
       )}
 
       {activeOverlay === "casualLeave" && (
-        <LeaveForm title="Casual Leave" type="casual" onClose={() => setActiveOverlay(null)} onSubmit={(v: any) => console.log(v)} />
+        <LeaveForm title="Casual Leave" type="casual" onClose={() => setActiveOverlay(null)} onSubmit={(v: any) => handleLeaveSubmit(v, "casual")} />
       )}
 
       {activeOverlay === "dayOff" && (
