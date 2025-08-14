@@ -11,6 +11,7 @@ import OfficerDashboard from "../../pages/admin/Officerdashbord";
 import DepartmentServicesPage from "../../pages/admin/DepartmentServicesPage";
 import { CitizenListPage } from "../../pages/admin/CitizenListPage";
 import DepartmentPage from "../../pages/admin/DepartmentPage";
+import AdminFeedbackPage from "../../pages/admin/FeedbackAdmin";
 
 export const AdminRoutes = () => {
   // const user = useAppSelector((state) => state.auth.user);
@@ -97,6 +98,14 @@ export const AdminRoutes = () => {
             }
           />
         </Route>
+                <Route
+          path="admin/feedback"
+          element={
+            // <ProtectedRoutesGuard>
+            <AdminFeedbackPage/>
+            // </ProtectedRoutesGuard>
+          }
+        />
       </Routes>
     </AuthProvider>
   );

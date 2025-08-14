@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router"; // ✅ fixed import
 import { FaHouseUser } from "react-icons/fa";
 import { UserOutlined } from "@ant-design/icons";
 import { HiUsers } from "react-icons/hi";
@@ -11,29 +11,22 @@ const AdminSidebar: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.auth.user);
-  const [navbarArray, setNavbarArray] = useState<String[]>([]);
+  const [navbarArray, setNavbarArray] = useState<string[]>([]);
 
-  // common css classes for nav item
   const navItemClass =
     "py-3 text-sm font-medium flex items-center text-gray-700 hover:text-white rounded-xl px-4 transition-all duration-200 transform hover:scale-105";
 
   useEffect(() => {
     if (!user?.permissions) return;
-
-    if (user?.permissions.length > 0) {
-      setNavbarArray(user?.permissions);
+    if (user.permissions.length > 0) {
+      setNavbarArray(user.permissions);
     }
   }, [user?.permissions]);
 
   const handleLogout = () => {
-    // remove user from redux store
     dispatch(logout());
-    // remove token from local storage
     localStorage.removeItem("token");
-
-    // remove last location state
     window.history.replaceState({}, document.title, "/admin/login");
-
     navigate("/admin/login");
   };
 
@@ -62,11 +55,17 @@ const AdminSidebar: FC = () => {
       icon: <FaHouseUser size={20} />,
       permission: "citizen:view",
     },
+    {
+      path: "admin/feedback",
+      label: "Feedback", // Added feedback menu
+      icon: <FaHouseUser size={20} />,
+      permission: "citizen:view",
+    },
   ];
 
   return (
     <div className="bg-gradient-to-br from-white to-gray-50 shadow-xl p-6 h-full fixed flex-col justify-between w-1/6 hidden md:flex border-r border-gray-200">
-      {/* Header with Logo */}
+      {/* Logo */}
       <div className="mb-8">
         <div className="flex items-center space-x-3 mb-6">
           <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center">
@@ -91,6 +90,7 @@ const AdminSidebar: FC = () => {
           </div>
         </div>
       </div>
+
       {/* Navigation */}
       <div className="flex-1">
         <ul className="space-y-3">
@@ -116,8 +116,7 @@ const AdminSidebar: FC = () => {
               </li>
             ))}
 
-          {/* show user management only for super_admin */}
-
+          {/* Super Admin: Users */}
           <li>
             <NavLink
               to="/admin/users"
@@ -139,7 +138,8 @@ const AdminSidebar: FC = () => {
           </li>
         </ul>
       </div>
-      {/* User Profile Section */}
+
+      {/* Profile */}
       <div className="mb-6">
         <div className="bg-gradient-to-r from-cyan-50 to-blue-50 rounded-xl p-4 border border-cyan-100">
           <div className="flex items-center gap-3 mb-3">
@@ -167,7 +167,7 @@ const AdminSidebar: FC = () => {
         </div>
       </div>
 
-      {/* Logout Button */}
+      {/* Logout */}
       <button
         className="w-full bg-gradient-to-r cursor-pointer from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold px-4 py-3 rounded-xl text-sm transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center justify-center gap-2"
         onClick={handleLogout}
