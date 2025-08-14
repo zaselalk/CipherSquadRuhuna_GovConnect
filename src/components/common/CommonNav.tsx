@@ -97,7 +97,7 @@ const CommonNav = () => {
         <NavLink to="/resident/dashboard/About">About Us</NavLink>
       </Menu.Item>
       <Menu.Item key="feedback" icon={<MessageOutlined />}>
-        <NavLink to="/feedback">Feedback</NavLink>
+        <NavLink to="/resident/feedback">Feedback</NavLink>
       </Menu.Item>
     </Menu>
   );
