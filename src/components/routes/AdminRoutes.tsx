@@ -98,8 +98,8 @@ export const AdminRoutes = () => {
             }
           />
         </Route>
-                <Route
-          path="admin/feedback"
+        <Route
+          path="/admin/feedback"
           element={
             // <ProtectedRoutesGuard>
             <AdminFeedbackPage/>
