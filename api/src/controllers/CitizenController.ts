@@ -14,7 +14,7 @@ export class CitizenController {
    * @param req - The HTTP request object containing citizen data
    * @param res - The HTTP response object
    */
-  createCitizen = async (
+  registerResident = async (
     req: createCitizenRequest,
     res: Response
   ): Promise<Response> => {
