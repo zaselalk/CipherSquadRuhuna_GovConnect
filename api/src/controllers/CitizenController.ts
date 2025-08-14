@@ -14,7 +14,7 @@ export class CitizenController {
    * @param req - The HTTP request object containing citizen data
    * @param res - The HTTP response object
    */
-  registerResident = async (
+  registerCitizen = async (
     req: createCitizenRequest,
     res: Response
   ): Promise<Response> => {
@@ -33,6 +33,63 @@ export class CitizenController {
         address: citizen.address,
         contactNumber: citizen.contactNumber,
         NICNumber: citizen.NICNumber,
+      },
+    });
+  };
+
+  /**
+   * Login a citizen
+   * @param req - The HTTP request object containing login credentials
+   * @param res - The HTTP response object
+   * @returns A response indicating success or failure of the login attempt
+   */
+  loginCitizen = async (req: Request, res: Response): Promise<Response> => {
+    const { email, password } = req.body;
+    // Implement login logic here, e.g., verify credentials
+
+    // find the user by email
+    const citizen = await this.citizenRepository.findCitizenByEmail(email);
+    if (!citizen) {
+      return res.status(404).json({
+        message: "Citizen not found",
+        status: 404,
+        error: null,
+        data: null,
+      });
+    }
+
+    const isValidPassword = await citizen.validatePassword(
+      password,
+      citizen.password
+    );
+
+    // Check password (this is a placeholder, implement your own logic)
+    if (!isValidPassword) {
+      return res.status(401).json({
+        message: "Invalid credentials",
+        status: 401,
+        error: null,
+        data: null,
+      });
+    }
+
+    const token = await citizen.generateToken();
+    // If login is successful, return citizen data (excluding password)
+    return res.status(200).json({
+      message: "Login successful",
+      status: 200,
+      error: null,
+      data: {
+        resident: {
+          id: citizen.id,
+          fullName: citizen.fullName,
+          email: citizen.email,
+          dateOfBirth: citizen.dateOfBirth,
+          address: citizen.address,
+          contactNumber: citizen.contactNumber,
+          NICNumber: citizen.NICNumber,
+        },
+        token,
       },
     });
   };
