@@ -1,16 +1,6 @@
-import { CitizenData } from "../types/citizen";
+import { Citizen, CitizenData, CitizenLoginResponse } from "../types/citizen";
 import axiosInstance from "./axios/axiosInstance";
 
-// Define Citizen type inline
-type Citizen = {
-  id: number;
-  fullName: string;
-  email: string;
-  dateOfBirth?: string;
-  address?: string;
-  contactNumber?: string;
-  NICNumber?: string;
-};
 
 export const CitizenService = {
   // Get all citizens
@@ -27,7 +17,7 @@ export const CitizenService = {
 
   async addCitizen(data: Partial<CitizenData>): Promise<void> {
     try {
-      const response = await axiosInstance.post("/citizen", data);
+      const response = await axiosInstance.post("/citizen/auth/register", data);
       return response.data;
     } catch (error: any) {
       console.error("Error adding citizen:", error);
@@ -46,5 +36,22 @@ export const CitizenService = {
   // Delete citizen
   deleteCitizenById: async (id: number): Promise<void> => {
     await axiosInstance.delete(`/citizen/${id}`);
+  },
+
+  //loginservice
+  login: async (
+    email: string,
+    password: string
+  ): Promise<CitizenLoginResponse> => {
+    try {
+      const response = await axiosInstance.post("/citizen/auth/login", {
+        email,
+        password,
+      });
+      return response.data.data;
+    } catch (error: any) {
+      console.error("Error logging in citizen:", error);
+      throw new Error(error.response?.data?.message || "Unable to log in citizen");
+    }
   },
 };
