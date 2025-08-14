@@ -6,6 +6,7 @@ import ShiftApplyModal from "../../../components/features/roster/shiftApplyModal
 import LeaveForm from "../../../components/features/roster/leaveForm";
 import DayOffSelector from "../../../components/features/roster/dayOffSelector";
 import { Calendar } from "antd";
+import CommonNav from "../../../components/common/CommonNav";
 
 const Dashboard = () => {
   const [activeOverlay, setActiveOverlay] = useState<string | null>(null);
@@ -64,9 +65,9 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
-      <DashboardHeader />
+      <CommonNav />
 
-      <main className="p-6 space-y-6">
+      <main className="px-10 py-6 space-y-6">
         {/* Top Section: Left Cards + Right Calendar */}
         <div className="flex gap-6">
           {/* Left Section: Off Days + Leave */}

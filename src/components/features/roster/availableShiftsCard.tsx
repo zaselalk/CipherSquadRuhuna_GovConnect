@@ -13,11 +13,7 @@ const AvailableShiftsCard = ({ shifts, onApply, onOverlayChange }: any) => {
       }
     >
       <ShiftsTable shifts={shifts.slice(0, 3)} onApply={onApply} />
-      <div className="mt-4 flex flex-wrap gap-2">
-        <Button type="primary" onClick={() => onOverlayChange("annualLeave")}>Apply Annual Leave</Button>
-        <Button onClick={() => onOverlayChange("casualLeave")}>Apply Casual Leave</Button>
-        <Button onClick={() => onOverlayChange("dayOff")}>Apply Day Off</Button>
-      </div>
+      
     </Card>
   );
 };
