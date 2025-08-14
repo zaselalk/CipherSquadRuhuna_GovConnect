@@ -8,6 +8,7 @@ import UserRouter from "./routes/user.routes";
 import serializeUser from "./middleware/serializeuser.middleware";
 import expressErrorHandler from "./util/expressErrorHandler";
 import CitizenRouter from "./routes/citizen.routes";
+import DepartmentRouter from "./routes/department.routes";
 // import "./models/association"; // Import associations to ensure they are registered
 
 dotenv.config();
@@ -43,6 +44,7 @@ app.use("/auth", AuthRouter);
 app.use("/role", RoleRouter);
 app.use("/user", UserRouter);
 app.use("/citizen", CitizenRouter);
+app.use("/department", DepartmentRouter);
 
 // citizen routes
 
