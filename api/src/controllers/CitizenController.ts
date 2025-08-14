@@ -1,6 +1,7 @@
 import { CitizenRepository } from "../repositories/CitizenRepository";
 import { Request, Response } from "express";
 import { CitizenCreationAttributes } from "../types/citizen";
+import { Citizen } from "../models/citizen";
 
 interface createCitizenRequest extends Request {
   body: CitizenCreationAttributes;
@@ -80,7 +81,7 @@ export class CitizenController {
       status: 200,
       error: null,
       data: {
-        resident: {
+        Citizen: {
           id: citizen.id,
           fullName: citizen.fullName,
           email: citizen.email,
