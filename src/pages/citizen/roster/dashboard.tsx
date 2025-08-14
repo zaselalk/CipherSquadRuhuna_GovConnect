@@ -39,7 +39,7 @@ const Dashboard = () => {
   ]);
 
   // Handle leave submission
-  const handleLeaveSubmit = (values: any, leaveType: string) => {
+  const handleLeaveSubmit = (leaveType: string) => {
     setLeaveRequests(prev => [
       ...prev,
       { type: leaveType === "annual" ? "Annual Leave" : "Casual Leave", status: "Pending" },
@@ -245,11 +245,11 @@ const dateCellRender = (value: any) => {
       )}
 
       {activeOverlay === "annualLeave" && (
-        <LeaveForm title="Annual Leave" type="annual" onClose={() => setActiveOverlay(null)} onSubmit={(v: any) => handleLeaveSubmit(v, "annual")} />
+        <LeaveForm title="Annual Leave" type="annual" onClose={() => setActiveOverlay(null)} onSubmit={() => handleLeaveSubmit("annual")} />
       )}
 
       {activeOverlay === "casualLeave" && (
-        <LeaveForm title="Casual Leave" type="casual" onClose={() => setActiveOverlay(null)} onSubmit={(v: any) => handleLeaveSubmit(v, "casual")} />
+        <LeaveForm title="Casual Leave" type="casual" onClose={() => setActiveOverlay(null)} onSubmit={() => handleLeaveSubmit("casual")} />
       )}
 
       {activeOverlay === "dayOff" && (
