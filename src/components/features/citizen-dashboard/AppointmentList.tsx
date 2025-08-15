@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { List, Typography, Tag, Button, Modal, Input, Rate, message } from "antd";
-import { ServiceFeedbackService, ServiceFeedback } from "../../../services/serviceFeedback.service";
+import {
+  List,
+  Typography,
+  Tag,
+  Button,
+  Modal,
+  Input,
+  Rate,
+  message,
+} from "antd";
+import {
+  ServiceFeedbackService,
+  ServiceFeedback,
+} from "../../../services/serviceFeedback.service";
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -22,16 +34,26 @@ interface AppointmentListProps {
 
 const statusColor = (status: Appointment["status"]) => {
   switch (status) {
-    case "Confirmed": return "green";
-    case "Pending": return "gold";
-    case "Rescheduled": return "blue";
-    default: return "default";
+    case "Confirmed":
+      return "green";
+    case "Pending":
+      return "gold";
+    case "Rescheduled":
+      return "blue";
+    default:
+      return "default";
   }
 };
 
-const AppointmentList: React.FC<AppointmentListProps> = ({ appointments, type, userId, onViewAppointment }) => {
+const AppointmentList: React.FC<AppointmentListProps> = ({
+  appointments,
+  type,
+  userId,
+  onViewAppointment,
+}) => {
   const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
-  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [selectedAppointment, setSelectedAppointment] =
+    useState<Appointment | null>(null);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [feedbacks, setFeedbacks] = useState<ServiceFeedback[]>([]);
@@ -41,7 +63,9 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ appointments, type, u
     if (type === "past" && userId) {
       const fetchFeedbacks = async () => {
         try {
-          const data = await ServiceFeedbackService.getFeedbacksByUserId(userId);
+          const data = await ServiceFeedbackService.getFeedbacksByUserId(
+            userId
+          );
           setFeedbacks(data);
         } catch (error: any) {
           console.error("Error fetching feedbacks:", error);
@@ -53,7 +77,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ appointments, type, u
 
   const handleFeedbackClick = (appointment: Appointment) => {
     setSelectedAppointment(appointment);
-    const existing = feedbacks.find(f => f.appointmentId === appointment.id);
+    const existing = feedbacks.find((f) => f.appointmentId === appointment.id);
     setRating(existing?.rating || 0);
     setComment(existing?.comment || "");
     setFeedbackModalOpen(true);
@@ -66,7 +90,8 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ appointments, type, u
     }
     if (!selectedAppointment || !userId) return;
 
-    const typeFeedback: ServiceFeedback["type"] = rating >= 4 ? "positive" : rating === 3 ? "neutral" : "negative";
+    const typeFeedback: ServiceFeedback["type"] =
+      rating >= 4 ? "positive" : rating === 3 ? "neutral" : "negative";
 
     try {
       await ServiceFeedbackService.addFeedback({
@@ -89,15 +114,27 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ appointments, type, u
 
   if (!appointments.length) {
     return (
-      <Text type="secondary" style={{ fontSize: 16, color: "#6b7280", userSelect: "none" }}>
-        {type === "upcoming" ? "No upcoming appointments." : "No past appointments."}
+      <Text
+        type="secondary"
+        style={{ fontSize: 16, color: "#6b7280", userSelect: "none" }}
+      >
+        {type === "upcoming"
+          ? "No upcoming appointments."
+          : "No past appointments."}
       </Text>
     );
   }
 
   return (
     <>
-      <div style={{ width: "100%", maxHeight: 400, overflowY: "auto", paddingRight: 8 }}>
+      <div
+        style={{
+          width: "100%",
+          maxHeight: 400,
+          overflowY: "auto",
+          paddingRight: 8,
+        }}
+      >
         <List
           itemLayout="horizontal"
           dataSource={appointments}
@@ -121,10 +158,13 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ appointments, type, u
                 }}
                 onClick={() => type === "upcoming" && onViewAppointment?.(id)}
                 onMouseEnter={(e) => {
-                  if (type === "upcoming") (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 8px rgba(0, 0, 0, 0.12)";
+                  if (type === "upcoming")
+                    (e.currentTarget as HTMLElement).style.boxShadow =
+                      "0 4px 8px rgba(0, 0, 0, 0.12)";
                 }}
                 onMouseLeave={(e) => {
-                  if (type === "upcoming") (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                  if (type === "upcoming")
+                    (e.currentTarget as HTMLElement).style.boxShadow = "none";
                 }}
                 actions={
                   type === "past"
@@ -132,57 +172,79 @@ const AppointmentList: React.FC<AppointmentListProps> = ({ appointments, type, u
                         <Button
                           type="primary"
                           key="feedback"
-                          onClick={(e) => { e.stopPropagation(); handleFeedbackClick(appointment); }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleFeedbackClick(appointment);
+                          }}
                           style={{ fontWeight: 600, borderRadius: 8 }}
                         >
-                          {feedbacks.find(f => f.appointmentId === appointment.id) ? "Edit Feedback" : "Give Feedback"}
+                          {feedbacks &&
+                          feedbacks.find(
+                            (f) => f.appointmentId === appointment.id
+                          )
+                            ? "Edit Feedback"
+                            : "Give Feedback"}
                         </Button>,
                       ]
                     : undefined
                 }
               >
                 <List.Item.Meta
-                  title={<Text strong style={{ fontSize: 18, color: "#111827" }}>{serviceName}</Text>}
-                  description={<Text style={{ color: "#4b5563" }}>{type === "upcoming" ? `${date} at ${time}` : date}</Text>}
+                  title={
+                    <Text strong style={{ fontSize: 18, color: "#111827" }}>
+                      {serviceName}
+                    </Text>
+                  }
+                  description={
+                    <Text style={{ color: "#4b5563" }}>
+                      {type === "upcoming" ? `${date} at ${time}` : date}
+                    </Text>
+                  }
                 />
-                {type === "upcoming" && <Tag color={statusColor(status)} style={{ fontWeight: 600, fontSize: 14 }}>{status}</Tag>}
+                {type === "upcoming" && (
+                  <Tag
+                    color={statusColor(status)}
+                    style={{ fontWeight: 600, fontSize: 14 }}
+                  >
+                    {status}
+                  </Tag>
+                )}
               </List.Item>
             );
           }}
         />
       </div>
 
-<Modal
-  title={`Give Feedback - ${selectedAppointment?.serviceName || ""}`}
-  open={feedbackModalOpen}
-  onCancel={() => setFeedbackModalOpen(false)}
-  onOk={handleSubmitFeedback}
-  okText="Submit"
-  cancelText="Cancel"
->
-  <div style={{ marginBottom: 16 }}>
-    <label htmlFor="feedbackRating"><Text strong>Rating:</Text></label>
-    <div style={{ marginTop: 8 }}>
-      <Rate
-        id="feedbackRating"
-        value={rating}
-        onChange={setRating}
-      />
-    </div>
-  </div>
-  <div>
-    <label htmlFor="feedbackComment"><Text strong>Comment:</Text></label>
-    <TextArea
-      id="feedbackComment"
-      name="comment"
-      rows={4}
-      value={comment}
-      onChange={(e) => setComment(e.target.value)}
-      placeholder="Write your feedback here..."
-    />
-  </div>
-</Modal>
-
+      <Modal
+        title={`Give Feedback - ${selectedAppointment?.serviceName || ""}`}
+        open={feedbackModalOpen}
+        onCancel={() => setFeedbackModalOpen(false)}
+        onOk={handleSubmitFeedback}
+        okText="Submit"
+        cancelText="Cancel"
+      >
+        <div style={{ marginBottom: 16 }}>
+          <label htmlFor="feedbackRating">
+            <Text strong>Rating:</Text>
+          </label>
+          <div style={{ marginTop: 8 }}>
+            <Rate id="feedbackRating" value={rating} onChange={setRating} />
+          </div>
+        </div>
+        <div>
+          <label htmlFor="feedbackComment">
+            <Text strong>Comment:</Text>
+          </label>
+          <TextArea
+            id="feedbackComment"
+            name="comment"
+            rows={4}
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="Write your feedback here..."
+          />
+        </div>
+      </Modal>
     </>
   );
 };
