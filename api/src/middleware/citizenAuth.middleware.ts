@@ -32,7 +32,7 @@ export default async function serializeCitizen(
 
   // decode jwt token
   try {
-    const secretKey = process.env.JWT_SECRET as string;
+    const secretKey = process.env.JWT_SECRET_CITIZEN as string;
     const decoded = jwt.verify(token, secretKey) as JwtPayload;
 
     const findCitizen = await Citizen.findByPk(decoded.id);

@@ -1,7 +1,6 @@
 import { Citizen, CitizenData, CitizenLoginResponse } from "../types/citizen";
 import axiosInstance from "./axios/axiosInstance";
 
-
 export const CitizenService = {
   // Get all citizens
   getAllCitizens: async (): Promise<Citizen[]> => {
@@ -51,7 +50,9 @@ export const CitizenService = {
       return response.data.data;
     } catch (error: any) {
       console.error("Error logging in citizen:", error);
-      throw new Error(error.response?.data?.message || "Unable to log in citizen");
+      throw new Error(
+        error.response?.data?.message || "Unable to log in citizen"
+      );
     }
   },
 
@@ -62,7 +63,9 @@ export const CitizenService = {
       return response.data;
     } catch (error: any) {
       console.error("Error checking citizen token:", error);
-      throw new Error(error.response?.data?.message || "Unable to check citizen token");
+      throw new Error(
+        error.response?.data?.message || "Unable to check citizen token"
+      );
     }
   },
 };
