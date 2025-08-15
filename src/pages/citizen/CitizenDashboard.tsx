@@ -66,6 +66,9 @@ const CitizenDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Simulated logged-in user ID
+  const userId = "user123"; 
+
   useEffect(() => {
     setTimeout(() => {
       setUpcomingAppointments([
@@ -89,7 +92,6 @@ const CitizenDashboard = () => {
     }, 1000);
   }, []);
 
-  // Handle notifications popover
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
@@ -101,7 +103,6 @@ const CitizenDashboard = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [notifOpen]);
 
-  // Scroll to document section if URL hash matches
   useEffect(() => {
     if (location.hash === "#document-submission-section") {
       const section = document.getElementById("document-submission-section");
@@ -113,7 +114,6 @@ const CitizenDashboard = () => {
 
   const handleBookNew = () => navigate("/resident/dashboard/service-selection");
   const handleViewAppointment = (id: string) => alert(`View or reschedule appointment ${id}`);
-  const handleFeedback = (id: string) => alert(`Give feedback for appointment ${id}`);
 
   if (loading) {
     return (
@@ -125,24 +125,20 @@ const CitizenDashboard = () => {
 
   return (
     <Layout className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-600">
-      <CommonNav /> {/* Nav bar will handle hash-based navigation */}
+      <CommonNav />
 
       <Content className="px-6 sm:px-8 py-12 overflow-auto" aria-label="Citizen Dashboard Content">
-        {/* Welcome Message with Notifications + Book Appointment */}
         <div style={welcomeStyle} role="region" aria-label="Welcome message">
           <div className="flex items-center gap-3">
             <SmileOutlined style={{ fontSize: 32, color: "#2563eb" }} />
             <div>
-              <Title level={4} style={{ margin: 0, color: "#1e293b" }}>
-                Welcome Back!
-              </Title>
+              <Title level={4} style={{ margin: 0, color: "#1e293b" }}>Welcome Back!</Title>
               <Paragraph style={{ margin: 0, color: "#4b5563" }}>
                 We're glad to see you. Manage your appointments and notifications below.
               </Paragraph>
             </div>
           </div>
 
-          {/* Right Controls */}
           <div className="flex items-center gap-4">
             <Popover
               content={<NotificationList notifications={notifications} />}
@@ -152,11 +148,7 @@ const CitizenDashboard = () => {
               onOpenChange={setNotifOpen}
               placement="bottomRight"
             >
-              <Badge
-                count={notifications.length}
-                overflowCount={99}
-                style={{ backgroundColor: "#2563eb", cursor: "pointer" }}
-              >
+              <Badge count={notifications.length} overflowCount={99} style={{ backgroundColor: "#2563eb", cursor: "pointer" }}>
                 <Button
                   shape="circle"
                   type="text"
@@ -178,16 +170,9 @@ const CitizenDashboard = () => {
           </div>
         </div>
 
-        {/* Appointments Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Upcoming Appointments */}
           <section style={sectionCardStyle} aria-labelledby="upcoming-appointments-title">
-            <Title
-              level={3}
-              id="upcoming-appointments-title"
-              className="mb-6 flex items-center gap-2"
-              style={{ color: "#1e293b" }}
-            >
+            <Title level={3} id="upcoming-appointments-title" className="mb-6 flex items-center gap-2" style={{ color: "#1e293b" }}>
               <ClockCircleOutlined style={{ color: "#2563eb", fontSize: 26 }} />
               Upcoming Appointments
             </Title>
@@ -196,19 +181,11 @@ const CitizenDashboard = () => {
               type="upcoming"
               onViewAppointment={handleViewAppointment}
             />
-            {upcomingAppointments.length === 0 && (
-              <Text className="text-gray-500 italic">You have no upcoming appointments.</Text>
-            )}
+            {upcomingAppointments.length === 0 && <Text className="text-gray-500 italic">You have no upcoming appointments.</Text>}
           </section>
 
-          {/* Past Appointments */}
           <section style={sectionCardStyle} aria-labelledby="past-appointments-title">
-            <Title
-              level={3}
-              id="past-appointments-title"
-              className="mb-6 flex items-center gap-2"
-              style={{ color: "#1e293b" }}
-            >
+            <Title level={3} id="past-appointments-title" className="mb-6 flex items-center gap-2" style={{ color: "#1e293b" }}>
               <HistoryOutlined style={{ color: "#2563eb", fontSize: 26 }} />
               Past Appointments
             </Title>
@@ -216,28 +193,16 @@ const CitizenDashboard = () => {
               <AppointmentList
                 appointments={pastAppointments}
                 type="past"
-                onGiveFeedback={handleFeedback}
+                userId={userId} // Pass userId for feedback functionality
+                onViewAppointment={handleViewAppointment}
               />
             </div>
-            {pastAppointments.length === 0 && (
-              <Text className="text-gray-500 italic">No past appointments available.</Text>
-            )}
+            {pastAppointments.length === 0 && <Text className="text-gray-500 italic">No past appointments available.</Text>}
           </section>
         </div>
 
-        {/* Document Submission */}
-        <section
-          id="document-submission-section"
-          style={sectionCardStyle}
-          aria-labelledby="document-submission-title"
-          className="mt-8 lg:col-span-3"
-        >
-          <Title
-            level={3}
-            id="document-submission-title"
-            className="mb-6 flex items-center gap-2"
-            style={{ color: "#1e293b" }}
-          >
+        <section id="document-submission-section" style={sectionCardStyle} aria-labelledby="document-submission-title" className="mt-8 lg:col-span-3">
+          <Title level={3} id="document-submission-title" className="mb-6 flex items-center gap-2" style={{ color: "#1e293b" }}>
             <FileTextOutlined style={{ color: "#2563eb", fontSize: 26 }} />
             Document Submission
           </Title>
