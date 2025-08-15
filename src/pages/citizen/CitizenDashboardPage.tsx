@@ -180,7 +180,8 @@ const CitizenDashboardPage = () => {
     <Layout className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-600 ">
       <CommonNav /> {/* Nav bar will handle hash-based navigation */}
       <Content
-        className="px-32 sm:px-8 py-12 overflow-auto"
+         style={{ paddingLeft: 50, paddingRight: 50 }}
+        className="py-12 overflow-auto"
         aria-label="Citizen Dashboard Content"
       >
         {/* Welcome Message with Notifications + Book Appointment */}
