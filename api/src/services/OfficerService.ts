@@ -31,7 +31,9 @@ export class OfficerService{
             return affectedCount > 0;
         });
     }
-   public async getDepartmentByOfficer(dep_id: number): Promise<Officer[]> {
+   public async getOfficersByDepartment(dep_id: number): Promise<Officer[]> {
         return await this.officerRepository.findByDepartmentId(dep_id);
     }
+
+    
 }

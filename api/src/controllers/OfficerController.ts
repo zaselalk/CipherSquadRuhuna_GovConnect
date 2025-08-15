@@ -35,7 +35,7 @@ export class OfficerController {
 
   // (Better name) officers by department id
   public getOfficersByDepartment = async (req: Request, res: Response): Promise<void> => {
-    const officers = await this.officerService.getDepartmentByOfficer(Number(req.params.dep_id));
+    const officers = await this.officerService.getOfficersByDepartment(Number(req.params.dep_id));
     res.json(officers);
   };
 
