@@ -11,6 +11,7 @@ import CitizenRouter from "./routes/citizen.routes";
 import DepartmentRouter from "./routes/department.routes";
 import serviceFeedbackRouter from "./routes/serviceFeedback.routes";
 import CitizenDocsRouter from "./routes/citizendoc.routes";
+import OfficerRouter from "./routes/officer.route";
 import path from "path";
 import FeedbackRouter from "./routes/generalFeedback.routes";
 import DepartmentServiceRouter from "./routes/DepService.routes";
@@ -55,6 +56,7 @@ app.use("/service-feedback", serviceFeedbackRouter); // Assuming feedback routes
 app.use("/depservice", DepartmentServiceRouter);
 app.use("/feedback", FeedbackRouter); // Assuming feedback routes are under department
 app.use("/citizen-docs", CitizenDocsRouter);
+app.use("/officer", OfficerRouter);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/feedback", FeedbackRouter); // Assuming feedback routes are under department
 
