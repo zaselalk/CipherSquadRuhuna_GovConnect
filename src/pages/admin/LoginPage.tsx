@@ -1,9 +1,9 @@
 import { FC, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router";
-import { useAppSelector } from "../hooks/state/hooks";
-import { LoginLeftImageSection } from "../components/features/user-management/user-authentication/LoginLeftImageSection";
-import { LoginRightLoginSection } from "../components/features/user-management/user-authentication/LoginRightLoginSection";
-import { LandingHeader } from "../components/features/landing-page/LandingHeader";
+import { useAppSelector } from "../../hooks/state/hooks";
+import { LoginLeftImageSection } from "../../components/features/user-management/user-authentication/LoginLeftImageSection";
+import { LoginRightLoginSection } from "../../components/features/user-management/user-authentication/LoginRightLoginSection";
+import { LandingHeader } from "../../components/features/landing-page/LandingHeader";
 
 const LoginPage: FC = () => {
   const auth = useAppSelector((state) => state.auth);

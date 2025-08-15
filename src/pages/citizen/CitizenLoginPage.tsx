@@ -1,27 +1,33 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
 import { loginState } from "../../types/login";
 import { Alert, Button, Form, Input } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
-import { useResidentAuth } from "../../components/auth/ResidentAuthContext";
+import { useCitizenAuth } from "../../components/auth/CitizenAuthContext";
 import { LandingHeader } from "../../components/features/landing-page/LandingHeader";
 
-const ResidentLoginPage: FC = () => {
+const CitizenLoginPage: FC = () => {
   const [error, setError] = useState<null | string>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const [form] = Form.useForm();
-  const { login, isLoading } = useResidentAuth();
+  const { login, isLoading, isAuthenticated } = useCitizenAuth();
 
   // Get the intended destination from location state
-  const from = location.state?.from || "/resident/dashboard";
+  const from = location.state?.from || "/citizen/dashboard";
+
+  // Redirect if already authenticated (similar to admin login)
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, navigate, from]);
 
   const onSubmit = async (values: loginState) => {
     try {
       setError(null);
       await login(values.email, values.password);
-      // Navigate to intended destination after successful login
-      navigate(from, { replace: true });
+      // Navigation will be handled by the useEffect above
     } catch (error: any) {
       setError(error.message);
     }
@@ -109,11 +115,9 @@ const ResidentLoginPage: FC = () => {
             </Form>
 
             <div className="text-center mt-6">
-              <p className="text-gray-600 mb-3">
-                Don't have an account?
-              </p>
+              <p className="text-gray-600 mb-3">Don't have an account?</p>
               <Link
-                to="/resident/register"
+                to="/citizen/register"
                 className="inline-flex items-center justify-center w-full px-4 py-3 text-[#008FFB] bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors font-medium"
               >
                 Register as Citizen
@@ -122,8 +126,8 @@ const ResidentLoginPage: FC = () => {
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 
-export default ResidentLoginPage;
+export default CitizenLoginPage;

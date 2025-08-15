@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router";
 import ProtectedRoutesGuard from "../auth/ProtectedRoute";
-import LoginPage from "../../pages/LoginPage";
+import LoginPage from "../../pages/admin/LoginPage";
 import ProfilePage from "../../pages/admin/ProfilePage";
 import UsersPage from "../../pages/admin/UsersPage";
 import AdminDashboard from "../../pages/admin/AdminDashboardPage";
@@ -61,7 +61,7 @@ export const AdminRoutes = () => {
           path="admin/department"
           element={
             // <ProtectedRoutesGuard>
-              <DepartmentPage />
+            <DepartmentPage />
             // </ProtectedRoutesGuard>
           }
         />
@@ -102,7 +102,7 @@ export const AdminRoutes = () => {
           path="/admin/feedback"
           element={
             // <ProtectedRoutesGuard>
-            <AdminFeedbackPage/>
+            <AdminFeedbackPage />
             // </ProtectedRoutesGuard>
           }
         />
