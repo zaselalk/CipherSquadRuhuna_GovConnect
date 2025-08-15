@@ -8,6 +8,7 @@ const DepartmentServiceRouter = Router();
 const departmentServiceController = new DepartmentServiceController();
 
 DepartmentServiceRouter.post("/", catchAsync(departmentServiceController.createService));
+DepartmentServiceRouter.get("/", catchAsync(departmentServiceController.getAllServices));
 DepartmentServiceRouter.get("/:id", catchAsync(departmentServiceController.getServiceById));
 DepartmentServiceRouter.put("/:id", catchAsync(departmentServiceController.updateService));
 DepartmentServiceRouter.delete("/:id", catchAsync(departmentServiceController.deleteService));
