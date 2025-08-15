@@ -12,6 +12,7 @@ import {
 import {
   DashboardOutlined,
   AppstoreOutlined,
+  FileTextOutlined,
   UserOutlined,
   InfoCircleOutlined,
   MessageOutlined,
