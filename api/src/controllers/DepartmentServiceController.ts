@@ -132,5 +132,38 @@ export class DepartmentServiceController {
         }
     }
 
+    // Get services by department ID
+public getServicesByDepartment = async (req: Request, res: Response) => {
+  try {
+    const dep_id = Number(req.params.dep_id);
+    if (isNaN(dep_id)) {
+      res.status(400).json({
+        message: "Invalid department ID",
+        status: 400,
+        error: "dep_id must be a number",
+        data: null
+      });
+      return;
+    }
+
+    const services = await this.departmentServiceService.getServicesByDepartment(dep_id);
+
+    res.status(200).json({
+      message: "Services retrieved successfully",
+      status: 200,
+      error: null,
+      data: services
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      message: "Failed to retrieve services",
+      status: 500,
+      error: error.message,
+      data: null
+    });
+  }
+};
+
+
 
 }
