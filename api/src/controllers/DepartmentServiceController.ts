@@ -55,6 +55,25 @@ export class DepartmentServiceController {
         }
     }
 
+    public getAllServices = async (req: Request, res: Response) => {
+        try {
+            const services = await this.departmentServiceService.getAllServices();
+            res.status(200).json({
+                message: "Services retrieved successfully",
+                status: 200,
+                error: null,
+                data: services
+            });
+        } catch (error: any) {
+            res.status(500).json({
+                message: "Failed to retrieve services",
+                status: 500,
+                error: error.message,
+                data: null
+            });
+        }
+    }
+
     public updateService = async (req: Request, res: Response) => {
         try {
             const service = await this.departmentServiceService.updateService(Number(req.params.id), req.body);
