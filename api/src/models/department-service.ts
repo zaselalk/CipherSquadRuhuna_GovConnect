@@ -1,16 +1,19 @@
+// models/department-service.ts
+
 import { Model, DataTypes } from "sequelize";
 import sequelize from "./sequelize";
 import { Department } from "./department";
-
+import { DocumentType } from "./document-type";
 
 export class DepartmentService extends Model {
   public service_id!: number;
   public dep_id!: number;
   public name!: string;
+  public doc_id!: number[]; // Array of integers
   public description!: string | null;
-  public createdAt!: Date;
-  public updatedAt!: Date;
-  public deletedAt!: Date | null;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+  public readonly deletedAt!: Date | null;
 }
 
 DepartmentService.init(
@@ -39,20 +42,9 @@ DepartmentService.init(
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW,
-    },
-    deletedAt: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: null,
+    doc_id: {
+      type: DataTypes.JSON, // Store array of integers
+      defaultValue: [],
     },
   },
   {
@@ -63,12 +55,14 @@ DepartmentService.init(
   }
 );
 
-// Association
+// Associations
 Department.hasMany(DepartmentService, {
   foreignKey: "dep_id",
   as: "services",
 });
+
 DepartmentService.belongsTo(Department, {
   foreignKey: "dep_id",
   as: "department",
 });
+
