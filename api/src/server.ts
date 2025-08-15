@@ -12,6 +12,7 @@ import DepartmentRouter from "./routes/department.routes";
 import FeedbackRouter from "./routes/generalFeedback.routes";
 import { ap } from "react-router/dist/development/route-data-C12CLHiN";
 import CitizenDocsRouter from "./routes/citizendoc.routes";
+import OfficerRouter from "./routes/officer.route";
 // import "./models/association"; // Import associations to ensure they are registered
 
 dotenv.config();
@@ -50,7 +51,7 @@ app.use("/citizen", CitizenRouter);
 app.use("/department", DepartmentRouter);
 app.use("/feedback", FeedbackRouter); // Assuming feedback routes are under department
 app.use("/citizen-docs", CitizenDocsRouter);
-
+app.use("/officer", OfficerRouter);
 
 // citizen routes
 
