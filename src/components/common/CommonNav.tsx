@@ -41,9 +41,7 @@ const CommonNav = () => {
       <Menu.Item key="profile">
         <NavLink to="/profile">Profile</NavLink>
       </Menu.Item>
-      <Menu.Item key="logout">
-        <NavLink to="/login">Logout</NavLink>
-      </Menu.Item>
+      <Menu.Item key="logout"></Menu.Item>
     </Menu>
   );
 
@@ -60,13 +58,10 @@ const CommonNav = () => {
         <NavLink to="/citizen/dashboard">Dashboard</NavLink>
       </Menu.Item>
       <Menu.Item key="departments" icon={<AppstoreOutlined />}>
-        <NavLink to="/citizen/dashboard/departments">Departments</NavLink>
+        <NavLink to="/citizen/departments">Departments</NavLink>
       </Menu.Item>
       <Menu.Item key="roster" icon={<ClockCircleOutlined />}>
         <NavLink to="/citizen/roster">Roster</NavLink>
-      </Menu.Item>
-      <Menu.Item key="about" icon={<InfoCircleOutlined />}>
-        <NavLink to="/citizen/dashboard/About">About Us</NavLink>
       </Menu.Item>
       <Menu.Item key="feedback" icon={<MessageOutlined />}>
         <NavLink to="/citizen/feedback">Feedback</NavLink>
@@ -129,17 +124,21 @@ const CommonNav = () => {
           </Drawer>
         </Space>
       ) : (
-        <Space align="center">
-          {menuItems}
-          <Dropdown overlay={profileMenu} placement="bottomRight">
-            <Avatar
-              size="large"
-              icon={<UserOutlined />}
-              style={{ cursor: "pointer" }}
-            />
-          </Dropdown>
-        </Space>
+        <Space align="center">{menuItems}</Space>
       )}
+
+      <Button
+        type="text"
+        className="ant-btn-icon-only"
+        danger
+        onClick={() => {
+          localStorage.removeItem("citizenToken");
+          localStorage.removeItem("citizenData");
+          window.location.href = "/citizen/login"; // Redirect to login
+        }}
+      >
+        Logout
+      </Button>
     </Header>
   );
 };

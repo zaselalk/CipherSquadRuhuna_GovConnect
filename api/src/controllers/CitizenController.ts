@@ -96,6 +96,50 @@ export class CitizenController {
   };
 
   /**
+   * Check if citizen token is valid
+   * @param req - The HTTP request object (token should be in headers)
+   * @param res - The HTTP response object
+   * @returns A response with citizen data if token is valid
+   */
+  checkToken = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      // The token should be validated by middleware and citizen data attached to req
+      const citizen = (req as any).citizen; // Assuming middleware adds citizen to request
+
+      if (!citizen) {
+        return res.status(401).json({
+          message: "Invalid or expired token",
+          status: 401,
+          error: null,
+          data: null,
+        });
+      }
+
+      return res.status(200).json({
+        message: "Token is valid",
+        status: 200,
+        error: null,
+        data: {
+          id: citizen.id,
+          fullName: citizen.fullName,
+          email: citizen.email,
+          dateOfBirth: citizen.dateOfBirth,
+          address: citizen.address,
+          contactNumber: citizen.contactNumber,
+          NICNumber: citizen.NICNumber,
+        },
+      });
+    } catch (error) {
+      return res.status(401).json({
+        message: "Invalid or expired token",
+        status: 401,
+        error: null,
+        data: null,
+      });
+    }
+  };
+
+  /**
    * Find a citizen by ID
    * @param req - The HTTP request object containing the citizen ID
    * @param res - The HTTP response object

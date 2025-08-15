@@ -170,17 +170,17 @@ const CitizenDashboardPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-blue-100 to-indigo-700">
+      <div className="min-h-screen flex justify-center items-center bg-gradient-to-br ">
         <Spin size="large" tip="Loading your dashboard..." />
       </div>
     );
   }
 
   return (
-    <Layout className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-600">
+    <Layout className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-600 ">
       <CommonNav /> {/* Nav bar will handle hash-based navigation */}
       <Content
-        className="px-6 sm:px-8 py-12 overflow-auto"
+        className="px-32 sm:px-8 py-12 overflow-auto"
         aria-label="Citizen Dashboard Content"
       >
         {/* Welcome Message with Notifications + Book Appointment */}

@@ -4,5 +4,4 @@ export interface CitizenAuthContextType {
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  // checkAuthStatus: () => Promise<void>;
 }

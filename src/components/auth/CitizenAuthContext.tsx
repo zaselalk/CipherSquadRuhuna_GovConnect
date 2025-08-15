@@ -1,9 +1,11 @@
-import React, { createContext, useContext, ReactNode } from "react";
+import React, { createContext, useContext, ReactNode, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../hooks/state/hooks";
 import {
   citizenLogin,
   citizenLogout,
   setCitizenLoading,
+  setCitizenAuthCheckComplete,
 } from "../../store/slices/citizenAuthSlice";
 import { CitizenService } from "../../services/citizen.service";
 import { CitizenAuthContextType } from "./types/CitizenAuthContextType";
@@ -20,9 +22,72 @@ export const CitizenAuthProvider: React.FC<CitizenAuthProviderProps> = ({
   children,
 }) => {
   const dispatch = useAppDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const { isAuthenticated, citizen, isLoading } = useAppSelector(
     (state) => state.citizenAuth
   );
+
+  // Check token when the app loads - similar to admin AuthProvider
+  useEffect(() => {
+    const citizenService = CitizenService;
+    (async () => {
+      try {
+        // Store the current path before authentication check
+        const currentPath = location.pathname + location.search;
+
+        const auth = await citizenService.checkToken();
+        const citizenData = auth.data;
+
+        // If user is authenticated, set the user in the store
+        dispatch(
+          citizenLogin({
+            citizen: {
+              id: citizenData.id,
+              fullName: citizenData.fullName,
+              email: citizenData.email,
+              NICNumber: citizenData.NICNumber,
+              address: citizenData.address,
+              contactNumber: citizenData.contactNumber,
+              dateOfBirth: citizenData.dateOfBirth,
+            },
+            token: localStorage.getItem("citizenToken") || "",
+          })
+        );
+
+        // On initial load, stay on the current page if authenticated
+        // Don't redirect to dashboard automatically
+        if (
+          isInitialLoad &&
+          currentPath !== "/" &&
+          currentPath !== "/citizen/login"
+        ) {
+          // User is authenticated and trying to access a protected route
+          // Stay on the current page
+          setIsInitialLoad(false);
+          return;
+        }
+
+        // If user is on login page or root, redirect to dashboard
+        if (currentPath === "/citizen/login" || currentPath === "/") {
+          navigate("/citizen/dashboard", { replace: true });
+        }
+      } catch (error) {
+        console.error("Error checking citizen token:", error);
+
+        // Clear localStorage on token validation failure
+        localStorage.removeItem("citizenToken");
+        localStorage.removeItem("citizenData");
+
+        // Logout
+        dispatch(citizenLogout());
+      }
+
+      dispatch(setCitizenAuthCheckComplete());
+      setIsInitialLoad(false);
+    })();
+  }, [dispatch, location, navigate, isInitialLoad]);
 
   const login = async (email: string, password: string): Promise<void> => {
     try {
@@ -60,7 +125,6 @@ export const CitizenAuthProvider: React.FC<CitizenAuthProviderProps> = ({
     isLoading,
     login,
     logout,
-    // checkAuthStatus,
   };
 
   return (

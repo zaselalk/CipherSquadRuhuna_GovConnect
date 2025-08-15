@@ -21,7 +21,7 @@ interface CitizenAuthState {
 const initialState: CitizenAuthState = {
   isAuthenticated: false,
   citizen: null,
-  isLoading: false,
+  isLoading: true, // Start with loading true to prevent flickering
   token: null,
 };
 

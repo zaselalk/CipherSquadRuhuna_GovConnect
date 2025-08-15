@@ -52,21 +52,14 @@ export const CitizenRoutes = () => {
           }
         />
         <Route
-          path="/citizen/dashboard/departments"
+          path="/citizen/departments"
           element={
             <CitizenProtectedRoute>
               <DepartmentPage />
             </CitizenProtectedRoute>
           }
         />
-        <Route
-          path="/citizen/dashboard/about"
-          element={
-            <CitizenProtectedRoute>
-              <AboutPage />
-            </CitizenProtectedRoute>
-          }
-        />
+
         <Route
           path="/citizen/verifyemail"
           element={<EmailVerificationPage />}

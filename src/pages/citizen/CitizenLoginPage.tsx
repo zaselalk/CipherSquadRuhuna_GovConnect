@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
 import { loginState } from "../../types/login";
 import { Alert, Button, Form, Input } from "antd";
@@ -11,17 +11,23 @@ const CitizenLoginPage: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [form] = Form.useForm();
-  const { login, isLoading } = useCitizenAuth();
+  const { login, isLoading, isAuthenticated } = useCitizenAuth();
 
   // Get the intended destination from location state
   const from = location.state?.from || "/citizen/dashboard";
+
+  // Redirect if already authenticated (similar to admin login)
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, navigate, from]);
 
   const onSubmit = async (values: loginState) => {
     try {
       setError(null);
       await login(values.email, values.password);
-      // Navigate to intended destination after successful login
-      navigate(from, { replace: true });
+      // Navigation will be handled by the useEffect above
     } catch (error: any) {
       setError(error.message);
     }

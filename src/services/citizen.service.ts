@@ -54,4 +54,15 @@ export const CitizenService = {
       throw new Error(error.response?.data?.message || "Unable to log in citizen");
     }
   },
+
+  // Token validation service
+  checkToken: async (): Promise<{ data: Citizen }> => {
+    try {
+      const response = await axiosInstance.get("/citizen/auth/check");
+      return response.data;
+    } catch (error: any) {
+      console.error("Error checking citizen token:", error);
+      throw new Error(error.response?.data?.message || "Unable to check citizen token");
+    }
+  },
 };
