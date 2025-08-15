@@ -12,6 +12,10 @@ export class DepartmentServiceService {
     return await this.departmentServiceRepository.getServiceById(id);
   }
 
+  public async getAllServices(): Promise<DepartmentService[]> {
+    return await this.departmentServiceRepository.getAllServices();
+  }
+
   public async updateService(id: number, data: Partial<DepartmentService>): Promise<DepartmentService | null> {
     return await this.departmentServiceRepository.updateService(id, data);
   }
