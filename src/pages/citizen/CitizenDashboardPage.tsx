@@ -167,8 +167,6 @@ const CitizenDashboardPage = () => {
   const handleBookNew = () => navigate("/resident/dashboard/service-selection");
   const handleViewAppointment = (id: string) =>
     alert(`View or reschedule appointment ${id}`);
-  const handleFeedback = (id: string) =>
-    alert(`Give feedback for appointment ${id}`);
 
   if (loading) {
     return (
