@@ -51,7 +51,7 @@ export class User extends Model<UserAttributes> implements UserAttributes {
 
   // generate token
   public async generateToken(): Promise<string> {
-    return jwt.sign({ id: this.id }, process.env.JWT_SECRET as string, {
+    return jwt.sign({ id: this.id }, process.env.JWT_SECRET_ADMIN as string, {
       expiresIn: "1h",
     });
   }
