@@ -1,37 +1,38 @@
+// src/pages/AdminFeedbackPage.tsx
 import React, { useState, useEffect } from "react";
-import { Tabs, Table, Modal, Button, Typography, Card } from "antd";
-import axios from "axios";
+import { Tabs, Table, Modal, Button, Typography, Card, Rate } from "antd";
 import { DashboardContainer } from "../../components/layouts/overlays/DashboardContainer";
+import { FeedbackService } from "../../services/generalfeedback.service"; // use your service
 
 const { Title, Text } = Typography;
 
 interface Feedback {
-  id: string | number;
-  userName: string;
-  userEmail?: string;
-  feedback?: string;
-  serviceName?: string;
+  id: number;
+  citizenId: number;
+  citizenName?: string; // optional: map from citizen if available
+  citizenEmail?: string;
   rating?: number;
   comment?: string;
-  date?: string;
+  createdAt?: string;
 }
 
 const AdminFeedbackPage: React.FC = () => {
   const [webFeedback, setWebFeedback] = useState<Feedback[]>([]);
-  const [serviceFeedback, setServiceFeedback] = useState<Feedback[]>([]);
+  const [serviceFeedback] = useState<Feedback[]>([]); // placeholder for service feedback
   const [loading, setLoading] = useState(true);
   const [selectedFeedback, setSelectedFeedback] = useState<Feedback | null>(null);
 
   useEffect(() => {
     const fetchFeedback = async () => {
+      setLoading(true);
       try {
-        const [webRes, serviceRes] = await Promise.all([
-          axios.get("/api/feedback/web"),
-          axios.get("/api/feedback/service"),
-        ]);
+        // Fetch general feedback for web app
+        const webData = await FeedbackService.getAllFeedbacks();
+        setWebFeedback(webData);
 
-        setWebFeedback(Array.isArray(webRes.data) ? webRes.data : []);
-        setServiceFeedback(Array.isArray(serviceRes.data) ? serviceRes.data : []);
+        // Optionally fetch service feedback from your API
+        // const res = await axios.get("/api/feedback/service");
+        // setServiceFeedback(res.data.data || []);
       } catch (error) {
         console.error("Error fetching feedback:", error);
       } finally {
@@ -43,9 +44,10 @@ const AdminFeedbackPage: React.FC = () => {
   }, []);
 
   const columnsWeb = [
-    { title: "User", dataIndex: "userName", key: "userName" },
-    { title: "Email", dataIndex: "userEmail", key: "userEmail" },
-    { title: "Feedback", dataIndex: "feedback", key: "feedback" },
+    { title: "User ID", dataIndex: "citizenId", key: "citizenId" },
+    { title: "Rating", dataIndex: "rating", key: "rating", render: (rating: number) => <Rate disabled defaultValue={rating} /> },
+    { title: "Comment", dataIndex: "comment", key: "comment" },
+    { title: "Date", dataIndex: "createdAt", key: "createdAt", render: (date: string) => date ? new Date(date).toLocaleString() : "-" },
     {
       title: "Action",
       key: "action",
@@ -58,10 +60,10 @@ const AdminFeedbackPage: React.FC = () => {
   ];
 
   const columnsService = [
-    { title: "User", dataIndex: "userName", key: "userName" },
-    { title: "Service", dataIndex: "serviceName", key: "serviceName" },
-    { title: "Rating", dataIndex: "rating", key: "rating" },
+    { title: "User", dataIndex: "citizenName", key: "citizenName" },
+    { title: "Rating", dataIndex: "rating", key: "rating", render: (rating: number) => <Rate disabled defaultValue={rating} /> },
     { title: "Comment", dataIndex: "comment", key: "comment" },
+    { title: "Date", dataIndex: "createdAt", key: "createdAt", render: (date: string) => date ? new Date(date).toLocaleString() : "-" },
     {
       title: "Action",
       key: "action",
@@ -78,9 +80,7 @@ const AdminFeedbackPage: React.FC = () => {
       <div style={{ padding: 24, minHeight: "100vh" }}>
         <Card bordered={false} style={{ marginBottom: 24, borderRadius: 12, boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
           <Title level={2}>Admin Feedback Dashboard</Title>
-          <Text type="secondary">
-            Manage and review feedback submitted via the web app and service system.
-          </Text>
+          <Text type="secondary">Manage and review feedback submitted via the web app and services.</Text>
         </Card>
 
         <Card bordered={false} style={{ borderRadius: 12, boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
@@ -90,28 +90,12 @@ const AdminFeedbackPage: React.FC = () => {
               {
                 key: "1",
                 label: "Web App Feedback",
-                children: (
-                  <Table
-                    dataSource={webFeedback}
-                    columns={columnsWeb}
-                    rowKey="id"
-                    loading={loading}
-                    pagination={{ pageSize: 5 }}
-                  />
-                ),
+                children: <Table dataSource={webFeedback} columns={columnsWeb} rowKey="id" loading={loading} pagination={{ pageSize: 5 }} />,
               },
               {
                 key: "2",
                 label: "Service Feedback",
-                children: (
-                  <Table
-                    dataSource={serviceFeedback}
-                    columns={columnsService}
-                    rowKey="id"
-                    loading={loading}
-                    pagination={{ pageSize: 5 }}
-                  />
-                ),
+                children: <Table dataSource={serviceFeedback} columns={columnsService} rowKey="id" loading={loading} pagination={{ pageSize: 5 }} />,
               },
             ]}
           />
@@ -121,20 +105,15 @@ const AdminFeedbackPage: React.FC = () => {
           title="Feedback Details"
           open={!!selectedFeedback}
           onCancel={() => setSelectedFeedback(null)}
-          footer={[
-            <Button key="close" onClick={() => setSelectedFeedback(null)}>
-              Close
-            </Button>,
-          ]}
+          footer={[<Button key="close" onClick={() => setSelectedFeedback(null)}>Close</Button>]}
           bodyStyle={{ maxHeight: "60vh", overflowY: "auto" }}
         >
           {selectedFeedback && (
             <div>
-              {Object.entries(selectedFeedback).map(([key, value]) => (
-                <p key={key}>
-                  <Text strong>{key.replace(/([A-Z])/g, " $1")}: </Text> {String(value)}
-                </p>
-              ))}
+              <p><Text strong>User ID: </Text> {selectedFeedback.citizenId}</p>
+              <p><Text strong>Rating: </Text> <Rate disabled defaultValue={selectedFeedback.rating} /></p>
+              <p><Text strong>Comment: </Text> {selectedFeedback.comment || "-"}</p>
+              <p><Text strong>Date: </Text> {selectedFeedback.createdAt ? new Date(selectedFeedback.createdAt).toLocaleString() : "-"}</p>
             </div>
           )}
         </Modal>

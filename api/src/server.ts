@@ -10,6 +10,10 @@ import expressErrorHandler from "./util/expressErrorHandler";
 import CitizenRouter from "./routes/citizen.routes";
 import DepartmentRouter from "./routes/department.routes";
 import DepartmentServiceRouter from "./routes/DepService.routes";
+import CitizenDocsRouter from "./routes/citizendoc.routes";
+import FeedbackRouter from "./routes/generalFeedback.routes";
+import { ap } from "react-router/dist/development/route-data-C12CLHiN";
+
 // import "./models/association"; // Import associations to ensure they are registered
 
 dotenv.config();
@@ -47,6 +51,9 @@ app.use("/user", UserRouter);
 app.use("/citizen", CitizenRouter);
 app.use("/department", DepartmentRouter);
 app.use("/depservice", DepartmentServiceRouter);
+app.use("/feedback", FeedbackRouter); // Assuming feedback routes are under department
+app.use("/citizen-docs", CitizenDocsRouter);
+
 
 // citizen routes
 
