@@ -42,11 +42,14 @@ export class CitizenDocsController {
 
         const relativePath = `uploads/documents/${file.filename}`; // <-- relative path
 
+
       const docData: CitizenDocCreationAttributes = {
         citizen_id: Number(citizen_id),
         document_id: Number(document_id),
         file_name: file.originalname,
+
         file_path: relativePath, // use relative path for storage
+        
         mime_type: file.mimetype,
       };
 
