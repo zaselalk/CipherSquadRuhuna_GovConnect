@@ -3,8 +3,8 @@ import { DepartmentService } from "../models/department-service";
 
 export class DepartmentServiceRepository {
   private static instance: DepartmentServiceRepository;
-  
-  private constructor() {}
+
+  private constructor() { }
 
   static getInstance(): DepartmentServiceRepository {
     if (!DepartmentServiceRepository.instance) {
@@ -19,6 +19,10 @@ export class DepartmentServiceRepository {
 
   public async getServiceById(id: number): Promise<DepartmentService | null> {
     return DepartmentService.findByPk(id);
+  }
+
+  public async getAllServices(): Promise<DepartmentService[]> {
+    return DepartmentService.findAll();
   }
 
   public async updateService(id: number, data: Partial<DepartmentService>): Promise<DepartmentService | null> {
