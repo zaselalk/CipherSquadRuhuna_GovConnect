@@ -12,12 +12,14 @@ import {
 
 import NotificationList from "../../components/features/citizen-dashboard/NotificationList";
 import AppointmentList from "../../components/features/citizen-dashboard/AppointmentList";
-import DocumentSubmissionCard from "../../components/features/citizen-dashboard/DocumentSubmissionCard";
 import Footer from "../../components/common/Footer";
 import CommonNav from "../../components/common/CommonNav";
+import DocumentSubmissionCard from "../../components/features/citizen-dashboard/DocumentSubmissionCard";
 
 const { Content } = Layout;
 const { Title, Text, Paragraph } = Typography;
+const loggedInCitizenId = 1; // hardcoded for testing purposes
+
 
 interface Appointment {
   id: string;
@@ -309,7 +311,8 @@ const CitizenDashboardPage = () => {
             <FileTextOutlined style={{ color: "#2563eb", fontSize: 26 }} />
             Document Submission
           </Title>
-          <DocumentSubmissionCard />
+          <DocumentSubmissionCard  citizenId={loggedInCitizenId}/>
+          
         </section>
       </Content>
       <Footer />
