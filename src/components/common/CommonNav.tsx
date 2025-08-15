@@ -1,19 +1,8 @@
 import { useState, useEffect } from "react";
-import {
-  Layout,
-  Menu,
-  Avatar,
-  Dropdown,
-  Space,
-  Typography,
-  Drawer,
-  Button,
-} from "antd";
+import { Layout, Menu, Button, Drawer, Space, Typography } from "antd";
 import {
   DashboardOutlined,
   AppstoreOutlined,
-  UserOutlined,
-  MessageOutlined,
   ClockCircleOutlined,
   MenuOutlined,
 } from "@ant-design/icons";
@@ -28,21 +17,12 @@ const CommonNav = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768); // breakpoint for mobile
+      setIsMobile(window.innerWidth < 768);
     };
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  const profileMenu = (
-    <Menu>
-      <Menu.Item key="profile">
-        <NavLink to="/profile">Profile</NavLink>
-      </Menu.Item>
-      <Menu.Item key="logout"></Menu.Item>
-    </Menu>
-  );
 
   const menuItems = (
     <Menu
@@ -62,9 +42,6 @@ const CommonNav = () => {
       <Menu.Item key="roster" icon={<ClockCircleOutlined />}>
         <NavLink to="/citizen/roster">Roster</NavLink>
       </Menu.Item>
-      <Menu.Item key="feedback" icon={<MessageOutlined />}>
-        <NavLink to="/citizen/feedback">Feedback</NavLink>
-      </Menu.Item>
     </Menu>
   );
 
@@ -80,14 +57,8 @@ const CommonNav = () => {
         boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
       }}
     >
-      {/* Left side: Logo and tagline */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-        }}
-      >
+      {/* Left side: Logo */}
+      <div style={{ display: "flex", flexDirection: "column" }}>
         <Text style={{ fontSize: "22px", fontWeight: "bold", color: "#000" }}>
           GovConnect
         </Text>
@@ -96,48 +67,47 @@ const CommonNav = () => {
         </Text>
       </div>
 
-      {/* Right side: Menu/Profile */}
-      {isMobile ? (
-        <Space>
-          <Button
-            type="text"
-            icon={<MenuOutlined />}
-            onClick={() => setDrawerVisible(true)}
-          />
-          <Dropdown overlay={profileMenu} placement="bottomRight">
-            <Avatar
-              size="large"
-              icon={<UserOutlined />}
-              style={{ cursor: "pointer" }}
+      {/* Center: Menu */}
+      <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
+        {isMobile ? (
+          <>
+            <Button
+              type="text"
+              icon={<MenuOutlined />}
+              onClick={() => setDrawerVisible(true)}
             />
-          </Dropdown>
+            <Drawer
+              title="Menu"
+              placement="left"
+              closable
+              onClose={() => setDrawerVisible(false)}
+              open={drawerVisible}
+            >
+              {menuItems}
+            </Drawer>
+          </>
+        ) : (
+          menuItems
+        )}
+      </div>
 
-          <Drawer
-            title="Menu"
-            placement="right"
-            closable
-            onClose={() => setDrawerVisible(false)}
-            open={drawerVisible}
-          >
-            {menuItems}
-          </Drawer>
-        </Space>
-      ) : (
-        <Space align="center">{menuItems}</Space>
-      )}
-
-      <Button
-        type="text"
-        className="ant-btn-icon-only"
-        danger
-        onClick={() => {
-          localStorage.removeItem("citizenToken");
-          localStorage.removeItem("citizenData");
-          window.location.href = "/citizen/login"; // Redirect to login
-        }}
-      >
-        Logout
-      </Button>
+      {/* Right side: Feedback + Logout */}
+      <Space>
+        <Button type="link">
+          <NavLink to="/citizen/feedback">Feedback</NavLink>
+        </Button>
+        <Button
+          type="text"
+          danger
+          onClick={() => {
+            localStorage.removeItem("citizenToken");
+            localStorage.removeItem("citizenData");
+            window.location.href = "/citizen/login";
+          }}
+        >
+          Logout
+        </Button>
+      </Space>
     </Header>
   );
 };
