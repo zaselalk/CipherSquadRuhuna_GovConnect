@@ -13,14 +13,14 @@ const LoginPage: FC = () => {
   useEffect(() => {
     if (auth.isAuthenticated) {
       // Check if there's a redirect path from the location state
-      const from = location.state?.from || "/admin/dashboard";
+      const from = location.state?.from || "/admin/analytics";
       navigate(from, { replace: true });
     }
   }, [auth.isAuthenticated, navigate, location.state]);
 
   const handleSuccessLogin = () => {
     // Check if there's a redirect path from the location state
-    const from = location.state?.from || "/admin/dashboard";
+    const from = location.state?.from || "/admin/analytics";
     navigate(from, { replace: true });
   };
 
