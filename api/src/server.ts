@@ -11,6 +11,7 @@ import CitizenRouter from "./routes/citizen.routes";
 import DepartmentRouter from "./routes/department.routes";
 import { ap } from "react-router/dist/development/route-data-C12CLHiN";
 import CitizenDocsRouter from "./routes/citizendoc.routes";
+import path from "path";
 // import "./models/association"; // Import associations to ensure they are registered
 
 dotenv.config();
@@ -48,6 +49,8 @@ app.use("/user", UserRouter);
 app.use("/citizen", CitizenRouter);
 app.use("/department", DepartmentRouter);
 app.use("/citizen-docs", CitizenDocsRouter);
+// Serve the uploads folder as static
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // citizen routes
 
