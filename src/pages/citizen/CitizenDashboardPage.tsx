@@ -20,7 +20,6 @@ const { Content } = Layout;
 const { Title, Text, Paragraph } = Typography;
 const loggedInCitizenId = 1; // hardcoded for testing purposes
 
-
 interface Appointment {
   id: string;
   serviceName: string;
@@ -69,6 +68,9 @@ const CitizenDashboardPage = () => {
   const notifRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Simulated logged-in user ID
+  const userId = "user123";
 
   useEffect(() => {
     setTimeout(() => {
@@ -139,7 +141,6 @@ const CitizenDashboardPage = () => {
     }, 1000);
   }, []);
 
-  // Handle notifications popover
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -154,7 +155,6 @@ const CitizenDashboardPage = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [notifOpen]);
 
-  // Scroll to document section if URL hash matches
   useEffect(() => {
     if (location.hash === "#document-submission-section") {
       const section = document.getElementById("document-submission-section");
@@ -167,8 +167,6 @@ const CitizenDashboardPage = () => {
   const handleBookNew = () => navigate("/resident/dashboard/service-selection");
   const handleViewAppointment = (id: string) =>
     alert(`View or reschedule appointment ${id}`);
-  const handleFeedback = (id: string) =>
-    alert(`Give feedback for appointment ${id}`);
 
   if (loading) {
     return (
@@ -200,7 +198,6 @@ const CitizenDashboardPage = () => {
             </div>
           </div>
 
-          {/* Right Controls */}
           <div className="flex items-center gap-4">
             <Popover
               content={<NotificationList notifications={notifications} />}
@@ -238,7 +235,6 @@ const CitizenDashboardPage = () => {
           </div>
         </div>
 
-        {/* Appointments Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Upcoming Appointments */}
           <section
@@ -284,7 +280,8 @@ const CitizenDashboardPage = () => {
               <AppointmentList
                 appointments={pastAppointments}
                 type="past"
-                onGiveFeedback={handleFeedback}
+                userId={userId} // Pass userId for feedback functionality
+                onViewAppointment={handleViewAppointment}
               />
             </div>
             {pastAppointments.length === 0 && (
@@ -295,7 +292,6 @@ const CitizenDashboardPage = () => {
           </section>
         </div>
 
-        {/* Document Submission */}
         <section
           id="document-submission-section"
           style={sectionCardStyle}
@@ -311,8 +307,7 @@ const CitizenDashboardPage = () => {
             <FileTextOutlined style={{ color: "#2563eb", fontSize: 26 }} />
             Document Submission
           </Title>
-          <DocumentSubmissionCard  citizenId={loggedInCitizenId}/>
-          
+          <DocumentSubmissionCard citizenId={loggedInCitizenId} />
         </section>
       </Content>
       <Footer />
