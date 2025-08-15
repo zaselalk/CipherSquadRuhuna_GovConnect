@@ -80,9 +80,9 @@ const CommonNav = () => {
       <Menu.Item key="departments" icon={<AppstoreOutlined />}>
         <NavLink to="/resident/dashboard/departments">Departments</NavLink>
       </Menu.Item>
-      <Menu.Item key="appointments" icon={<CalendarOutlined />}>
+      {/* <Menu.Item key="appointments" icon={<CalendarOutlined />}>
         <NavLink to="/appointments">Appointments</NavLink>
-      </Menu.Item>
+      </Menu.Item> */}
       <Menu.Item
         key="documents"
         icon={<FileTextOutlined />}
