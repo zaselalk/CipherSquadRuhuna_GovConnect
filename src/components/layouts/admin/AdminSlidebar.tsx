@@ -11,7 +11,13 @@ const AdminSidebar: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.auth.user);
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
   const [navbarArray, setNavbarArray] = useState<string[]>([]);
+
+  // If not authenticated as admin, don't render the sidebar
+  if (!isAuthenticated || !user) {
+    return null;
+  }
 
   const navItemClass =
     "py-3 text-sm font-medium flex items-center text-gray-700 hover:text-white rounded-xl px-4 transition-all duration-200 transform hover:scale-105";

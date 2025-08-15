@@ -34,35 +34,35 @@ export const AdminRoutes = () => {
         <Route
           path="admin/analytics"
           element={
-            // <ProtectedRoutesGuard>
-            <AnalyticsDashboard />
-            // </ProtectedRoutesGuard>
+            <ProtectedRoutesGuard>
+              <AnalyticsDashboard />
+            </ProtectedRoutesGuard>
           }
         />
 
         <Route
           path="admin/officerdashboard"
           element={
-            // <ProtectedRoutesGuard>
-            <OfficerDashboard />
-            // </ProtectedRoutesGuard>
+            <ProtectedRoutesGuard>
+              <OfficerDashboard />
+            </ProtectedRoutesGuard>
           }
         />
         <Route
           path="admin/citizen"
           element={
-            // <ProtectedRoutesGuard>
-            <CitizenListPage />
-            // </ProtectedRoutesGuard>
+            <ProtectedRoutesGuard>
+              <CitizenListPage />
+            </ProtectedRoutesGuard>
           }
         />
 
         <Route
           path="admin/department"
           element={
-            // <ProtectedRoutesGuard>
-            <DepartmentPage />
-            // </ProtectedRoutesGuard>
+            <ProtectedRoutesGuard>
+              <DepartmentPage />
+            </ProtectedRoutesGuard>
           }
         />
 
@@ -101,9 +101,9 @@ export const AdminRoutes = () => {
         <Route
           path="/admin/feedback"
           element={
-            // <ProtectedRoutesGuard>
-            <AdminFeedbackPage />
-            // </ProtectedRoutesGuard>
+            <ProtectedRoutesGuard>
+              <AdminFeedbackPage />
+            </ProtectedRoutesGuard>
           }
         />
       </Routes>
