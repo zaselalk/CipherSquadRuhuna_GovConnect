@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Tabs, Table, Modal, Button, Typography, Card, message } from "antd";
 import axios from "axios";
 import { DashboardContainer } from "../../components/layouts/overlays/DashboardContainer";
-import { ServiceFeedbackService, ServiceFeedback } from "../../services/serviceFeedback.service";
+import {
+  ServiceFeedbackService,
+  ServiceFeedback,
+} from "../../services/serviceFeedback.service";
 
 const { Title, Text } = Typography;
 
@@ -18,7 +21,9 @@ const AdminFeedbackPage: React.FC = () => {
   const [webFeedback, setWebFeedback] = useState<WebFeedback[]>([]);
   const [serviceFeedback, setServiceFeedback] = useState<ServiceFeedback[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedFeedback, setSelectedFeedback] = useState<WebFeedback | ServiceFeedback | null>(null);
+  const [selectedFeedback, setSelectedFeedback] = useState<
+    WebFeedback | ServiceFeedback | null
+  >(null);
 
   useEffect(() => {
     const fetchFeedback = async () => {
@@ -50,7 +55,9 @@ const AdminFeedbackPage: React.FC = () => {
       title: "Action",
       key: "action",
       render: (_: any, record: WebFeedback) => (
-        <Button type="primary" onClick={() => setSelectedFeedback(record)}>View</Button>
+        <Button type="primary" onClick={() => setSelectedFeedback(record)}>
+          View
+        </Button>
       ),
     },
   ];
@@ -64,7 +71,9 @@ const AdminFeedbackPage: React.FC = () => {
       title: "Action",
       key: "action",
       render: (_: any, record: ServiceFeedback) => (
-        <Button type="primary" onClick={() => setSelectedFeedback(record)}>View</Button>
+        <Button type="primary" onClick={() => setSelectedFeedback(record)}>
+          View
+        </Button>
       ),
     },
   ];
@@ -74,10 +83,17 @@ const AdminFeedbackPage: React.FC = () => {
       <div style={{ padding: 24, minHeight: "100vh" }}>
         <Card
           bordered={false}
-          style={{ marginBottom: 24, borderRadius: 12, boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
+          style={{
+            marginBottom: 24,
+            borderRadius: 12,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+          }}
         >
           <Title level={2}>Admin Feedback Dashboard</Title>
-          <Text type="secondary">Manage and review feedback submitted via the web app and service system.</Text>
+          <Text type="secondary">
+            Manage and review feedback submitted via the web app and service
+            system.
+          </Text>
         </Card>
 
         <Card
@@ -122,17 +138,19 @@ const AdminFeedbackPage: React.FC = () => {
           open={!!selectedFeedback}
           onCancel={() => setSelectedFeedback(null)}
           footer={[
-            <Button key="close" onClick={() => setSelectedFeedback(null)}>Close</Button>,
+            <Button key="close" onClick={() => setSelectedFeedback(null)}>
+              Close
+            </Button>,
           ]}
           bodyStyle={{ maxHeight: "60vh", overflowY: "auto" }}
         >
           {selectedFeedback &&
             Object.entries(selectedFeedback).map(([key, value]) => (
               <p key={key}>
-                <Text strong>{key.replace(/([A-Z])/g, " $1")}: </Text> {String(value)}
+                <Text strong>{key.replace(/([A-Z])/g, " $1")}: </Text>{" "}
+                {String(value)}
               </p>
-            ))
-          }
+            ))}
         </Modal>
       </div>
     </DashboardContainer>

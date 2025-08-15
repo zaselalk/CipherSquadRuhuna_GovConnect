@@ -12,15 +12,11 @@ import {
 import {
   DashboardOutlined,
   AppstoreOutlined,
-  CalendarOutlined,
-  FileTextOutlined,
   UserOutlined,
-  InfoCircleOutlined,
   MessageOutlined,
   ClockCircleOutlined,
   MenuOutlined,
 } from "@ant-design/icons";
-import { useNavigate, useLocation } from "react-router";
 import { NavLink } from "react-router";
 
 const { Header } = Layout;
@@ -29,8 +25,6 @@ const { Text } = Typography;
 const CommonNav = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
     const handleResize = () => {
@@ -46,24 +40,9 @@ const CommonNav = () => {
       <Menu.Item key="profile">
         <NavLink to="/profile">Profile</NavLink>
       </Menu.Item>
-      <Menu.Item key="logout">
-        <NavLink to="/login">Logout</NavLink>
-      </Menu.Item>
+      <Menu.Item key="logout"></Menu.Item>
     </Menu>
   );
-
-  const handleDocumentsClick = () => {
-    if (location.pathname === "/resident/dashboard") {
-      // Already on dashboard → scroll to section
-      const section = document.getElementById("document-submission-section");
-      if (section) {
-        section.scrollIntoView({ behavior: "smooth" });
-      }
-    } else {
-      // Navigate to dashboard with hash
-      navigate("/resident/dashboard#document-submission-section");
-    }
-  };
 
   const menuItems = (
     <Menu
@@ -75,29 +54,16 @@ const CommonNav = () => {
       }}
     >
       <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
-        <NavLink to="/resident/dashboard">Dashboard</NavLink>
+        <NavLink to="/citizen/dashboard">Dashboard</NavLink>
       </Menu.Item>
       <Menu.Item key="departments" icon={<AppstoreOutlined />}>
-        <NavLink to="/resident/dashboard/departments">Departments</NavLink>
-      </Menu.Item>
-      <Menu.Item key="appointments" icon={<CalendarOutlined />}>
-        <NavLink to="/appointments">Appointments</NavLink>
-      </Menu.Item>
-      <Menu.Item
-        key="documents"
-        icon={<FileTextOutlined />}
-        onClick={handleDocumentsClick}
-      >
-        Documents
+        <NavLink to="/citizen/departments">Departments</NavLink>
       </Menu.Item>
       <Menu.Item key="roster" icon={<ClockCircleOutlined />}>
-        <NavLink to="/roster">Roster</NavLink>
-      </Menu.Item>
-      <Menu.Item key="about" icon={<InfoCircleOutlined />}>
-        <NavLink to="/resident/dashboard/About">About Us</NavLink>
+        <NavLink to="/citizen/roster">Roster</NavLink>
       </Menu.Item>
       <Menu.Item key="feedback" icon={<MessageOutlined />}>
-        <NavLink to="/resident/feedback">Feedback</NavLink>
+        <NavLink to="/citizen/feedback">Feedback</NavLink>
       </Menu.Item>
     </Menu>
   );
@@ -157,17 +123,21 @@ const CommonNav = () => {
           </Drawer>
         </Space>
       ) : (
-        <Space align="center">
-          {menuItems}
-          <Dropdown overlay={profileMenu} placement="bottomRight">
-            <Avatar
-              size="large"
-              icon={<UserOutlined />}
-              style={{ cursor: "pointer" }}
-            />
-          </Dropdown>
-        </Space>
+        <Space align="center">{menuItems}</Space>
       )}
+
+      <Button
+        type="text"
+        className="ant-btn-icon-only"
+        danger
+        onClick={() => {
+          localStorage.removeItem("citizenToken");
+          localStorage.removeItem("citizenData");
+          window.location.href = "/citizen/login"; // Redirect to login
+        }}
+      >
+        Logout
+      </Button>
     </Header>
   );
 };
