@@ -57,7 +57,6 @@ app.use("/depservice", DepartmentServiceRouter);
 app.use("/feedback", FeedbackRouter); // Assuming feedback routes are under department
 app.use("/citizen-docs", CitizenDocsRouter);
 app.use("/officer", OfficerRouter);
-// Serve the uploads folder as static
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/feedback", FeedbackRouter); // Assuming feedback routes are under department
 

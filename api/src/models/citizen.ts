@@ -41,7 +41,7 @@ export class Citizen
    * @return A JWT token as a string
    */
   public async generateToken(): Promise<string> {
-    return jwt.sign({ id: this.id }, process.env.JWT_SECRET as string, {
+    return jwt.sign({ id: this.id }, process.env.JWT_SECRET_CITIZEN as string, {
       expiresIn: "1h",
     });
   }

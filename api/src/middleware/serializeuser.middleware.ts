@@ -39,7 +39,7 @@ export default async function serializeUser(
 
   // decode jwt token
   try {
-    const secretKey = process.env.JWT_SECRET as string;
+    const secretKey = process.env.JWT_SECRET_ADMIN as string;
     const decoded = jwt.verify(token, secretKey) as JwtPayload;
 
     const findUser = await User.findByPk(decoded.id, {

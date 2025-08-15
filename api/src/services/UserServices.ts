@@ -89,7 +89,10 @@ export class UserServices {
     if (!isPasswordValid)
       throw new ValidationException("Invalid username or password");
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string);
+    const token = jwt.sign(
+      { id: user.id },
+      process.env.JWT_SECRET_ADMIN as string
+    );
     return {
       id: user.id,
       name: user.name,
@@ -283,7 +286,7 @@ export class UserServices {
     try {
       const decoded = jwt.verify(
         token,
-        process.env.JWT_SECRET as string
+        process.env.JWT_SECRET_ADMIN as string
       ) as DecodedToken;
       console.log(decoded.id);
       // get the user id from the decoded token
