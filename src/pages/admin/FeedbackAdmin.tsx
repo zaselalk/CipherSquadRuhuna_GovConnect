@@ -18,7 +18,7 @@ interface Feedback {
 
 const AdminFeedbackPage: React.FC = () => {
   const [webFeedback, setWebFeedback] = useState<Feedback[]>([]);
-  const [serviceFeedback, setServiceFeedback] = useState<Feedback[]>([]); // placeholder for service feedback
+  const [serviceFeedback] = useState<Feedback[]>([]); // placeholder for service feedback
   const [loading, setLoading] = useState(true);
   const [selectedFeedback, setSelectedFeedback] = useState<Feedback | null>(null);
 
