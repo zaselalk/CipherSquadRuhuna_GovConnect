@@ -24,36 +24,6 @@ export const ResidentAuthProvider: React.FC<ResidentAuthProviderProps> = ({
     (state) => state.residentAuth
   );
 
-  // Check for existing token on app load
-  // useEffect(() => {
-  //   checkAuthStatus();
-  // }, []);
-
-  // const checkAuthStatus = async () => {
-  //   try {
-  //     dispatch(setResidentLoading(true));
-
-  //     // Check if there's a stored token
-  //     const storedToken = localStorage.getItem("residentToken");
-  //     const storedResident = localStorage.getItem("residentData");
-
-  //     if (storedToken) {
-  //       // Validate token with backend (you might need to create this endpoint)
-  //       // For now, we'll trust the stored data
-  //       const residentData = JSON.parse(storedResident);
-  //       dispatch(residentLogin({ resident: residentData, token: storedToken }));
-  //     }
-  //   } catch (error) {
-  //     console.error("Error checking resident auth status:", error);
-  //     // Clear invalid tokens
-  //     localStorage.removeItem("residentToken");
-  //     localStorage.removeItem("residentData");
-  //     dispatch(residentLogout());
-  //   } finally {
-  //     dispatch(setResidentAuthCheckComplete());
-  //   }
-  // };
-
   const login = async (email: string, password: string): Promise<void> => {
     try {
       dispatch(setResidentLoading(true));

@@ -9,10 +9,13 @@ import serializeUser from "./middleware/serializeuser.middleware";
 import expressErrorHandler from "./util/expressErrorHandler";
 import CitizenRouter from "./routes/citizen.routes";
 import DepartmentRouter from "./routes/department.routes";
-import FeedbackRouter from "./routes/generalFeedback.routes";
-import { ap } from "react-router/dist/development/route-data-C12CLHiN";
+import serviceFeedbackRouter from "./routes/serviceFeedback.routes";
 import CitizenDocsRouter from "./routes/citizendoc.routes";
 import OfficerRouter from "./routes/officer.route";
+import path from "path";
+import FeedbackRouter from "./routes/generalFeedback.routes";
+import DepartmentServiceRouter from "./routes/DepService.routes";
+
 // import "./models/association"; // Import associations to ensure they are registered
 
 dotenv.config();
@@ -49,9 +52,14 @@ app.use("/role", RoleRouter);
 app.use("/user", UserRouter);
 app.use("/citizen", CitizenRouter);
 app.use("/department", DepartmentRouter);
+app.use("/service-feedback", serviceFeedbackRouter); // Assuming feedback routes are under department
+app.use("/depservice", DepartmentServiceRouter);
 app.use("/feedback", FeedbackRouter); // Assuming feedback routes are under department
 app.use("/citizen-docs", CitizenDocsRouter);
 app.use("/officer", OfficerRouter);
+// Serve the uploads folder as static
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/feedback", FeedbackRouter); // Assuming feedback routes are under department
 
 // citizen routes
 

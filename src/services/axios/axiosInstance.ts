@@ -10,11 +10,19 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    // Add token to headers if available
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    // Check for admin token first (higher priority)
+    const adminToken = localStorage.getItem("token");
+    if (adminToken) {
+      config.headers.Authorization = `Bearer ${adminToken}`;
+      return config;
     }
+
+    // Check for citizen token as fallback
+    const citizenToken = localStorage.getItem("citizenToken");
+    if (citizenToken) {
+      config.headers.Authorization = `Bearer ${citizenToken}`;
+    }
+
     return config;
   },
   (error) => Promise.reject(error)

@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { CalendarOutlined, ClockCircleOutlined, ScheduleOutlined, PlusCircleOutlined, CloseOutlined } from "@ant-design/icons";
+import {
+  CalendarOutlined,
+  ClockCircleOutlined,
+  ScheduleOutlined,
+  PlusCircleOutlined,
+  CloseOutlined,
+} from "@ant-design/icons";
 import AvailableShiftsCard from "../../../components/features/roster/availableShiftsCard";
 import ShiftApplyModal from "../../../components/features/roster/shiftApplyModal";
 import LeaveForm from "../../../components/features/roster/leaveForm";
@@ -7,13 +13,10 @@ import DayOffSelector from "../../../components/features/roster/dayOffSelector";
 import { Calendar } from "antd";
 import CommonNav from "../../../components/common/CommonNav";
 
-const Dashboard = () => {
+const CitizenRosterDashboard = () => {
   const [activeOverlay, setActiveOverlay] = useState<string | null>(null);
   const [selectedShift, setSelectedShift] = useState<any>(null);
 
-
-  
-  
   const offDays = [
     { date: "3", day: "Mon" },
     { date: "5", day: "Tue" },
@@ -40,51 +43,56 @@ const Dashboard = () => {
 
   // Handle leave submission
   const handleLeaveSubmit = (leaveType: string) => {
-    setLeaveRequests(prev => [
+    setLeaveRequests((prev) => [
       ...prev,
-      { type: leaveType === "annual" ? "Annual Leave" : "Casual Leave", status: "Pending" },
+      {
+        type: leaveType === "annual" ? "Annual Leave" : "Casual Leave",
+        status: "Pending",
+      },
     ]);
     setActiveOverlay(null); // close form
   };
 
   // Handle shift application
   const handleShiftApply = (shift: any) => {
-    setShiftRequests(prev => [
+    setShiftRequests((prev) => [
       ...prev,
       { shift: `${shift.type} Shift ${shift.id}th`, status: "Pending" },
     ]);
     setSelectedShift(null); // close modal
   };
 
-// Remove handlers
-const handleRemoveLeave = (index: number) => {
-  setLeaveRequests(prev => prev.filter((_, i) => i !== index));
-};
+  // Remove handlers
+  const handleRemoveLeave = (index: number) => {
+    setLeaveRequests((prev) => prev.filter((_, i) => i !== index));
+  };
 
-const handleRemoveShift = (index: number) => {
-  setShiftRequests(prev => prev.filter((_, i) => i !== index));
-};
+  const handleRemoveShift = (index: number) => {
+    setShiftRequests((prev) => prev.filter((_, i) => i !== index));
+  };
 
-// Calendar date renderer with colored dots
-const dateCellRender = (value: any) => {
-  const date = value.date();
-  const off = offDays.find(d => parseInt(d.date) === date);
-  const dayShift = shifts.find(s => s.type === "Day" && parseInt(s.id) === date);
-  const nightShift = shifts.find(s => s.type === "Night" && parseInt(s.id) === date);
+  // Calendar date renderer with colored dots
+  const dateCellRender = (value: any) => {
+    const date = value.date();
+    const off = offDays.find((d) => parseInt(d.date) === date);
+    const dayShift = shifts.find(
+      (s) => s.type === "Day" && parseInt(s.id) === date
+    );
+    const nightShift = shifts.find(
+      (s) => s.type === "Night" && parseInt(s.id) === date
+    );
 
-  // Return empty content, we'll style via wrapper
-  const className = off
-    ? "bg-gray-300 text-gray-800 font-bold rounded-full w-full h-full flex items-center justify-center"
-    : dayShift
-    ? "bg-green-300 text-green-900 font-bold rounded-full w-full h-full flex items-center justify-center"
-    : nightShift
-    ? "bg-blue-300 text-blue-900 font-bold rounded-full w-full h-full flex items-center justify-center"
-    : "";
+    // Return empty content, we'll style via wrapper
+    const className = off
+      ? "bg-gray-300 text-gray-800 font-bold rounded-full w-full h-full flex items-center justify-center"
+      : dayShift
+      ? "bg-green-300 text-green-900 font-bold rounded-full w-full h-full flex items-center justify-center"
+      : nightShift
+      ? "bg-blue-300 text-blue-900 font-bold rounded-full w-full h-full flex items-center justify-center"
+      : "";
 
-  return <div className={className}></div>;
-};
-
-
+    return <div className={className}></div>;
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
@@ -105,7 +113,9 @@ const dateCellRender = (value: any) => {
                 <div className="flex items-center gap-30">
                   {offDays.map((day) => (
                     <div key={day.date} className="text-center">
-                      <div className="text-gray-700 font-bold text-xl">{day.date}</div>
+                      <div className="text-gray-700 font-bold text-xl">
+                        {day.date}
+                      </div>
                       <div className="text-gray-400 text-m">{day.day}</div>
                     </div>
                   ))}
@@ -117,8 +127,12 @@ const dateCellRender = (value: any) => {
                 onClick={() => setActiveOverlay("dayOff")}
               >
                 <PlusCircleOutlined className="text-green-500 text-3xl mb-2" />
-                <h3 className="text-md font-semibold text-gray-800 mb-1">Select Off Days</h3>
-                <p className="text-gray-500 text-sm">Pick your preferred off days from the calendar.</p>
+                <h3 className="text-md font-semibold text-gray-800 mb-1">
+                  Select Off Days
+                </h3>
+                <p className="text-gray-500 text-sm">
+                  Pick your preferred off days from the calendar.
+                </p>
               </div>
             </div>
 
@@ -129,8 +143,12 @@ const dateCellRender = (value: any) => {
                 onClick={() => setActiveOverlay("annualLeave")}
               >
                 <ScheduleOutlined className="text-pink-500 text-3xl mb-2" />
-                <h3 className="text-md font-semibold text-gray-800 mb-1">Apply Annual Leave</h3>
-                <p className="text-gray-500 text-sm">Submit your annual leave request here.</p>
+                <h3 className="text-md font-semibold text-gray-800 mb-1">
+                  Apply Annual Leave
+                </h3>
+                <p className="text-gray-500 text-sm">
+                  Submit your annual leave request here.
+                </p>
               </div>
 
               <div
@@ -138,8 +156,12 @@ const dateCellRender = (value: any) => {
                 onClick={() => setActiveOverlay("casualLeave")}
               >
                 <ClockCircleOutlined className="text-yellow-500 text-3xl mb-2" />
-                <h3 className="text-md font-semibold text-gray-800 mb-1">Apply Casual Leave</h3>
-                <p className="text-gray-500 text-sm">Submit your casual leave request here.</p>
+                <h3 className="text-md font-semibold text-gray-800 mb-1">
+                  Apply Casual Leave
+                </h3>
+                <p className="text-gray-500 text-sm">
+                  Submit your casual leave request here.
+                </p>
               </div>
             </div>
           </div>
@@ -155,7 +177,6 @@ const dateCellRender = (value: any) => {
               fullscreen={false}
               headerRender={() => null} // hides month/year selector
             />
-
           </div>
         </div>
 
@@ -174,58 +195,67 @@ const dateCellRender = (value: any) => {
           </div>
 
           <div className="bg-white rounded-xl shadow-lg p-6">
-  <h2 className="text-xl font-bold text-gray-800 mb-4">Request Status</h2>
-  <div className="grid grid-cols-1 gap-4">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">
+              Request Status
+            </h2>
+            <div className="grid grid-cols-1 gap-4">
+              {/* Leave Requests */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                  Leave Requests
+                </h3>
+                <ul className="space-y-2">
+                  {leaveRequests.map((req, idx) => (
+                    <li
+                      key={idx}
+                      className={`flex items-center justify-between p-2 rounded-md ${
+                        req.status === "Approved"
+                          ? "bg-green-100 text-green-800"
+                          : req.status === "Rejected"
+                          ? "bg-red-100 text-red-800"
+                          : "bg-yellow-100 text-yellow-800"
+                      }`}
+                    >
+                      <span>
+                        {req.type} - {req.status}
+                      </span>
+                      {req.status === "Approved" && (
+                        <CloseOutlined
+                          className="cursor-pointer text-red-500 hover:text-red-700"
+                          onClick={() => handleRemoveLeave(idx)}
+                        />
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-    {/* Leave Requests */}
-    <div>
-      <h3 className="text-lg font-semibold text-gray-700 mb-2">Leave Requests</h3>
-      <ul className="space-y-2">
-        {leaveRequests.map((req, idx) => (
-          <li
-            key={idx}
-            className={`flex items-center justify-between p-2 rounded-md ${
-              req.status === "Approved"
-                ? "bg-green-100 text-green-800"
-                : req.status === "Rejected"
-                ? "bg-red-100 text-red-800"
-                : "bg-yellow-100 text-yellow-800"
-            }`}
-          >
-            <span>{req.type} - {req.status}</span>
-            {req.status === "Approved" && (
-              <CloseOutlined
-                className="cursor-pointer text-red-500 hover:text-red-700"
-                onClick={() => handleRemoveLeave(idx)}
-              />
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
-
-    {/* Shift Requests */}
-    <div>
-      <h3 className="text-lg font-semibold text-gray-700 mb-2">Shift Requests</h3>
-      <ul className="space-y-2">
-        {shiftRequests.map((req, idx) => (
-          <li
-            key={idx}
-            className={`flex items-center justify-between p-2 rounded-md ${
-              req.status === "Approved"
-                ? "bg-green-100 text-green-800"
-                : req.status === "Rejected"
-                ? "bg-red-100 text-red-800"
-                : "bg-yellow-100 text-yellow-800"
-            }`}
-          >
-            <span>{req.shift} - {req.status}</span>
-            {req.status === "Approved" && (
-              <CloseOutlined
-                className="cursor-pointer text-red-500 hover:text-red-700"
-                onClick={() => handleRemoveShift(idx)}
-              />  
-            )}
+              {/* Shift Requests */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                  Shift Requests
+                </h3>
+                <ul className="space-y-2">
+                  {shiftRequests.map((req, idx) => (
+                    <li
+                      key={idx}
+                      className={`flex items-center justify-between p-2 rounded-md ${
+                        req.status === "Approved"
+                          ? "bg-green-100 text-green-800"
+                          : req.status === "Rejected"
+                          ? "bg-red-100 text-red-800"
+                          : "bg-yellow-100 text-yellow-800"
+                      }`}
+                    >
+                      <span>
+                        {req.shift} - {req.status}
+                      </span>
+                      {req.status === "Approved" && (
+                        <CloseOutlined
+                          className="cursor-pointer text-red-500 hover:text-red-700"
+                          onClick={() => handleRemoveShift(idx)}
+                        />
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -245,18 +275,31 @@ const dateCellRender = (value: any) => {
       )}
 
       {activeOverlay === "annualLeave" && (
-        <LeaveForm title="Annual Leave" type="annual" onClose={() => setActiveOverlay(null)} onSubmit={() => handleLeaveSubmit("annual")} />
+        <LeaveForm
+          title="Annual Leave"
+          type="annual"
+          onClose={() => setActiveOverlay(null)}
+          onSubmit={() => handleLeaveSubmit("annual")}
+        />
       )}
 
       {activeOverlay === "casualLeave" && (
-        <LeaveForm title="Casual Leave" type="casual" onClose={() => setActiveOverlay(null)} onSubmit={() => handleLeaveSubmit("casual")} />
+        <LeaveForm
+          title="Casual Leave"
+          type="casual"
+          onClose={() => setActiveOverlay(null)}
+          onSubmit={() => handleLeaveSubmit("casual")}
+        />
       )}
 
       {activeOverlay === "dayOff" && (
-        <DayOffSelector onClose={() => setActiveOverlay(null)} onSubmit={(dates: any) => console.log("Selected day offs:", dates)} />
+        <DayOffSelector
+          onClose={() => setActiveOverlay(null)}
+          onSubmit={(dates: any) => console.log("Selected day offs:", dates)}
+        />
       )}
     </div>
   );
 };
 
-export default Dashboard;
+export default CitizenRosterDashboard;

@@ -12,12 +12,13 @@ import {
 
 import NotificationList from "../../components/features/citizen-dashboard/NotificationList";
 import AppointmentList from "../../components/features/citizen-dashboard/AppointmentList";
-import DocumentSubmissionCard from "../../components/features/citizen-dashboard/DocumentSubmissionCard";
 import Footer from "../../components/common/Footer";
 import CommonNav from "../../components/common/CommonNav";
+import DocumentSubmissionCard from "../../components/features/citizen-dashboard/DocumentSubmissionCard";
 
 const { Content } = Layout;
 const { Title, Text, Paragraph } = Typography;
+const loggedInCitizenId = 1; // hardcoded for testing purposes
 
 interface Appointment {
   id: string;
@@ -56,9 +57,11 @@ const welcomeStyle: React.CSSProperties = {
   gap: 12,
 };
 
-const CitizenDashboard = () => {
+const CitizenDashboardPage = () => {
   const [loading, setLoading] = useState(true);
-  const [upcomingAppointments, setUpcomingAppointments] = useState<Appointment[]>([]);
+  const [upcomingAppointments, setUpcomingAppointments] = useState<
+    Appointment[]
+  >([]);
   const [pastAppointments, setPastAppointments] = useState<Appointment[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [notifOpen, setNotifOpen] = useState(false);
@@ -66,33 +69,84 @@ const CitizenDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Simulated logged-in user ID
+  const userId = "user123";
+
   useEffect(() => {
     setTimeout(() => {
       setUpcomingAppointments([
-        { id: "1", serviceName: "Passport Renewal", date: "2025-08-20", time: "10:30 AM", status: "Confirmed" },
-        { id: "2", serviceName: "Driver's License Test", date: "2025-08-25", time: "02:00 PM", status: "Pending" },
-        { id: "3", serviceName: "Birth Certificate Update", date: "2025-09-01", time: "09:00 AM", status: "Rescheduled" },
+        {
+          id: "1",
+          serviceName: "Passport Renewal",
+          date: "2025-08-20",
+          time: "10:30 AM",
+          status: "Confirmed",
+        },
+        {
+          id: "2",
+          serviceName: "Driver's License Test",
+          date: "2025-08-25",
+          time: "02:00 PM",
+          status: "Pending",
+        },
+        {
+          id: "3",
+          serviceName: "Birth Certificate Update",
+          date: "2025-09-01",
+          time: "09:00 AM",
+          status: "Rescheduled",
+        },
       ]);
 
       setPastAppointments([
-        { id: "7", serviceName: "Property Tax Payment", date: "2025-07-10", time: "11:00 AM", status: "Confirmed" },
-        { id: "8", serviceName: "Marriage Certificate Issuance", date: "2025-06-15", time: "09:30 AM", status: "Confirmed" },
+        {
+          id: "7",
+          serviceName: "Property Tax Payment",
+          date: "2025-07-10",
+          time: "11:00 AM",
+          status: "Confirmed",
+        },
+        {
+          id: "8",
+          serviceName: "Marriage Certificate Issuance",
+          date: "2025-06-15",
+          time: "09:30 AM",
+          status: "Confirmed",
+        },
       ]);
 
       setNotifications([
-        { id: "n1", message: "Your Passport Renewal appointment is confirmed for Aug 20.", type: "reminder", date: "2025-08-12" },
-        { id: "n2", message: "Driver's License Test rescheduled to Aug 25.", type: "change", date: "2025-08-10" },
-        { id: "n3", message: "Please submit your documents before the Passport Renewal appointment.", type: "reminder", date: "2025-08-11" },
+        {
+          id: "n1",
+          message: "Your Passport Renewal appointment is confirmed for Aug 20.",
+          type: "reminder",
+          date: "2025-08-12",
+        },
+        {
+          id: "n2",
+          message: "Driver's License Test rescheduled to Aug 25.",
+          type: "change",
+          date: "2025-08-10",
+        },
+        {
+          id: "n3",
+          message:
+            "Please submit your documents before the Passport Renewal appointment.",
+          type: "reminder",
+          date: "2025-08-11",
+        },
       ]);
 
       setLoading(false);
     }, 1000);
   }, []);
 
-  // Handle notifications popover
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
+      if (
+        notifRef.current &&
+        !notifRef.current.contains(event.target as Node)
+      ) {
         setNotifOpen(false);
       }
     };
@@ -101,7 +155,6 @@ const CitizenDashboard = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [notifOpen]);
 
-  // Scroll to document section if URL hash matches
   useEffect(() => {
     if (location.hash === "#document-submission-section") {
       const section = document.getElementById("document-submission-section");
@@ -112,22 +165,24 @@ const CitizenDashboard = () => {
   }, [location]);
 
   const handleBookNew = () => navigate("/resident/dashboard/service-selection");
-  const handleViewAppointment = (id: string) => alert(`View or reschedule appointment ${id}`);
-  const handleFeedback = (id: string) => alert(`Give feedback for appointment ${id}`);
+  const handleViewAppointment = (id: string) =>
+    alert(`View or reschedule appointment ${id}`);
 
   if (loading) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-blue-100 to-indigo-700">
+      <div className="min-h-screen flex justify-center items-center bg-gradient-to-br ">
         <Spin size="large" tip="Loading your dashboard..." />
       </div>
     );
   }
 
   return (
-    <Layout className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-600">
+    <Layout className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-600 ">
       <CommonNav /> {/* Nav bar will handle hash-based navigation */}
-
-      <Content className="px-6 sm:px-8 py-12 overflow-auto" aria-label="Citizen Dashboard Content">
+      <Content
+        className="px-32 sm:px-8 py-12 overflow-auto"
+        aria-label="Citizen Dashboard Content"
+      >
         {/* Welcome Message with Notifications + Book Appointment */}
         <div style={welcomeStyle} role="region" aria-label="Welcome message">
           <div className="flex items-center gap-3">
@@ -137,12 +192,12 @@ const CitizenDashboard = () => {
                 Welcome Back!
               </Title>
               <Paragraph style={{ margin: 0, color: "#4b5563" }}>
-                We're glad to see you. Manage your appointments and notifications below.
+                We're glad to see you. Manage your appointments and
+                notifications below.
               </Paragraph>
             </div>
           </div>
 
-          {/* Right Controls */}
           <div className="flex items-center gap-4">
             <Popover
               content={<NotificationList notifications={notifications} />}
@@ -160,7 +215,9 @@ const CitizenDashboard = () => {
                 <Button
                   shape="circle"
                   type="text"
-                  icon={<BellOutlined style={{ color: "#2563eb", fontSize: 20 }} />}
+                  icon={
+                    <BellOutlined style={{ color: "#2563eb", fontSize: 20 }} />
+                  }
                   aria-label="Toggle notifications"
                 />
               </Badge>
@@ -178,10 +235,12 @@ const CitizenDashboard = () => {
           </div>
         </div>
 
-        {/* Appointments Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Upcoming Appointments */}
-          <section style={sectionCardStyle} aria-labelledby="upcoming-appointments-title">
+          <section
+            style={sectionCardStyle}
+            aria-labelledby="upcoming-appointments-title"
+          >
             <Title
               level={3}
               id="upcoming-appointments-title"
@@ -197,12 +256,17 @@ const CitizenDashboard = () => {
               onViewAppointment={handleViewAppointment}
             />
             {upcomingAppointments.length === 0 && (
-              <Text className="text-gray-500 italic">You have no upcoming appointments.</Text>
+              <Text className="text-gray-500 italic">
+                You have no upcoming appointments.
+              </Text>
             )}
           </section>
 
           {/* Past Appointments */}
-          <section style={sectionCardStyle} aria-labelledby="past-appointments-title">
+          <section
+            style={sectionCardStyle}
+            aria-labelledby="past-appointments-title"
+          >
             <Title
               level={3}
               id="past-appointments-title"
@@ -216,16 +280,18 @@ const CitizenDashboard = () => {
               <AppointmentList
                 appointments={pastAppointments}
                 type="past"
-                onGiveFeedback={handleFeedback}
+                userId={userId} // Pass userId for feedback functionality
+                onViewAppointment={handleViewAppointment}
               />
             </div>
             {pastAppointments.length === 0 && (
-              <Text className="text-gray-500 italic">No past appointments available.</Text>
+              <Text className="text-gray-500 italic">
+                No past appointments available.
+              </Text>
             )}
           </section>
         </div>
 
-        {/* Document Submission */}
         <section
           id="document-submission-section"
           style={sectionCardStyle}
@@ -241,7 +307,7 @@ const CitizenDashboard = () => {
             <FileTextOutlined style={{ color: "#2563eb", fontSize: 26 }} />
             Document Submission
           </Title>
-          <DocumentSubmissionCard />
+          <DocumentSubmissionCard citizenId={loggedInCitizenId} />
         </section>
       </Content>
       <Footer />
@@ -249,4 +315,4 @@ const CitizenDashboard = () => {
   );
 };
 
-export default CitizenDashboard;
+export default CitizenDashboardPage;
