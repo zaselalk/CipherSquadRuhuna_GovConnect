@@ -33,7 +33,7 @@ const { Step } = Steps;
 const { TextArea } = Input;
 const { Title } = Typography;
 
-const ResidentRegisterPage: FC = () => {
+const CitizenRegisterPage: FC = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
@@ -309,7 +309,7 @@ const ResidentRegisterPage: FC = () => {
           ? values.birthday.format("YYYY-MM-DD")
           : null;
 
-      const residentData: Partial<CitizenData> = {
+      const citizenData: Partial<CitizenData> = {
         fullName: `${values.firstName || ""} ${values.lastName || ""}`.trim(),
         NICNumber: values.NICNumber || undefined,
         email: values.email || undefined,
@@ -320,12 +320,12 @@ const ResidentRegisterPage: FC = () => {
         address: values.address || undefined,
       };
 
-      console.log("Submitting resident data:", residentData);
-      await CitizenService.addCitizen(residentData);
+      console.log("Submitting citizen data:", citizenData);
+      await CitizenService.addCitizen(citizenData);
 
       setSuccess("Registration successful!");
       form.resetFields();
-      setTimeout(() => navigate("/resident/verifyemail"), 1500);
+      setTimeout(() => navigate("/citizen/verifyemail"), 1500);
     } catch (err: any) {
       setError(err?.message || "Registration failed");
     } finally {
@@ -338,7 +338,7 @@ const ResidentRegisterPage: FC = () => {
       <LandingHeader />
       <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg mt-8">
         <Title level={3} style={{ textAlign: "center", marginBottom: 24 }}>
-          Resident Registration
+          Citizen Registration
         </Title>
 
         {error && (
@@ -398,9 +398,9 @@ const ResidentRegisterPage: FC = () => {
           </div>
         </Form>
       </div>
-   <LandingFooter />
+      <LandingFooter />
     </>
   );
 };
 
-export default ResidentRegisterPage;
+export default CitizenRegisterPage;

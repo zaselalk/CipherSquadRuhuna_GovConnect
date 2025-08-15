@@ -1,72 +1,78 @@
 import { Route, Routes } from "react-router";
-import { ResidentAuthProvider } from "../auth/ResidentAuthContext";
-// import ResidentProtectedRoute from "../auth/ResidentProtectedRoute";
-// import ResidentDashboard from "../../pages/citizen/ResidentDashboard";
-import ResidentLoginPage from "../../pages/citizen/CitizenLoginPage";
-import ResidentRegisterPage from "../../pages/citizen/CitizenRegisterPage";
-import CitizenDashboard from "../../pages/citizen/CitizenDashboard";
+import { CitizenAuthProvider } from "../auth/CitizenAuthContext";
+import CitizenProtectedRoute from "../auth/CitizenProtectedRoute";
+import CitizenLoginPage from "../../pages/citizen/CitizenLoginPage";
 import FeedbackForm from "../../pages/citizen/FeedbackPage";
 import ServiceSelectionPage from "../../pages/citizen/ServiceSelection";
-import AboutPage from "../../pages/citizen/About";
-import Dashboard from "../../pages/citizen/roster/dashboard";
+import AboutPage from "../../pages/About";
 import DepartmentPage from "../../pages/citizen/DepartmentPage";
 import EmailVerificationPage from "../../pages/citizen/EmailVerificationPage";
+import CitizenRegisterPage from "../../pages/citizen/CitizenRegisterPage";
+import CitizenDashboardPage from "../../pages/citizen/CitizenDashboardPage";
+import CitizenRosterDashboard from "../../pages/citizen/roster/dashboard";
 
-export const ResidentRoutes = () => {
+export const CitizenRoutes = () => {
   return (
-    <ResidentAuthProvider>
+    <CitizenAuthProvider>
       <Routes>
-        <Route path="/resident/login" element={<ResidentLoginPage />} />
-        <Route path="/resident/register" element={<ResidentRegisterPage />} />
-        <Route
-          path="/resident/dashboard"
-          element={
-            // <ResidentProtectedRoute>
-            <CitizenDashboard />
-            // </ResidentProtectedRoute>
-          }
-        />
-        <Route
-          path="/resident/dashboard/service-selection"
-          element={
-            // <ResidentProtectedRoute>
-            <ServiceSelectionPage />
-            // </ResidentProtectedRoute>
-          }
-        />
-        <Route
-          path="/resident/dashboard/about-govconnect"
-          element={
-            // <ResidentProtectedRoute>
-            <AboutPage />
-            // </ResidentProtectedRoute>
-          }
-        />
-        <Route path="resident/feedback" element={<FeedbackForm />} />
+        <Route path="/citizen/login" element={<CitizenLoginPage />} />
+        <Route path="/citizen/register" element={<CitizenRegisterPage />} />
 
+        {/* protected citizen routes */}
         <Route
-          path="/resident/dashboard/departments"
+          path="/citizen/dashboard"
           element={
-            // <ResidentProtectedRoute>
-            <DepartmentPage />
-            // </ResidentProtectedRoute>
+            <CitizenProtectedRoute>
+              <CitizenDashboardPage />
+            </CitizenProtectedRoute>
           }
         />
-        <Route path="resident/feedback" element={<FeedbackForm />} />
         <Route
-          path="/resident/dashboard/About"
+          path="/citizen/dashboard/service-selection"
           element={
-            // <ResidentProtectedRoute>
-            <AboutPage />
-            // </ResidentProtectedRoute>
+            <CitizenProtectedRoute>
+              <ServiceSelectionPage />
+            </CitizenProtectedRoute>
           }
         />
-
-        <Route path="/resident/roster/dashboard" element={<Dashboard />} />
-
-        
-        <Route path="/resident/verifyemail" element={<EmailVerificationPage />} />
+        <Route
+          path="/citizen/dashboard/about-govconnect"
+          element={
+            <CitizenProtectedRoute>
+              <AboutPage />
+            </CitizenProtectedRoute>
+          }
+        />
+        <Route
+          path="/citizen/feedback"
+          element={
+            <CitizenProtectedRoute>
+              <FeedbackForm />
+            </CitizenProtectedRoute>
+          }
+        />
+        <Route
+          path="/citizen/dashboard/departments"
+          element={
+            <CitizenProtectedRoute>
+              <DepartmentPage />
+            </CitizenProtectedRoute>
+          }
+        />
+        <Route
+          path="/citizen/dashboard/about"
+          element={
+            <CitizenProtectedRoute>
+              <AboutPage />
+            </CitizenProtectedRoute>
+          }
+        />
+        <Route
+          path="/citizen/verifyemail"
+          element={<EmailVerificationPage />}
+        />
+        <Route path="/citizen/roster" element={<CitizenRosterDashboard />} />
       </Routes>
-    </ResidentAuthProvider>
+    </CitizenAuthProvider>
   );
 };
