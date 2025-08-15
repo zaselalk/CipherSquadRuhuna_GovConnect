@@ -12,5 +12,6 @@ DepartmentServiceRouter.get("/", catchAsync(departmentServiceController.getAllSe
 DepartmentServiceRouter.get("/:id", catchAsync(departmentServiceController.getServiceById));
 DepartmentServiceRouter.put("/:id", catchAsync(departmentServiceController.updateService));
 DepartmentServiceRouter.delete("/:id", catchAsync(departmentServiceController.deleteService));
+DepartmentServiceRouter.get("/department/:dep_id", catchAsync(departmentServiceController.getServicesByDepartment));
 
 export default DepartmentServiceRouter;
