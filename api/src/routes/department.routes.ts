@@ -3,7 +3,6 @@ import { DepartmentController } from "../controllers/DepartmentController";
 import catchAsync from "../util/catchAsync";
 import { departmentCreateValidation, departmentGetValidation, departmentUpdateValidation } from "../validation/department";
 
-
 const router = Router();
 const controller = new DepartmentController();
 
