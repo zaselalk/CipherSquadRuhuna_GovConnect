@@ -23,4 +23,10 @@ export class DepartmentServiceService {
   public async deleteService(id: number): Promise<number> {
     return await this.departmentServiceRepository.deleteService(id);
   }
+
+  public async getServicesByDepartment(dep_id: number): Promise<DepartmentService[]> {
+  return await this.departmentServiceRepository.findServicesByDepartment(dep_id);
+}
+
+  
 }

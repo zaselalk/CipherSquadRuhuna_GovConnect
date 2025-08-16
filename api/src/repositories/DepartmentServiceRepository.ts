@@ -37,4 +37,9 @@ export class DepartmentServiceRepository {
       where: { service_id: id },
     });
   }
+
+  public async findServicesByDepartment(dep_id: number): Promise<DepartmentService[]> {
+  return await DepartmentService.findAll({ where: { dep_id } });
+}
+
 }

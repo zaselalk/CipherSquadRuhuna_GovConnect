@@ -1,173 +1,180 @@
-import { useState } from "react";
-import { Card, Col, Row, Typography, Button } from "antd";
-import {
-  FileTextOutlined,
-  CarOutlined,
-  CreditCardOutlined,
-} from "@ant-design/icons";
+// src/pages/citizen/DepartmentPage.tsx
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { Card, Col, Row, Typography, Button, Spin} from "antd";
+import { FileTextOutlined, CarOutlined, CreditCardOutlined } from "@ant-design/icons";
 import CommonNav from "../../components/common/CommonNav";
+import { DepartmentService } from "../../services/department.service";
+import { DepartmentServicesApi } from "../../services/service.service";
 
-const { Title, Paragraph } = Typography;
+const { Paragraph: TextParagraph, Title } = Typography;
 
 interface Service {
-  id: string;
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  bgColor: string;
-  iconColor: string;
-  category: string;
+  service_id: number; // updated from id
+  dep_id: number;
+  name: string;
+  description?: string | null;
 }
 
 interface Department {
-  id: string;
+  dep_id: number;
   name: string;
-  description: string;
-  icon: React.ReactNode;
-  bgColor: string;
-  iconColor: string;
+  description?: string | null;
+  link?: string;
 }
 
-const departments: Department[] = [
-  {
-    id: "documents",
-    name: "Document Services Department",
-    description: "Handles ID cards, passports, and certificates",
-    icon: <FileTextOutlined className="text-4xl text-blue-600" />,
-    bgColor: "bg-blue-50",
-    iconColor: "text-blue-600",
-  },
-  {
-    id: "tax",
-    name: "Tax & Finance Department",
-    description: "Handles taxes, fines, and government fees",
-    icon: <CreditCardOutlined className="text-4xl text-green-600" />,
-    bgColor: "bg-green-50",
-    iconColor: "text-green-600",
-  },
-  {
-    id: "vehicle",
-    name: "Transport Department",
-    description: "Vehicle registration, licenses, and permits",
-    icon: <CarOutlined className="text-4xl text-purple-600" />,
-    bgColor: "bg-purple-50",
-    iconColor: "text-purple-600",
-  },
-];
+// Icons and colors mapping based on department
+const iconMap: Record<string, React.ReactNode> = {
+  documents: <FileTextOutlined className="text-4xl text-blue-600" />,
+  tax: <CreditCardOutlined className="text-4xl text-green-600" />,
+  vehicle: <CarOutlined className="text-4xl text-purple-600" />,
+};
 
-const services: Service[] = [
-  {
-    id: "passport",
-    title: "Passport Application",
-    description: "Apply for a new passport or renew existing one",
-    icon: <FileTextOutlined className="text-4xl text-blue-600" />,
-    bgColor: "bg-blue-50",
-    iconColor: "text-blue-600",
-    category: "documents",
-  },
-  {
-    id: "idcard",
-    title: "National ID Card",
-    description: "Apply for or replace your national ID card",
-    icon: <FileTextOutlined className="text-4xl text-blue-600" />,
-    bgColor: "bg-blue-50",
-    iconColor: "text-blue-600",
-    category: "documents",
-  },
-  {
-    id: "vehicle-license",
-    title: "Vehicle License",
-    description: "Renew or register vehicle licenses",
-    icon: <CarOutlined className="text-4xl text-purple-600" />,
-    bgColor: "bg-purple-50",
-    iconColor: "text-purple-600",
-    category: "vehicle",
-  },
-  {
-    id: "tax-payment",
-    title: "Pay Taxes",
-    description: "Pay income tax, property tax, and fines",
-    icon: <CreditCardOutlined className="text-4xl text-green-600" />,
-    bgColor: "bg-green-50",
-    iconColor: "text-green-600",
-    category: "tax",
-  },
-];
+const colorMap: Record<string, { bgColor: string; iconColor: string }> = {
+  documents: { bgColor: "bg-blue-50", iconColor: "text-blue-600" },
+  tax: { bgColor: "bg-green-50", iconColor: "text-green-600" },
+  vehicle: { bgColor: "bg-purple-50", iconColor: "text-purple-600" },
+};
 
-export const DepartmentPage = () => {
+const DepartmentPage = () => {
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedDept, setSelectedDept] = useState<Department | null>(null);
+  const [deptServices, setDeptServices] = useState<Service[]>([]);
+  const [servicesLoading, setServicesLoading] = useState(false);
 
-  const deptServices = selectedDept
-    ? services.filter((s) => s.category === selectedDept.id)
-    : [];
+  const navigate = useNavigate();
+
+  // Fetch all departments
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        setLoading(true);
+        const data = await DepartmentService.getAllDepartments();
+        setDepartments(data);
+      } catch (error) {
+        console.error("Error fetching departments:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDepartments();
+  }, []);
+
+  // Fetch services for selected department
+  const fetchServicesForDept = async (dept: Department) => {
+    try {
+      setServicesLoading(true);
+      const data = await DepartmentServicesApi.getServicesByDepartment(dept.dep_id);
+      setDeptServices(data);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+      setDeptServices([]);
+    } finally {
+      setServicesLoading(false);
+    }
+  };
+
+  const handleDeptClick = (dept: Department) => {
+    setSelectedDept(dept);
+    fetchServicesForDept(dept);
+  };
+
+  // Safe navigation function
+  const handleServiceClick = (service: Service) => {
+    if (!service?.service_id) {
+      console.warn("Invalid service ID, cannot navigate");
+      return;
+    }
+    navigate(`/citizen/service-detail/${service.service_id}`);
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* Navigation Bar */}
       <CommonNav />
 
-      {/* Page Content */}
       <div className="flex-1 px-6 py-8">
         <Title level={2} className="text-center mb-8">
           Government Departments
         </Title>
 
-        {/* Department List */}
-        {!selectedDept && (
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <Spin size="large" />
+          </div>
+        ) : !selectedDept ? (
           <Row gutter={[24, 24]}>
-            {departments.map((dept) => (
-              <Col xs={24} sm={12} md={8} lg={6} key={dept.id}>
-                <Card
-                  hoverable
-                  className="text-center cursor-pointer"
-                  cover={<div className={`p-6 ${dept.bgColor}`}>{dept.icon}</div>}
-                  onClick={() => setSelectedDept(dept)}
-                >
-                  <Card.Meta title={dept.name} description={dept.description} />
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        )}
+            {departments.map((dept) => {
+              const colors = colorMap[dept.link || ""] || { bgColor: "bg-gray-100", iconColor: "text-gray-600" };
+              const icon = iconMap[dept.link || ""] || <FileTextOutlined className={`text-4xl ${colors.iconColor}`} />;
 
-        {/* Department Services */}
-        {selectedDept && (
+              return (
+                <Col xs={24} sm={12} md={8} lg={6} key={dept.dep_id}>
+                  <Card
+                    hoverable
+                    className="text-center cursor-pointer"
+                    cover={<div className={`p-6 ${colors.bgColor}`}>{icon}</div>}
+                    onClick={() => handleDeptClick(dept)}
+                  >
+                    <Card.Meta title={dept.name} />
+                  </Card>
+                </Col>
+              );
+            })}
+          </Row>
+        ) : (
           <div>
-            <Button
-              type="default"
-              className="mb-6"
-              onClick={() => setSelectedDept(null)}
-            >
+            <Button type="default" className="mb-6" onClick={() => setSelectedDept(null)}>
               &larr; Back to Departments
             </Button>
 
             <Title level={3} className="mb-4">
               {selectedDept.name} - Services
             </Title>
-            <Paragraph className="mb-8">{selectedDept.description}</Paragraph>
+            <TextParagraph className="mb-8">
+              {selectedDept.description || "No description provided."}
+            </TextParagraph>
 
-            <Row gutter={[24, 24]}>
-              {deptServices.length > 0 ? (
-                deptServices.map((service) => (
-                  <Col xs={24} sm={12} md={8} lg={6} key={service.id}>
-                    <Card
-                      hoverable
-                      className="text-center cursor-pointer"
-                      cover={<div className={`p-6 ${service.bgColor}`}>{service.icon}</div>}
-                    >
-                      <Card.Meta
-                        title={service.title}
-                        description={service.description}
-                      />
-                    </Card>
-                  </Col>
-                ))
-              ) : (
-                <Paragraph className="text-gray-500 text-center mt-8">
-                  No services available in this department.
-                </Paragraph>
-              )}
-            </Row>
+            {servicesLoading ? (
+              <div className="flex justify-center items-center py-20">
+                <Spin size="large" />
+              </div>
+            ) : (
+              <Row gutter={[24, 24]}>
+                {deptServices.length > 0 ? (
+                  deptServices.map((service) => {
+                    const category = service.name.toLowerCase().includes("vehicle")
+                      ? "vehicle"
+                      : service.name.toLowerCase().includes("tax")
+                      ? "tax"
+                      : "documents";
+
+                    const colors = colorMap[category] || { bgColor: "bg-gray-100", iconColor: "text-gray-600" };
+                    const icon = iconMap[category] || <FileTextOutlined className={`text-4xl ${colors.iconColor}`} />;
+
+                    return (
+                      <Col xs={24} sm={12} md={8} lg={6} key={service.service_id}>
+                        <Card
+                          hoverable
+                          className="text-center cursor-pointer"
+                          cover={<div className={`p-6 ${colors.bgColor}`}>{icon}</div>}
+                          onClick={() => handleServiceClick(service)}
+                        >
+                          <Card.Meta
+                            title={service.name}
+                            description={service.description || "No description available"}
+                          />
+                        </Card>
+                      </Col>
+                    );
+                  })
+                ) : (
+                  <TextParagraph className="text-gray-500 text-center mt-8">
+                    No services available in this department.
+                  </TextParagraph>
+                )}
+              </Row>
+            )}
           </div>
         )}
       </div>

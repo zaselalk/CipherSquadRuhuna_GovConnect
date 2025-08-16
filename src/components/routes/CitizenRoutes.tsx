@@ -10,6 +10,7 @@ import EmailVerificationPage from "../../pages/citizen/EmailVerificationPage";
 import CitizenRegisterPage from "../../pages/citizen/CitizenRegisterPage";
 import CitizenDashboardPage from "../../pages/citizen/CitizenDashboardPage";
 import CitizenRosterDashboard from "../../pages/citizen/roster/dashboard";
+import SingleServiceDetailPage from "../../pages/citizen/SingleServicePage";
 
 export const CitizenRoutes = () => {
   return (
@@ -59,6 +60,16 @@ export const CitizenRoutes = () => {
             </CitizenProtectedRoute>
           }
         />
+
+        <Route
+  path="/citizen/service-detail/:serviceId"
+  element={
+    <CitizenProtectedRoute>
+      <SingleServiceDetailPage />
+    </CitizenProtectedRoute>
+  }
+/>
+
 
         <Route
           path="/citizen/verifyemail"
