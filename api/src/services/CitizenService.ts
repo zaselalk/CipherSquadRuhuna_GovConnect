@@ -1,7 +1,6 @@
 import { CitizenRepository } from "../repositories/CitizenRepository";
 import { CitizenCreationAttributes } from "../types/citizen";
 import { Citizen } from "../models/citizen";
-import bcrypt from "bcrypt";
 import { EmailService } from "./EmailService";
 
 /**
@@ -43,25 +42,19 @@ export class CitizenService {
       const existingCitizen = await this.citizenRepository.findCitizenByEmail(
         citizenData.email
       );
+
       if (existingCitizen) {
         throw new Error("Citizen with this email already exists");
       }
-
-      // Hash the password
-      const saltRounds = 10;
-      const hashedPassword = await bcrypt.hash(
-        citizenData.password,
-        saltRounds
-      );
 
       // Generate verification token and expiry
       const verificationToken = this.emailService.generateVerificationToken();
       const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
 
       // Create citizen with email verification fields
+      // Note: Password hashing is handled by the model's beforeCreate hook
       const newCitizenData = {
         ...citizenData,
-        password: hashedPassword,
         email_verified: false,
         email_verification_token: verificationToken,
         email_verification_expires: verificationExpires,
@@ -105,12 +98,8 @@ export class CitizenService {
       if (!citizen) {
         throw new Error("Citizen not found");
       }
-
       // Validate password
-      const isValidPassword = await citizen.validatePassword(
-        password,
-        citizen.password
-      );
+      const isValidPassword = await citizen.validatePassword(password);
       if (!isValidPassword) {
         throw new Error("Invalid credentials");
       }

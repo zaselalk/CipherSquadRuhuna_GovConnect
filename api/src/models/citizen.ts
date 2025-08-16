@@ -32,11 +32,8 @@ export class Citizen
    * @param password - The password to verify
    * @return A boolean indicating whether the password is valid
    */
-  public async validatePassword(
-    password: string,
-    hashPassword: string
-  ): Promise<boolean> {
-    return await bcrypt.compare(password, hashPassword);
+  public async validatePassword(password: string): Promise<boolean> {
+    return await bcrypt.compare(password, this.password);
   }
 
   /**
