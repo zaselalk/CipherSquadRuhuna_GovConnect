@@ -10,5 +10,6 @@ AppointmentDocumentRoutes.get("/", catchAsync(appointmentDocumentController.getA
 AppointmentDocumentRoutes.get("/:id", catchAsync(appointmentDocumentController.getDocumentById));
 AppointmentDocumentRoutes.put("/:id", catchAsync(appointmentDocumentController.updateDocument));
 AppointmentDocumentRoutes.delete("/:id", catchAsync(appointmentDocumentController.deleteDocument));
+AppointmentDocumentRoutes.get("/reference/:referenceId", catchAsync(appointmentDocumentController.getDocumentByReferenceID));
 
 export default AppointmentDocumentRoutes;
