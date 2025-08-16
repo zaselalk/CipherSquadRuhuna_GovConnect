@@ -30,12 +30,12 @@ const Footer = () => {
                         </Title>
                         <ul className="space-y-2 text-gray-400">
                             <li>
-                                <a href="/resident/dashboard/service-selection" className="hover:text-white transition">
+                                <a href="/citizen/dashboard/service-selection" className="hover:text-white transition">
                                     Services
                                 </a>
                             </li>
                             <li>
-                                <a href="/resident/dashboard/about-govconnect" className="hover:text-white transition">
+                                <a href="/citizen/dashboard/about-govconnect" className="hover:text-white transition">
                                     About Us
                                 </a>
                             </li>
@@ -46,7 +46,7 @@ const Footer = () => {
                             </li>
                             <li>
                                 <Link
-                                    to="/resident/login"
+                                    to="/citizen/login"
                                     className="hover:text-white transition"
                                 >
                                     Citizen Portal

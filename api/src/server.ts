@@ -3,19 +3,24 @@ import { auditLogger } from "./middleware/auditLogger.middleware";
 import dotenv from "dotenv";
 import AuthRouter from "./routes/auth.routes";
 import cors from "cors";
-import RoleRouter from "./routes/role.routes";
 import UserRouter from "./routes/user.routes";
 import serializeUser from "./middleware/serializeuser.middleware";
 import expressErrorHandler from "./util/expressErrorHandler";
 import CitizenRouter from "./routes/citizen.routes";
 import DepartmentRouter from "./routes/department.routes";
-// import "./models/association"; // Import associations to ensure they are registered
+import serviceFeedbackRouter from "./routes/serviceFeedback.routes";
+import CitizenDocsRouter from "./routes/citizendoc.routes";
+import OfficerRouter from "./routes/officer.route";
+import path from "path";
+import FeedbackRouter from "./routes/generalFeedback.routes";
+import DepartmentServiceRouter from "./routes/DepService.routes";
+import DocumentTypeRouter from "./routes/documenttype.routes";
+import appointmentDocumentRoutes from "./routes/appointmentDocumentRoutes";
+import AppointmentRoutes from "./routes/appointment.routes";
+import AppointmentDocumentRoutes from "./routes/appointmentDocumentRoutes";
+import { protectRoute } from "./middleware/authjwt.middleware";
 
 dotenv.config();
-
-// env variables
-const PORT: number =
-  parseInt(process.env.APPLICATION_PORT as string, 10) || 3001;
 const app: Application = express();
 
 app.use(express.json());
@@ -41,12 +46,23 @@ app.get("/health", (req: Request, res: Response) => {
 
 // Registering routes
 app.use("/auth", AuthRouter);
-app.use("/role", RoleRouter);
-app.use("/user", UserRouter);
+app.use("/user", protectRoute(["Administrator"]), UserRouter);
 app.use("/citizen", CitizenRouter);
 app.use("/department", DepartmentRouter);
-
-// citizen routes
+app.use("/service-feedback", serviceFeedbackRouter); // Assuming feedback routes are under department
+app.use("/depservice", DepartmentServiceRouter);
+app.use("/feedback", FeedbackRouter); // Assuming feedback routes are under department
+app.use("/citizen-docs", CitizenDocsRouter);
+app.use("/officer", protectRoute(["Administrator"]), OfficerRouter);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/feedback", FeedbackRouter); // Assuming feedback routes are under department
+app.use("/document-types", DocumentTypeRouter);
+app.use("/appointments", protectRoute(["Officer"]), AppointmentRoutes);
+app.use(
+  "/appointment-documents",
+  protectRoute(["Officer"]),
+  AppointmentDocumentRoutes
+);
 
 // error handling middleware
 app.use(expressErrorHandler);

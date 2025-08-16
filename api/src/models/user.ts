@@ -1,8 +1,7 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "./sequelize";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import Role from "./role";
 
 /* Define the User model properties
   Extra properties like id, createdAt, and updatedAt are added by default
@@ -13,7 +12,7 @@ export interface UserAttributes {
   name: string;
   email: string;
   password?: string;
-  roleId?: number;
+  role: string;
   createdAt?: Date;
   updatedAt?: Date;
   phone_number?: string;
@@ -29,7 +28,7 @@ export class User extends Model<UserAttributes> implements UserAttributes {
   public name!: string;
   public email!: string;
   public password!: string;
-  public roleId!: number;
+  public role!: string;
   public phone_number?: string;
   public createdAt!: Date;
   public updatedAt!: Date;
@@ -51,7 +50,7 @@ export class User extends Model<UserAttributes> implements UserAttributes {
 
   // generate token
   public async generateToken(): Promise<string> {
-    return jwt.sign({ id: this.id }, process.env.JWT_SECRET as string, {
+    return jwt.sign({ id: this.id }, process.env.JWT_SECRET_ADMIN as string, {
       expiresIn: "1h",
     });
   }
@@ -79,14 +78,9 @@ User.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    roleId: {
-      type: DataTypes.INTEGER,
+    role: {
+      type: DataTypes.STRING,
       allowNull: false,
-      references: {
-        model: Role,
-        key: "id",
-      },
-      onUpdate: "CASCADE",
     },
 
     deletedAt: {

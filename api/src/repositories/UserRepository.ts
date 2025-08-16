@@ -1,18 +1,5 @@
 import { Op } from "sequelize";
-import { Role, User } from "../models";
-import { UserNotFoundException } from "../exceptions/UserNotFound";
-
-interface LoginUser extends User {
-  role?: string;
-}
-
-export interface UserWithPermission extends User {
-  role?: {
-    id: number;
-    role: string;
-    permission: string[];
-  };
-}
+import { User } from "../models";
 
 /**
  * Repository for handling user-related database operations.
@@ -20,67 +7,17 @@ export interface UserWithPermission extends User {
  */
 export class UserRepository {
   /**
-   * Creates a new user in the database.
-   * @param name - The name of the user.
-   * @param email - The email of the user.
-   * @param hashedPassword - The hashed password of the user.
-   * @returns A promise that resolves to the created User instance.
-   */
-  async createUser(
-    name: string,
-    email: string,
-    hashedPassword: string
-  ): Promise<User> {
-    return User.create({
-      name,
-      email,
-      password: hashedPassword,
-    });
-  }
-
-  /**
    * Finds a user by their email address.
    * @param email - The email address of the user to find.
    * @returns A promise that resolves to the found User instance or null if not found.
    */
-  async findByEmail(email: string): Promise<LoginUser | null> {
+  async findByEmail(email: string): Promise<User | null> {
     return User.findOne({
       where: {
         email,
         deletedAt: null,
       },
-      attributes: ["id", "name", "email", "password"],
-      include: [
-        {
-          model: Role,
-          as: "role",
-          attributes: ["id", "role"],
-        },
-      ],
-    });
-  }
-
-  /**
-   * Finds a user by their email address and includes their role with permissions.
-   * @param email - The email address of the user to find.
-   * @returns A promise that resolves to the found UserWithPermission instance or null if not found.
-   */
-  async findByEmailWithPermission(
-    email: string
-  ): Promise<UserWithPermission | null> {
-    return User.findOne<UserWithPermission>({
-      where: {
-        email,
-        deletedAt: null,
-      },
-      attributes: ["id", "name", "email", "password"],
-      include: [
-        {
-          model: Role,
-          as: "role",
-          attributes: ["id", "role", "permission"],
-        },
-      ],
+      attributes: ["id", "name", "email", "password", "role"],
     });
   }
 
@@ -89,20 +26,13 @@ export class UserRepository {
    * @param id - The ID of the user to find.
    * @returns A promise that resolves to the found UserWithPermission instance or null if not found.
    */
-  async findById(id: number): Promise<UserWithPermission | null> {
+  async findById(id: number): Promise<User | null> {
     return User.findOne({
       where: {
         id,
         deletedAt: null,
       },
-      attributes: ["id", "name", "email"],
-      include: [
-        {
-          model: Role,
-          as: "role",
-          attributes: ["id", "role", "permission"],
-        },
-      ],
+      attributes: ["id", "name", "email", "role"],
     });
   }
 
@@ -111,20 +41,13 @@ export class UserRepository {
    * @param id - The ID of the user to find.
    * @returns A promise that resolves to the found LoginUser instance or null if not found.
    */
-  async findByIdWithPassword(id: number): Promise<LoginUser | null> {
+  async findByIdWithPassword(id: number): Promise<User | null> {
     return User.findOne({
       where: {
         id,
         deletedAt: null,
       },
       attributes: ["id", "name", "email", "password"],
-      include: [
-        {
-          model: Role,
-          as: "role",
-          attributes: ["id", "role"],
-        },
-      ],
     });
   }
 
@@ -147,14 +70,7 @@ export class UserRepository {
         deletedAt: null, // Exclude soft-deleted users
       },
 
-      attributes: ["id", "name", "email", "createdAt", "updatedAt"],
-      include: [
-        {
-          model: Role,
-          as: "role",
-          attributes: ["id", "role", "permission"],
-        },
-      ],
+      attributes: ["id", "name", "email", "createdAt", "updatedAt", "role"],
     });
   }
 
@@ -169,14 +85,14 @@ export class UserRepository {
    */
   async CreateUser(
     name: string,
-    roleId: number,
+    role: string,
     email: string,
     password: string,
     phone_number: string
   ): Promise<User> {
     return User.create({
       name,
-      roleId,
+      role,
       email,
       password,
       phone_number,
@@ -198,22 +114,6 @@ export class UserRepository {
 
     user.name = full_name;
     await user.save();
-    return user;
-  }
-
-  /**
-   * Updates the role of a user by their ID.
-   * @param id - The ID of the user to update.
-   * @param roleId - The new role ID for the user.
-   * @returns A promise that resolves to the updated User instance or null if not found.
-   */
-  async updateUserRoleById(id: number, roleId: number): Promise<User | null> {
-    const user = await this.findById(id);
-    if (!user) return null;
-
-    user.roleId = roleId;
-    await user.save();
-    await user.reload(); // Reload the user to get the updated data
     return user;
   }
 
@@ -249,20 +149,5 @@ export class UserRepository {
     );
 
     return updatedRows > 0; // Check if any rows were updated
-  }
-
-  /**
-   * Finds users by their role ID.
-   * @param roleId - The ID of the role to find users for.
-   * @returns A promise that resolves to an array of User instances with selected attributes.
-   */
-  async findUsersByRoleId(roleId: number): Promise<User[]> {
-    return User.findAll({
-      where: {
-        roleId,
-        deletedAt: null,
-      },
-      attributes: ["id", "name", "email"],
-    });
   }
 }

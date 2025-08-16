@@ -1,8 +1,8 @@
 import config from "../config/config";
 import { Dialect } from "sequelize";
 import { User } from "./user"; // Ensure this imports the model correctly
-import Permission from "./permission";
-import Role from "./role";
+// import Permission from "./permission";
+// import Role from "./role";
 import sequelize from "./sequelize";
 
 // Determine environment configuration
@@ -21,8 +21,8 @@ const dbConfig: DBConfig = config[env] as DBConfig;
 
 // Initialize Sequelize
 
-Role.associate({ User, Permission });
-User.associate({ Role });
+// Role.associate({ User, Permission });
+// User.associate({ Role });
 
 // // Sync models with the database
 // async function syncDatabase() {
@@ -38,4 +38,4 @@ User.associate({ Role });
 // syncDatabase();
 
 export default sequelize;
-export { User, Role, Permission };
+export { User };

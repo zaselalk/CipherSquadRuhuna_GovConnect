@@ -1,0 +1,123 @@
+name: govconnect-app
+
+services:
+  # Database service
+  database:
+    image: mysql:8.0
+    container_name: govconnect-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: govconnect
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - govconnect-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Database migration service
+  migration:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: govconnect-migration
+    environment:
+      NODE_ENV: development
+      DATABASE_USER: user
+      DATABASE_PASSWORD: password
+      DATABASE_NAME: govconnect
+      DATABASE_HOST: database
+      DATABASE_PORT: 3306
+    command: >
+      sh -c "
+        echo 'Waiting for database to be ready...' &&
+        sleep 10 &&
+        echo 'Checking migration status...' &&
+        PENDING_MIGRATIONS=$$(npx sequelize-cli db:migrate:status | grep -c 'down' || true) &&
+        echo 'Pending migrations: '$$PENDING_MIGRATIONS &&
+        if [ \"$$PENDING_MIGRATIONS\" -gt 0 ]; then
+          echo 'Running database migrations...' &&
+          npm run migrate
+        else
+          echo 'All migrations are up to date.'
+        fi &&
+        echo 'Checking if seeds need to be run...' &&
+        sleep 5 &&
+        PERMISSION_COUNT=$$(mysql -h database -u user -ppassword govconnect -e 'SELECT COUNT(*) FROM permissions;' -s -N 2>/dev/null || echo '0') &&
+        echo 'Current permission count: '$$PERMISSION_COUNT &&
+        if [ \"$$PERMISSION_COUNT\" -eq 0 ]; then
+          echo 'Running database seeds...' &&
+          npm run seed || echo 'Seeds may have already been run - continuing...'
+        else
+          echo 'Seeds appear to have been run already (permissions table has data).'
+        fi &&
+        echo 'Database initialization completed!'
+      "
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - govconnect-network
+    restart: "no"
+
+  # Backend API service
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: govconnect-api
+    restart: always
+    environment:
+      NODE_ENV: development
+      APPLICATION_PORT: 3001
+      DATABASE_USER: user
+      DATABASE_PASSWORD: password
+      DATABASE_NAME: govconnect
+      DATABASE_HOST: database
+      DATABASE_PORT: 3306
+      JWT_SECRET_ADMIN: OKZXxPmVEsYAPmqVaLtdjIRAQmMDG0DZRu8gXYS+gHmCCkcBhfbJEGNkeOdcxba1
+      JWT_SECRET_CITIZEN: JWT_SECRET_CITIZEN+gHmCCkcBhfbJEGNkeOdcxba2
+    ports:
+      - "3001:3001"
+    depends_on:
+      database:
+        condition: service_healthy
+      migration:
+        condition: service_completed_successfully
+    volumes:
+      - ./api/uploads:/app/uploads
+    networks:
+      - govconnect-network
+
+  # Frontend service
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: govconnect-frontend
+    restart: always
+    environment:
+      VITE_BACKEND_URL: http://localhost:3001
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+    networks:
+      - govconnect-network
+
+volumes:
+  mysql-data:
+
+networks:
+  govconnect-network:
+    driver: bridge

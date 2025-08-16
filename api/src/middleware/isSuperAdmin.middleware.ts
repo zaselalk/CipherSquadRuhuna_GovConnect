@@ -24,7 +24,7 @@ export const isSuperAdmin = (
   let user = req.user;
 
   // Ensure user has a role and that the role is defined
-  if (!user.role || !user.role.role) {
+  if (!user.role || !user.role) {
     res.status(403).json({
       message: "Forbidden - Invalid user ",
       status: 403,
@@ -33,7 +33,7 @@ export const isSuperAdmin = (
   }
 
   // Check if the user's role is 'super_admin'
-  if (user?.role.role !== "super_admin") {
+  if (user?.role !== "Administrator") {
     res.status(403).json({
       message: "Forbidden - Insufficient permissions",
       status: 403,

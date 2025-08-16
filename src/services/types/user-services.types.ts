@@ -18,11 +18,7 @@ export interface User {
   email: string;
   createdAt: string;
   updatedAt: string;
-  role: {
-    id: number;
-    role: string;
-    permission: string;
-  };
+  role: string;
 }
 
 /**

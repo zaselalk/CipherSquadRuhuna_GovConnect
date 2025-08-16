@@ -71,7 +71,7 @@ export const UserLoginForm: FC<UserLoginFormProps> = ({
       <div className="text-center pt-4 border-t border-gray-200">
         <p className="text-sm text-gray-600 mb-2">Are you a citizen?</p>
         <Link
-          to="/resident/login"
+          to="/citizen/login"
           className="inline-flex items-center px-4 py-2 text-sm font-medium text-cyan-600 hover:text-cyan-700 bg-cyan-50 hover:bg-cyan-100 rounded-lg transition-colors"
         >
           <User className="w-4 h-4 mr-2" />

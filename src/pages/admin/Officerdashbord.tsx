@@ -20,6 +20,7 @@ import {
   FileOutlined,
   ReloadOutlined,
   SearchOutlined,
+  ArrowLeftOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
@@ -41,14 +42,19 @@ interface Appointment {
   notes: string;
 }
 
-const OfficerDashboard: React.FC = () => {
+interface OfficerDashboardProps {
+  service: string;
+  onBack: () => void;
+}
+
+const OfficerDashboard: React.FC<OfficerDashboardProps> = ({ service, onBack }) => {
   const [appointments, setAppointments] = useState<Appointment[]>([
     {
       id: 1,
-      citizenName: "Jane Doe",
+      citizenName: "Kasun Udayanga",
       date: "2025-09-01",
       time: "10:30 AM",
-      service: "Driving License",
+      service: "ID Card Renewal",
       status: "Pending",
       documents: [
         { name: "National ID.pdf", url: "#" },
@@ -58,7 +64,7 @@ const OfficerDashboard: React.FC = () => {
     },
     {
       id: 2,
-      citizenName: "John Smith",
+      citizenName: "Kasuni Perera",
       date: "2025-09-02",
       time: "11:00 AM",
       service: "Passport Renewal",
@@ -68,10 +74,10 @@ const OfficerDashboard: React.FC = () => {
     },
     {
       id: 3,
-      citizenName: "Mary Johnson",
+      citizenName: "Anura Silva",
       date: "2025-09-03",
       time: "09:15 AM",
-      service: "Medical Certification",
+      service: "ID Card Renewal",
       status: "Approved",
       documents: [{ name: "Medical Report.pdf", url: "#" }],
       notes: "Missing signature on report.",
@@ -80,7 +86,6 @@ const OfficerDashboard: React.FC = () => {
 
   const [filters, setFilters] = useState({
     date: null as string | null,
-    service: "",
     status: "",
     name: "",
   });
@@ -96,15 +101,14 @@ const OfficerDashboard: React.FC = () => {
     message.success(`Appointment status updated to "${newStatus}".`);
   };
 
-  const filteredAppointments = appointments.filter((a) => {
-    return (
+  const filteredAppointments = appointments.filter(
+    (a) =>
+      a.service === service &&
       (!filters.date || a.date === filters.date) &&
-      (!filters.service || a.service === filters.service) &&
       (!filters.status || a.status === filters.status) &&
       (!filters.name ||
         a.citizenName.toLowerCase().includes(filters.name.toLowerCase()))
-    );
-  });
+  );
 
   const statusColors: Record<string, string> = {
     Pending: "orange",
@@ -125,11 +129,6 @@ const OfficerDashboard: React.FC = () => {
     },
     { title: "Time", dataIndex: "time" },
     {
-      title: "Service",
-      dataIndex: "service",
-      sorter: (a, b) => a.service.localeCompare(b.service),
-    },
-    {
       title: "Status",
       dataIndex: "status",
       filters: Object.keys(statusColors).map((s) => ({ text: s, value: s })),
@@ -140,10 +139,15 @@ const OfficerDashboard: React.FC = () => {
 
   return (
     <DashboardContainer>
-      <div className="max-w-[1100px] mx-auto  min-h-screen">
-        <h1 className="text-[#0052cc] text-2xl font-bold mb-4">
-          Officer Dashboard
-        </h1>
+      <div className="max-w-[1100px] mx-auto min-h-screen">
+        <div className="flex items-center gap-3 mb-4">
+          <Button icon={<ArrowLeftOutlined />} onClick={onBack}>
+            Back
+          </Button>
+          <h1 className="text-[#0052cc] text-2xl font-bold">
+            {service} - Appoinments
+          </h1>
+        </div>
 
         {/* Filters */}
         <Card className="mb-4">
@@ -156,22 +160,6 @@ const OfficerDashboard: React.FC = () => {
                   date: date ? dayjs(date).format("YYYY-MM-DD") : null,
                 }))
               }
-            />
-            <Select
-              placeholder="Service"
-              className="w-48"
-              allowClear
-              onChange={(val) =>
-                setFilters((f) => ({ ...f, service: val || "" }))
-              }
-              options={[
-                { value: "Driving License", label: "Driving License" },
-                { value: "Passport Renewal", label: "Passport Renewal" },
-                {
-                  value: "Medical Certification",
-                  label: "Medical Certification",
-                },
-              ]}
             />
             <Select
               placeholder="Status"
@@ -194,9 +182,7 @@ const OfficerDashboard: React.FC = () => {
             />
             <Button
               icon={<ReloadOutlined />}
-              onClick={() =>
-                setFilters({ date: null, service: "", status: "", name: "" })
-              }
+              onClick={() => setFilters({ date: null, status: "", name: "" })}
             >
               Reset
             </Button>

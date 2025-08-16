@@ -5,11 +5,11 @@ export const userRegisterValidation: RequestHandler[] = [
   body("email").isEmail().withMessage("Email is not valid"),
   body("password").notEmpty().withMessage("Password is required"),
   body("full_name").notEmpty().withMessage("Full name is required"),
-  body("role_id")
+  body("role")
     .notEmpty()
-    .withMessage("Role ID is required")
-    .isNumeric()
-    .withMessage("Role ID must be a number"),
+    .withMessage("Role is required")
+    .isIn(["Administrator", "Officer", "Analyst"])
+    .withMessage("Invalid role selected"),
   body("phone_number")
     .optional()
     .isString()

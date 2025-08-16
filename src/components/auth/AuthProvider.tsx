@@ -8,7 +8,7 @@ interface AuthProviderProps {
   children: React.ReactNode;
 }
 
-const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+const AdminAuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -21,7 +21,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       try {
         // Store the current path before authentication check
         const currentPath = location.pathname + location.search;
-
         const auth = await authServices.checkToken();
         const user = auth.data;
 
@@ -31,8 +30,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             id: user.id,
             name: user.name,
             email: user.email,
-            role: user.role.role,
-            permissions: JSON.parse(user.role.permission),
+            role: user.role,
           })
         );
 
@@ -51,7 +49,11 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         // If user is on login page or root, redirect to dashboard
         if (currentPath === "/admin/login" || currentPath === "/") {
-          navigate("/admin/dashboard", { replace: true });
+          // if the user is officer, redirect to officer dashboard
+          if (user.role === "Officer") {
+            navigate("/admin/officerdashboard", { replace: true });
+          }
+          navigate("/admin/analytics", { replace: true });
         }
       } catch (error) {
         console.error("Error checking token:", error);
@@ -67,4 +69,4 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   return <>{children}</>;
 };
 
-export default AuthProvider;
+export default AdminAuthProvider;

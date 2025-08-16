@@ -129,4 +129,79 @@ export class CitizenRepository {
       throw new Error("Failed to find citizen by email");
     }
   }
+
+  /**
+   * Find a citizen by email verification token
+   * @param token - The verification token to find
+   * @return The found citizen or null if not found
+   */
+  public async findCitizenByVerificationToken(
+    token: string
+  ): Promise<Citizen | null> {
+    try {
+      const citizen = await Citizen.findOne({
+        where: {
+          email_verification_token: token,
+          email_verification_expires: {
+            [require("sequelize").Op.gt]: new Date(),
+          },
+        },
+      });
+      return citizen;
+    } catch (error) {
+      console.error("Error finding citizen by verification token:", error);
+      throw new Error("Failed to find citizen by verification token");
+    }
+  }
+
+  /**
+   * Verify citizen email
+   * @param id - The ID of the citizen to verify
+   * @return The updated citizen or null if not found
+   */
+  public async verifyCitizenEmail(id: number): Promise<Citizen | null> {
+    try {
+      const citizen = await this.findCitizenById(id);
+      if (!citizen) {
+        return null;
+      }
+      await citizen.update({
+        email_verified: true,
+        email_verification_token: undefined,
+        email_verification_expires: undefined,
+      });
+      return citizen;
+    } catch (error) {
+      console.error("Error verifying citizen email:", error);
+      throw new Error("Failed to verify citizen email");
+    }
+  }
+
+  /**
+   * Update citizen verification token
+   * @param id - The ID of the citizen to update
+   * @param token - The new verification token
+   * @param expires - The expiration date for the token
+   * @return The updated citizen or null if not found
+   */
+  public async updateCitizenVerificationToken(
+    id: number,
+    token: string,
+    expires: Date
+  ): Promise<Citizen | null> {
+    try {
+      const citizen = await this.findCitizenById(id);
+      if (!citizen) {
+        return null;
+      }
+      await citizen.update({
+        email_verification_token: token,
+        email_verification_expires: expires,
+      });
+      return citizen;
+    } catch (error) {
+      console.error("Error updating citizen verification token:", error);
+      throw new Error("Failed to update citizen verification token");
+    }
+  }
 }

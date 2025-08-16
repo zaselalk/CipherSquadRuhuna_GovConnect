@@ -1,24 +1,25 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { Role, User } from "../models";
-import { UserAttributes } from "../models/user";
+import { User } from "../models";
 
 // jwt payload
 interface JwtPayload {
   id: number;
 }
 
-interface UserInfo extends UserAttributes {
-  role?: {
-    id: number;
-    role: string;
-    permission: string;
-  };
-}
-
 declare global {
   namespace Express {
-    interface User extends UserInfo {}
+    interface User {
+      id?: number | undefined;
+      name: string;
+      email: string;
+      password?: string | undefined;
+      role: string;
+      createdAt?: Date | undefined;
+      updatedAt?: Date | undefined;
+      phone_number?: string | undefined;
+      deletedAt?: Date | null | undefined;
+    }
   }
 }
 
@@ -39,18 +40,10 @@ export default async function serializeUser(
 
   // decode jwt token
   try {
-    const secretKey = process.env.JWT_SECRET as string;
+    const secretKey = process.env.JWT_SECRET_ADMIN as string;
     const decoded = jwt.verify(token, secretKey) as JwtPayload;
 
-    const findUser = await User.findByPk(decoded.id, {
-      include: [
-        {
-          model: Role,
-          as: "role",
-          attributes: ["id", "role", "permission"],
-        },
-      ],
-    });
+    const findUser = await User.findByPk(decoded.id);
 
     if (!findUser) return next();
 

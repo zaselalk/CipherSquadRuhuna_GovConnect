@@ -5,7 +5,7 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "./sequelize";
 import { CitizenAttributes, CitizenCreationAttributes } from "../types/citizen";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export class Citizen
@@ -23,17 +23,17 @@ export class Citizen
   public createdAt!: Date;
   public updatedAt!: Date;
   public deletedAt!: Date | null;
+  public email_verified!: boolean;
+  public email_verification_token?: string;
+  public email_verification_expires?: Date;
 
   /**
    * Verify the password
    * @param password - The password to verify
    * @return A boolean indicating whether the password is valid
    */
-  public async validatePassword(
-    password: string,
-    hashPassword: string
-  ): Promise<boolean> {
-    return await bcrypt.compare(password, hashPassword);
+  public async validatePassword(password: string): Promise<boolean> {
+    return await bcrypt.compare(password, this.password);
   }
 
   /**
@@ -41,7 +41,7 @@ export class Citizen
    * @return A JWT token as a string
    */
   public async generateToken(): Promise<string> {
-    return jwt.sign({ id: this.id }, process.env.JWT_SECRET as string, {
+    return jwt.sign({ id: this.id }, process.env.JWT_SECRET_CITIZEN as string, {
       expiresIn: "1h",
     });
   }
@@ -103,6 +103,19 @@ Citizen.init(
       type: DataTypes.DATE,
       allowNull: true,
       defaultValue: null,
+    },
+    email_verified: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    email_verification_token: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    email_verification_expires: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
   },
 
