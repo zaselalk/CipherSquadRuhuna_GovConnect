@@ -13,11 +13,13 @@ export type ServiceFeedback = {
 };
 
 export const ServiceFeedbackService = {
-getAllFeedbacks: async (): Promise<ServiceFeedback[]> => {
-  const response = await axiosInstance.get("/service-feedback");
-  return Array.isArray(response.data) ? response.data : response.data.data ?? [];
-},
-
+  // Get all feedbacks
+  getAllFeedbacks: async (): Promise<ServiceFeedback[]> => {
+    const response = await axiosInstance.get("/service-feedback");
+    return Array.isArray(response.data)
+      ? response.data
+      : response.data.data ?? [];
+  },
 
   // Get feedback by ID
   getFeedbackById: async (id: string): Promise<ServiceFeedback> => {
@@ -25,14 +27,18 @@ getAllFeedbacks: async (): Promise<ServiceFeedback[]> => {
     return response.data.data;
   },
 
-  // Get feedbacks by user ID (fixed route)
+  // Get feedbacks by user ID
   getFeedbacksByUserId: async (userId: string): Promise<ServiceFeedback[]> => {
     const response = await axiosInstance.get(`/service-feedback/user/${userId}`);
-    return response.data.data;
+    return Array.isArray(response.data)
+      ? response.data
+      : response.data.data ?? [];
   },
 
   // Add a new feedback
-  addFeedback: async (data: Omit<ServiceFeedback, "id" | "createdAt" | "updatedAt">): Promise<ServiceFeedback> => {
+  addFeedback: async (
+    data: Omit<ServiceFeedback, "id" | "createdAt" | "updatedAt">
+  ): Promise<ServiceFeedback> => {
     const response = await axiosInstance.post("/service-feedback", data);
     return response.data.data;
   },

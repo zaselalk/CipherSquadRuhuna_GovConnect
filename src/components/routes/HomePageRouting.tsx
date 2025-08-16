@@ -6,6 +6,8 @@ import PrivacyPage from "../../pages/PrivacyPage";
 import ServiceDetailPage from "../../pages/ServiceDetailPage";
 import AppointmentBookingPage from "../../pages/AppointmentBookingPage";
 import { LandingGovServices } from "../features/landing-page/LandingGovServices";
+import EmailVerificationSuccessPage from "../../pages/citizen/EmailVerificationSuccessPage";
+import ResendVerificationPage from "../../pages/citizen/ResendVerificationPage";
 
 export const HomePageRouting: React.FC = () => {
   return (
@@ -19,6 +21,8 @@ export const HomePageRouting: React.FC = () => {
         path="/services/:serviceId/book-appointment"
         element={<AppointmentBookingPage />}
       />
+      <Route path="/verify-email" element={<EmailVerificationSuccessPage />} />
+      <Route path="/resend-verification" element={<ResendVerificationPage />} />
     </Routes>
   );
 };
