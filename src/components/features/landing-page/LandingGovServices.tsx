@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router"; // ✅ fixed import
 import { DepartmentService, DepartmentServicesApi } from "../../../services/service.service";
 
-const logo = "/logo.png"; // ✅ make sure this is in /public
+const logo = "/images/logo.png"; // ✅ make sure this is in /public
 
 export const LandingGovServices = () => {
   const [services, setServices] = useState<DepartmentService[]>([]);
