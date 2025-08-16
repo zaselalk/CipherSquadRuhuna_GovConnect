@@ -97,5 +97,23 @@ export class AppointmentDocumentController {
             data: null
         });
     }
+    public getDocumentByReferenceID = async (req: Request, res: Response) => {
+        const { referenceId } = req.params;
+        const document = await this.appointmentDocumentService.getDocumentByReferenceID(referenceId);
+        if (!document) {
+            return res.status(404).json({
+                message: "Document not found",
+                status: 404,
+                error: null,
+                data: null
+            });
+        }
+        return res.status(200).json({
+            message: "Document retrieved successfully",
+            status: 200,
+            error: null,
+            data: document
+        });
+    }
 
 }
