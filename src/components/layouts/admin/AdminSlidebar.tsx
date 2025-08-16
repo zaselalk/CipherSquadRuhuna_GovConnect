@@ -13,15 +13,10 @@ const AdminSidebar: FC = () => {
   const user = useAppSelector((state) => state.auth.user);
   const [navbarArray, setNavbarArray] = useState<string[]>([]);
 
+  if (!user) return null; // or a loading spinner, or redirect to login
+
   const navItemClass =
     "py-3 text-sm font-medium flex items-center text-gray-700 hover:text-white rounded-xl px-4 transition-all duration-200 transform hover:scale-105";
-
-  useEffect(() => {
-    if (!user?.permissions) return;
-    if (user.permissions.length > 0) {
-      setNavbarArray(user.permissions);
-    }
-  }, [user?.permissions]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -36,30 +31,42 @@ const AdminSidebar: FC = () => {
       label: "Analytics",
       icon: <FaHouseUser size={20} />,
       permission: "citizen:view",
+      role: ["Administrator", "Analyst"],
     },
     {
       path: "/admin/citizen",
       label: "Citizens",
       icon: <FaHouseUser size={20} />,
       permission: "citizen:view",
+      role: ["Administrator"],
     },
     {
       path: "/admin/department",
       label: "Departments",
       icon: <FaHouseUser size={20} />,
       permission: "citizen:view",
+      role: ["Administrator", "Analyst"],
     },
     {
       path: "/admin/officerdashboard",
       label: "Officers",
       icon: <FaHouseUser size={20} />,
       permission: "citizen:view",
+      role: ["Administrator", "Officer"],
     },
     {
       path: "/admin/feedback",
       label: "Feedback", // Added feedback menu
       icon: <FaHouseUser size={20} />,
       permission: "citizen:view",
+      role: ["Administrator", "Analyst", "Officer"],
+    },
+    {
+      path: "/admin/users",
+      label: "Users",
+      icon: <HiUsers size={20} />,
+      permission: "user:view",
+      role: ["Administrator"],
     },
   ];
 
@@ -95,7 +102,7 @@ const AdminSidebar: FC = () => {
       <div className="flex-1">
         <ul className="space-y-3">
           {navItems
-            .filter((item) => navbarArray.includes(item.permission))
+            .filter((item) => item.role.includes(user.role))
             .map((item) => (
               <li key={item.path}>
                 <NavLink
@@ -116,26 +123,28 @@ const AdminSidebar: FC = () => {
               </li>
             ))}
 
-          {/* Super Admin: Users */}
-          <li>
-            <NavLink
-              to="/admin/users"
-              className={({ isActive }) =>
-                `${navItemClass} ${
-                  isActive
-                    ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg"
-                    : "hover:bg-gradient-to-r hover:from-cyan-500 hover:to-blue-600 hover:text-white"
-                }`
-              }
-            >
-              <div className="flex items-center gap-3">
-                <div className="p-1">
-                  <HiUsers size={20} />
+          {/* Admin: Users */}
+          {/* {user?.role === "Administrator" && (
+            <li>
+              <NavLink
+                to="/admin/users"
+                className={({ isActive }) =>
+                  `${navItemClass} ${
+                    isActive
+                      ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg"
+                      : "hover:bg-gradient-to-r hover:from-cyan-500 hover:to-blue-600 hover:text-white"
+                  }`
+                }
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-1">
+                    <HiUsers size={20} />
+                  </div>
+                  <div>Users</div>
                 </div>
-                <div>Users</div>
-              </div>
-            </NavLink>
-          </li>
+              </NavLink>
+            </li>
+          )} */}
         </ul>
       </div>
 

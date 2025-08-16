@@ -5,11 +5,7 @@ interface ReturnUser {
   id: number;
   name: string;
   email: string;
-  role: {
-    id: number;
-    role: string;
-    permission: string;
-  };
+  role: string;
   token: string;
 }
 

@@ -4,7 +4,6 @@ import User from "../models/user";
 import { UserRepository } from "../repositories/UserRepository";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { RoleRepository } from "../repositories/RoleRepository";
 import { logSuperUserAction } from "../util/superUserLogger";
 
 /**
@@ -16,22 +15,13 @@ interface LoginUser {
   email: string; // Email address of the user
   token: string; // Authentication token for the user
   role: string | null; // Role of the user (if any)
-  permissions?: string[] | null; // List of permissions assigned to the user (optional)
 }
 
 /**
  * Interface representing a logged-in user with a detailed role and permissions object.
  */
-interface LoginUserWithPermissionObjectWithToken {
-  id: number; // Unique identifier for the user
-  name: string; // Full name of the user
-  email: string; // Email address of the user
+interface LoginUserWithPermissionObjectWithToken extends LoginUser {
   token: string; // Authentication token for the user
-  role: {
-    id: number | undefined; // Role ID (optional)
-    role: string | undefined; // Role name (optional)
-    permission: string[] | undefined; // List of permissions (optional)
-  };
 }
 
 // Define the shape of the decoded token
@@ -57,17 +47,17 @@ export class UserServices {
    * @returns The created user object.
    * @throws UserNotFoundException if the email is already in use.
    */
-  async registerUser(
-    name: string,
-    email: string,
-    password: string
-  ): Promise<User> {
-    const excitingUser = await this.userRepository.findByEmail(email);
-    if (excitingUser) throw new UserNotFoundException("Email already in use");
+  // async registerUser(
+  //   name: string,
+  //   email: string,
+  //   password: string
+  // ): Promise<User> {
+  //   const excitingUser = await this.userRepository.findByEmail(email);
+  //   if (excitingUser) throw new UserNotFoundException("Email already in use");
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    return this.userRepository.createUser(name, email, hashedPassword);
-  }
+  //   const hashedPassword = await bcrypt.hash(password, 10);
+  //   return this.userRepository.createUser(name, email, hashedPassword);
+  // }
 
   /**
    * Authenticates a user and generates a JWT token.
@@ -80,7 +70,7 @@ export class UserServices {
     email: string,
     password: string
   ): Promise<LoginUserWithPermissionObjectWithToken | null> {
-    const user = await this.userRepository.findByEmailWithPermission(email);
+    const user = await this.userRepository.findByEmail(email);
     if (!user) throw new UserNotFoundException("Invalid username or password");
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -98,11 +88,7 @@ export class UserServices {
       name: user.name,
       email: user.email,
       token: token,
-      role: {
-        id: user?.role?.id,
-        role: user?.role?.role,
-        permission: user?.role?.permission,
-      },
+      role: user.role,
     };
   }
 
@@ -142,31 +128,18 @@ export class UserServices {
    */
   async addNewUser(
     full_name: string,
-    role_id: number,
+    role: string,
     email: string,
     password: string,
     phone_number: string
   ): Promise<User> {
-    // Check if the role is super_user
-    const roleRepository = new RoleRepository();
-    const role = await roleRepository.findById(role_id);
-    if (role && role.role === "super_user") {
-      logSuperUserAction({
-        userId: email,
-        action: "Attempted to assign super_user role via API",
-      });
-      throw new ValidationException(
-        "Assigning the super_user role is forbidden via API."
-      );
-    }
-
     const existingUser = await this.userRepository.findByEmail(email);
     if (existingUser) throw new UserNotFoundException("Email already in use");
 
     const hashedPassword = await bcrypt.hash(password, 10);
     return this.userRepository.CreateUser(
       full_name,
-      role_id,
+      role,
       email,
       hashedPassword,
       phone_number
@@ -188,44 +161,6 @@ export class UserServices {
     if (!user) throw new UserNotFoundException("User not found");
 
     return this.userRepository.updateUserFullNameById(id, full_name);
-  }
-
-  /**
-   * Updates the role of a user by their ID.
-   * @param id - Unique identifier of the user.
-   * @param role_id - New role ID to assign to the user.
-   * @returns The updated user object or null if not found.
-   * @throws UserNotFoundException if the user or role is not found.
-   * @throws ValidationException if the role is already assigned to the user.
-   */
-  async updateUserRoleById(id: number, role_id: number): Promise<User | null> {
-    // Check if the user exists
-    const user = await this.userRepository.findById(id);
-    if (!user) throw new UserNotFoundException("User not found");
-
-    // Check if the role exists
-    const roleRepository = new RoleRepository();
-    const role = await roleRepository.findById(role_id);
-
-    // throw error if role not found
-    if (!role) throw new UserNotFoundException("Role not found");
-
-    // Block super_user assignment
-    if (role.role === "super_user") {
-      logSuperUserAction({
-        userId: id,
-        action: "Attempted to update user to super_user role via API",
-      });
-      throw new ValidationException(
-        "Updating to super_user role is forbidden via API."
-      );
-    }
-
-    // Check if the user already has the role
-    if (user.roleId === role_id)
-      throw new ValidationException("Role already assigned");
-
-    return this.userRepository.updateUserRoleById(id, role_id);
   }
 
   /**
@@ -262,16 +197,6 @@ export class UserServices {
   async deleteUserById(id: number): Promise<boolean> {
     const user = await this.userRepository.findById(id);
     if (!user) throw new UserNotFoundException("User not found");
-
-    if (user.role?.role === "super_admin") {
-      logSuperUserAction({
-        userId: id,
-        action: "Attempted to delete super_admin via API",
-      });
-      throw new ValidationException(
-        "Deleting the super_admin is forbidden via API."
-      );
-    }
 
     return this.userRepository.deleteUserById(id);
   }

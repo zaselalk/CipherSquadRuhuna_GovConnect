@@ -3,7 +3,6 @@ interface authUserState {
   name: string;
   email: string;
   role: string;
-  permissions: string[];
 }
 
 interface authState {

@@ -1,11 +1,7 @@
 import { Router } from "express";
 import { UserController } from "../controllers/UserController";
 import catchAsync from "../util/catchAsync";
-import {
-  checkAuthValidation,
-  userLoginValidation,
-  userRegisterValidation,
-} from "../validation/user";
+import { checkAuthValidation, userLoginValidation } from "../validation/user";
 
 const AuthRouter: Router = Router();
 const userController = new UserController();
@@ -14,11 +10,6 @@ AuthRouter.post(
   "/login",
   userLoginValidation,
   catchAsync(userController.login)
-);
-AuthRouter.post(
-  "/register",
-  userRegisterValidation,
-  catchAsync(userController.register)
 );
 
 AuthRouter.get(

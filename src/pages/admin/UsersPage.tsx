@@ -2,7 +2,6 @@ import { FC, useState, createContext, useContext } from "react";
 import { DashboardContainer } from "../../components/layouts/overlays/DashboardContainer";
 import { UserStatCards } from "../../components/features/user-management/UserStatCards";
 import { UserList } from "../../components/features/user-management/UserList";
-import { UserRoleset } from "../../components/features/user-management/UserRoleset";
 
 interface UserContextType {
   userCount: number;
@@ -43,7 +42,6 @@ const UsersPage: FC = () => {
           <UserStatCards />
           <div className="grid grid-cols-12 gap-4 mb-6">
             <UserList />
-            <UserRoleset />
           </div>
         </div>
       </DashboardContainer>

@@ -30,8 +30,7 @@ const AdminAuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             id: user.id,
             name: user.name,
             email: user.email,
-            role: user.role.role,
-            permissions: JSON.parse(user.role.permission),
+            role: user.role,
           })
         );
 
@@ -50,6 +49,10 @@ const AdminAuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         // If user is on login page or root, redirect to dashboard
         if (currentPath === "/admin/login" || currentPath === "/") {
+          // if the user is officer, redirect to officer dashboard
+          if (user.role === "Officer") {
+            navigate("/admin/officerdashboard", { replace: true });
+          }
           navigate("/admin/analytics", { replace: true });
         }
       } catch (error) {
