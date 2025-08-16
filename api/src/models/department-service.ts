@@ -55,14 +55,4 @@ DepartmentService.init(
   }
 );
 
-// Associations
-Department.hasMany(DepartmentService, {
-  foreignKey: "dep_id",
-  as: "services",
-});
-
-DepartmentService.belongsTo(Department, {
-  foreignKey: "dep_id",
-  as: "department",
-});
 
