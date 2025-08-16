@@ -35,4 +35,8 @@ export class AppointmentRepository {
         }
         return Appointment.destroy({ where: { id } });
     }
+
+    public async findAppointmentsByUserId(userId: string): Promise<Appointment[]> {
+        return Appointment.findAll({ where: { citizenId: userId } });
+    }
 }
