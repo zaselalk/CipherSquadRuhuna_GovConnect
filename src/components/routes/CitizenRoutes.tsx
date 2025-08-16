@@ -63,28 +63,29 @@ export const CitizenRoutes = () => {
         />
 
         <Route
-  path="/citizen/service-detail/:serviceId"
-  element={
-    <CitizenProtectedRoute>
-      <SingleServiceDetailPage />
-    </CitizenProtectedRoute>
-  }
-/>
-
+          path="/citizen/service-detail/:serviceId"
+          element={
+            <CitizenProtectedRoute>
+              <SingleServiceDetailPage />
+            </CitizenProtectedRoute>
+          }
+        />
 
         <Route
           path="/citizen/verifyemail"
           element={<EmailVerificationPage />}
         />
         <Route
-  path="/citizen/roster-login"
-  element={
-    <StaticLoginPage onLoginSuccess={() => {
-      // Navigate to the dashboard after login
-      window.location.href = "/citizen/roster";
-    }} />
-  }
-/>
+          path="/citizen/roster-login"
+          element={
+            <StaticLoginPage
+              onLoginSuccess={() => {
+                // Navigate to the dashboard after login
+                window.location.href = "/citizen/roster";
+              }}
+            />
+          }
+        />
 
         <Route path="/citizen/roster" element={<CitizenRosterDashboard />} />
       </Routes>
