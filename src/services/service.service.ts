@@ -1,5 +1,6 @@
 // src/api/DepartmentServicesApi.ts
 import axiosInstance from "./axios/axiosInstance";
+import publicAxios from "./axios/publicaxios";
 
 export type DepartmentService = {
   service_id: number;
@@ -22,7 +23,7 @@ interface ApiResponse<T> {
 
 export const DepartmentServicesApi = {
   getAllServices: async (): Promise<DepartmentService[]> => {
-    const response = await axiosInstance.get<ApiResponse<DepartmentService[]>>("/departmentservices");
+    const response = await publicAxios.get<ApiResponse<DepartmentService[]>>("/depservice");
     return response.data.data;
   },
 

@@ -53,6 +53,8 @@ export const AdminRoutes = () => {
           }
         />
 
+
+
         {/* /admin/profile */}
         <Route
           path="admin/profile"
@@ -66,13 +68,15 @@ export const AdminRoutes = () => {
         />
 
         <Route
-          path="admin/department/:id"
+          path="admin/department/:dep_id"
           element={
             <ProtectedRoutesGuard roles={["Administrator", "Analyst"]}>
               <DepartmentServicesPage />
             </ProtectedRoutesGuard>
           }
         />
+
+        
 
         {/* /admin/users routs */}
 

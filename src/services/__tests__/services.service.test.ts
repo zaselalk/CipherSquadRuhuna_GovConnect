@@ -1,14 +1,23 @@
+// tests/DepartmentServicesApi.test.ts
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import axiosInstance from "../axios/axiosInstance";
+import publicAxios from "../axios/publicaxios";
 import { DepartmentService, DepartmentServicesApi } from "../service.service";
 
 
+// Mock both axios instances
 vi.mock("../axios/axiosInstance", () => ({
   default: {
     get: vi.fn(),
     post: vi.fn(),
     put: vi.fn(),
     delete: vi.fn(),
+  },
+}));
+
+vi.mock("../axios/publicaxios", () => ({
+  default: {
+    get: vi.fn(),
   },
 }));
 
@@ -27,10 +36,10 @@ describe("DepartmentServicesApi", () => {
           data: [{ service_id: 1, dep_id: 1, name: "Service 1" }],
         },
       };
-      (axiosInstance.get as any).mockResolvedValue(mockData);
+      (publicAxios.get as any).mockResolvedValue(mockData);
 
       const result = await DepartmentServicesApi.getAllServices();
-      expect(axiosInstance.get).toHaveBeenCalledWith("/departmentservices");
+      expect(publicAxios.get).toHaveBeenCalledWith("/depservice");
       expect(result).toEqual(mockData.data.data);
     });
   });
