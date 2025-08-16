@@ -325,8 +325,13 @@ const CitizenRegisterPage: FC = () => {
 
       setSuccess("Registration successful!");
       form.resetFields();
-      setTimeout(() => navigate("/citizen/verifyemail"), 1500);
+      setTimeout(
+        () =>
+          navigate("/citizen/verifyemail", { state: { email: values.email } }),
+        1500
+      );
     } catch (err: any) {
+      console.log(err);
       setError(err?.message || "Registration failed");
     } finally {
       setIsLoading(false);

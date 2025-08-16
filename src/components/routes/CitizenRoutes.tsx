@@ -10,6 +10,8 @@ import EmailVerificationPage from "../../pages/citizen/EmailVerificationPage";
 import CitizenRegisterPage from "../../pages/citizen/CitizenRegisterPage";
 import CitizenDashboardPage from "../../pages/citizen/CitizenDashboardPage";
 import CitizenRosterDashboard from "../../pages/citizen/roster/dashboard";
+import SingleServiceDetailPage from "../../pages/citizen/SingleServicePage";
+import StaticLoginPage from "../../pages/citizen/roster/roster-login";
 
 export const CitizenRoutes = () => {
   return (
@@ -61,9 +63,29 @@ export const CitizenRoutes = () => {
         />
 
         <Route
+  path="/citizen/service-detail/:serviceId"
+  element={
+    <CitizenProtectedRoute>
+      <SingleServiceDetailPage />
+    </CitizenProtectedRoute>
+  }
+/>
+
+
+        <Route
           path="/citizen/verifyemail"
           element={<EmailVerificationPage />}
         />
+        <Route
+  path="/citizen/roster-login"
+  element={
+    <StaticLoginPage onLoginSuccess={() => {
+      // Navigate to the dashboard after login
+      window.location.href = "/citizen/roster";
+    }} />
+  }
+/>
+
         <Route path="/citizen/roster" element={<CitizenRosterDashboard />} />
       </Routes>
     </CitizenAuthProvider>

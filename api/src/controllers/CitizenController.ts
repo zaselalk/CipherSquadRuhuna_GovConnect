@@ -1,14 +1,17 @@
-import { CitizenRepository } from "../repositories/CitizenRepository";
+import { CitizenService } from "../services/CitizenService";
 import { Request, Response } from "express";
 import { CitizenCreationAttributes } from "../types/citizen";
-import { Citizen } from "../models/citizen";
 
 interface createCitizenRequest extends Request {
   body: CitizenCreationAttributes;
 }
 
 export class CitizenController {
-  constructor(private citizenRepository = CitizenRepository.getInstance()) {}
+  private citizenService: CitizenService;
+
+  constructor() {
+    this.citizenService = new CitizenService();
+  }
 
   /**
    * Create a new citizen
@@ -19,23 +22,33 @@ export class CitizenController {
     req: createCitizenRequest,
     res: Response
   ): Promise<Response> => {
-    const citizenData = req.body;
-    const citizen = await this.citizenRepository.createCitizen(citizenData);
+    try {
+      const citizenData = req.body;
+      const result = await this.citizenService.registerCitizen(citizenData);
 
-    return res.status(201).json({
-      message: "Citizen created successfully",
-      status: 201,
-      error: null,
-      data: {
-        id: citizen.id,
-        fullName: citizen.fullName,
-        email: citizen.email,
-        dateOfBirth: citizen.dateOfBirth,
-        address: citizen.address,
-        contactNumber: citizen.contactNumber,
-        NICNumber: citizen.NICNumber,
-      },
-    });
+      return res.status(201).json({
+        message: result.message,
+        status: 201,
+        error: null,
+        data: {
+          id: result.citizen.id,
+          fullName: result.citizen.fullName,
+          email: result.citizen.email,
+          dateOfBirth: result.citizen.dateOfBirth,
+          address: result.citizen.address,
+          contactNumber: result.citizen.contactNumber,
+          NICNumber: result.citizen.NICNumber,
+          email_verified: result.citizen.email_verified,
+        },
+      });
+    } catch (error) {
+      return res.status(400).json({
+        message: "Failed to register citizen",
+        status: 400,
+        error: (error as Error).message,
+        data: null,
+      });
+    }
   };
 
   /**
@@ -45,54 +58,124 @@ export class CitizenController {
    * @returns A response indicating success or failure of the login attempt
    */
   loginCitizen = async (req: Request, res: Response): Promise<Response> => {
-    const { email, password } = req.body;
-    // Implement login logic here, e.g., verify credentials
+    try {
+      const { email, password } = req.body;
+      const result = await this.citizenService.loginCitizen(email, password);
 
-    // find the user by email
-    const citizen = await this.citizenRepository.findCitizenByEmail(email);
-    if (!citizen) {
-      return res.status(404).json({
-        message: "Citizen not found",
-        status: 404,
+      return res.status(200).json({
+        message: "Login successful",
+        status: 200,
         error: null,
-        data: null,
-      });
-    }
-
-    const isValidPassword = await citizen.validatePassword(
-      password,
-      citizen.password
-    );
-
-    // Check password (this is a placeholder, implement your own logic)
-    if (!isValidPassword) {
-      return res.status(401).json({
-        message: "Invalid credentials",
-        status: 401,
-        error: null,
-        data: null,
-      });
-    }
-
-    const token = await citizen.generateToken();
-    // If login is successful, return citizen data (excluding password)
-    return res.status(200).json({
-      message: "Login successful",
-      status: 200,
-      error: null,
-      data: {
-        Citizen: {
-          id: citizen.id,
-          fullName: citizen.fullName,
-          email: citizen.email,
-          dateOfBirth: citizen.dateOfBirth,
-          address: citizen.address,
-          contactNumber: citizen.contactNumber,
-          NICNumber: citizen.NICNumber,
+        data: {
+          Citizen: {
+            id: result.id,
+            fullName: result.fullName,
+            email: result.email,
+            email_verified: result.email_verified,
+          },
+          token: result.token,
         },
-        token,
-      },
-    });
+      });
+    } catch (error) {
+      const errorMessage = (error as Error).message;
+      let statusCode = 400;
+
+      if (errorMessage === "Citizen not found") {
+        statusCode = 404;
+      } else if (errorMessage === "Invalid credentials") {
+        statusCode = 401;
+      } else if (
+        errorMessage === "Please verify your email before logging in"
+      ) {
+        statusCode = 403;
+      }
+
+      return res.status(statusCode).json({
+        message: errorMessage,
+        status: statusCode,
+        error: null,
+        data: null,
+      });
+    }
+  };
+
+  /**
+   * Verify citizen email using verification token
+   * @param req - The HTTP request object containing the verification token
+   * @param res - The HTTP response object
+   */
+  verifyEmail = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const { token } = req.query;
+
+      if (!token || typeof token !== "string") {
+        return res.status(400).json({
+          message: "Verification token is required",
+          status: 400,
+          error: null,
+          data: null,
+        });
+      }
+
+      const result = await this.citizenService.verifyCitizenEmail(token);
+
+      return res.status(200).json({
+        message: result.message,
+        status: 200,
+        error: null,
+        data: {
+          id: result.citizen.id,
+          email: result.citizen.email,
+          email_verified: result.citizen.email_verified,
+        },
+      });
+    } catch (error) {
+      return res.status(400).json({
+        message: (error as Error).message,
+        status: 400,
+        error: null,
+        data: null,
+      });
+    }
+  };
+
+  /**
+   * Resend verification email to citizen
+   * @param req - The HTTP request object containing the email
+   * @param res - The HTTP response object
+   */
+  resendVerificationEmail = async (
+    req: Request,
+    res: Response
+  ): Promise<Response> => {
+    try {
+      const { email } = req.body;
+
+      if (!email) {
+        return res.status(400).json({
+          message: "Email is required",
+          status: 400,
+          error: null,
+          data: null,
+        });
+      }
+
+      const result = await this.citizenService.resendVerificationEmail(email);
+
+      return res.status(200).json({
+        message: result.message,
+        status: 200,
+        error: null,
+        data: null,
+      });
+    } catch (error) {
+      return res.status(400).json({
+        message: (error as Error).message,
+        status: 400,
+        error: null,
+        data: null,
+      });
+    }
   };
 
   /**
@@ -148,22 +231,31 @@ export class CitizenController {
     req: Request,
     res: Response
   ): Promise<Response | void> => {
-    const { id } = req.params;
-    const citizen = await this.citizenRepository.findCitizenById(parseInt(id));
-    if (!citizen) {
-      return res.status(404).json({
-        message: "Citizen not found",
-        status: 404,
+    try {
+      const { id } = req.params;
+      const citizen = await this.citizenService.getCitizenById(parseInt(id));
+      if (!citizen) {
+        return res.status(404).json({
+          message: "Citizen not found",
+          status: 404,
+          error: null,
+          data: null,
+        });
+      }
+      return res.status(200).json({
+        message: "Citizen found",
+        status: 200,
         error: null,
+        data: citizen,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: "Internal server error",
+        status: 500,
+        error: (error as Error).message,
         data: null,
       });
     }
-    return res.status(200).json({
-      message: "Citizen found",
-      status: 200,
-      error: null,
-      data: citizen,
-    });
   };
 
   /**
@@ -175,28 +267,37 @@ export class CitizenController {
     req: Request,
     res: Response
   ): Promise<Response | void> => {
-    const { id } = req.params;
-    const citizenData = req.body;
-    const updatedCitizen = await this.citizenRepository.updateCitizenById(
-      parseInt(id),
-      citizenData
-    );
+    try {
+      const { id } = req.params;
+      const citizenData = req.body;
+      const updatedCitizen = await this.citizenService.updateCitizen(
+        parseInt(id),
+        citizenData
+      );
 
-    if (!updatedCitizen) {
-      return res.status(404).json({
-        message: "Citizen not found",
-        status: 404,
+      if (!updatedCitizen) {
+        return res.status(404).json({
+          message: "Citizen not found",
+          status: 404,
+          error: null,
+          data: null,
+        });
+      }
+
+      return res.status(200).json({
+        message: "Citizen updated successfully",
+        status: 200,
         error: null,
+        data: updatedCitizen,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: "Internal server error",
+        status: 500,
+        error: (error as Error).message,
         data: null,
       });
     }
-
-    return res.status(200).json({
-      message: "Citizen updated successfully",
-      status: 200,
-      error: null,
-      data: updatedCitizen,
-    });
   };
 
   /**
@@ -208,26 +309,33 @@ export class CitizenController {
     req: Request,
     res: Response
   ): Promise<Response | void> => {
-    const { id } = req.params;
-    const deleted = await this.citizenRepository.deleteCitizenById(
-      parseInt(id)
-    );
+    try {
+      const { id } = req.params;
+      const deleted = await this.citizenService.deleteCitizen(parseInt(id));
 
-    if (!deleted) {
-      return res.status(404).json({
-        message: "Citizen not found",
-        status: 404,
+      if (!deleted) {
+        return res.status(404).json({
+          message: "Citizen not found",
+          status: 404,
+          error: null,
+          data: null,
+        });
+      }
+
+      return res.status(200).json({
+        message: "Citizen deleted successfully",
+        status: 200,
         error: null,
         data: null,
       });
+    } catch (error) {
+      return res.status(500).json({
+        message: "Internal server error",
+        status: 500,
+        error: (error as Error).message,
+        data: null,
+      });
     }
-
-    return res.status(200).json({
-      message: "Citizen deleted successfully",
-      status: 200,
-      error: null,
-      data: null,
-    });
   };
 
   /**
@@ -236,13 +344,22 @@ export class CitizenController {
    * @param res - The HTTP response object
    */
   getAllCitizens = async (req: Request, res: Response): Promise<Response> => {
-    const citizens = await this.citizenRepository.getAllCitizens();
-    return res.status(200).json({
-      message: "Citizens retrieved successfully",
-      status: 200,
-      error: null,
-      data: citizens,
-    });
+    try {
+      const citizens = await this.citizenService.getAllCitizens();
+      return res.status(200).json({
+        message: "Citizens retrieved successfully",
+        status: 200,
+        error: null,
+        data: citizens,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: "Internal server error",
+        status: 500,
+        error: (error as Error).message,
+        data: null,
+      });
+    }
   };
 }
 

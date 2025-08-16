@@ -15,6 +15,7 @@ import OfficerRouter from "./routes/officer.route";
 import path from "path";
 import FeedbackRouter from "./routes/generalFeedback.routes";
 import DepartmentServiceRouter from "./routes/DepService.routes";
+import DocumentTypeRouter from "./routes/documenttype.routes";
 import appointmentDocumentRoutes from "./routes/appointmentDocumentRoutes";
 import AppointmentRoutes from "./routes/appointment.routes";
 import AppointmentDocumentRoutes from "./routes/appointmentDocumentRoutes";
@@ -63,6 +64,7 @@ app.use("/citizen-docs", CitizenDocsRouter);
 app.use("/officer", OfficerRouter);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/feedback", FeedbackRouter); // Assuming feedback routes are under department
+app.use("/document-types", DocumentTypeRouter);
 app.use("/appointments", AppointmentRoutes);
 app.use("/appointment-documents", AppointmentDocumentRoutes);
 

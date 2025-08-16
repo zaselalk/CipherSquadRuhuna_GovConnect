@@ -2,7 +2,7 @@ import { UserNotFoundException } from "../exceptions/UserNotFound";
 import { ValidationException } from "../exceptions/ValidatationError";
 import User from "../models/user";
 import { UserRepository } from "../repositories/UserRepository";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { RoleRepository } from "../repositories/RoleRepository";
 import { logSuperUserAction } from "../util/superUserLogger";
