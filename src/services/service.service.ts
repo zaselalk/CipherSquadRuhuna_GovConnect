@@ -6,6 +6,7 @@ export type DepartmentService = {
   dep_id: number;
   name: string;
   description?: string | null;
+  doc_id?: string,
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string | null;

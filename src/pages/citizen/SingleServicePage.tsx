@@ -76,32 +76,52 @@ const SingleServiceDetailPage = () => {
         // Fetch all document types dynamically
         const allDocs = await DocumentTypeApi.getAllDocumentTypes();
 
-        // Map required documents safely
-        const rawDocs = (serviceData as any).requiredDocuments;
+        // Parse doc_id string into an array of numbers
         let requiredIds: number[] = [];
-
-        if (rawDocs) {
-          if (Array.isArray(rawDocs)) {
-            if (typeof rawDocs[0] === "number") {
-              requiredIds = rawDocs as number[];
-            } else if (typeof rawDocs[0] === "object" && "doc_id" in rawDocs[0]) {
-              requiredIds = (rawDocs as { doc_id: number }[]).map(doc => doc.doc_id);
-            } else if (typeof rawDocs[0] === "string") {
-              requiredIds = (rawDocs as string[]).map(id => Number(id));
+        if (serviceData.doc_id) {
+            try {
+            requiredIds = JSON.parse(serviceData.doc_id); // "[1,2,3]" -> [1,2,3]
+            } catch (err) {
+            console.error("Failed to parse required documents:", err);
             }
-          } else if (typeof rawDocs === "string") {
-            requiredIds = rawDocs.split(",").map(id => Number(id.trim()));
-          }
         }
 
+            // Map to full document objects
         const mappedDocs = allDocs.filter(doc => requiredIds.includes(doc.doc_id!));
         setDocuments(mappedDocs);
-      } catch (error) {
+        } catch (error) {
         console.error("Error fetching service details:", error);
-      } finally {
+        } finally {
         setLoading(false);
-      }
+        }
     };
+
+    //     // Map required documents safely
+    //     const rawDocs = (serviceData as any).requiredDocuments;
+    //     let requiredIds: number[] = [];
+
+    //     if (rawDocs) {
+    //       if (Array.isArray(rawDocs)) {
+    //         if (typeof rawDocs[0] === "number") {
+    //           requiredIds = rawDocs as number[];
+    //         } else if (typeof rawDocs[0] === "object" && "doc_id" in rawDocs[0]) {
+    //           requiredIds = (rawDocs as { doc_id: number }[]).map(doc => doc.doc_id);
+    //         } else if (typeof rawDocs[0] === "string") {
+    //           requiredIds = (rawDocs as string[]).map(id => Number(id));
+    //         }
+    //       } else if (typeof rawDocs === "string") {
+    //         requiredIds = rawDocs.split(",").map(id => Number(id.trim()));
+    //       }
+    //     }
+
+    //     const mappedDocs = allDocs.filter(doc => requiredIds.includes(doc.doc_id!));
+    //     setDocuments(mappedDocs);
+    //   } catch (error) {
+    //     console.error("Error fetching service details:", error);
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // };
 
     if (serviceId) fetchData();
   }, [serviceId]);
