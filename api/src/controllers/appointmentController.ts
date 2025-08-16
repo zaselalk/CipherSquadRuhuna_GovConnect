@@ -35,4 +35,12 @@ export class AppointmentController {
     const appointments = await appointmentService.getAppointmentsByUserId(req.params.userId);
     res.json(appointments);
   }
+
+  // Get appointment by reference ID
+  public async getByReferenceID(req: Request, res: Response) {
+    const appointment = await appointmentService.getAppointmentByReferenceID(req.params.referenceId);
+    if (!appointment) return res.status(404).json({ message: "Not found" });
+    res.json(appointment);
+  }
+
 }
