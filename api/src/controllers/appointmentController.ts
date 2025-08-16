@@ -59,37 +59,35 @@ export class AppointmentController {
 
   async createAppointmentWithDocuments(req: Request, res: Response) {
     try {
-      const { citizenId, serviceId, appointmentDate, appointmentTime, referenceId } = req.body;
+      const { citizenId, serviceId, appointmentDate, appointmentTime } = req.body;
+      const files = req.files as Express.Multer.File[];
 
-      
+      console.log(req.body);
+      console.log(req.files);
 
+      // 1️⃣ Save appointment
       const appointment = await Appointment.create({
         citizenId,
         serviceId,
         appointmentDate,
         appointmentTime,
-        referenceId, // null නොවී save වෙනවා
+        referenceId: `APP-${Date.now()}`,
       });
 
-      // File upload තියෙනවද බලන්න
-      if (Array.isArray(req.files) && req.files.length > 0) {
-        const docs = req.files.map((file) => ({
+      // 2️⃣ Save attached files
+      if (files && files.length > 0) {
+        const documents = files.map(file => ({
           appointmentId: appointment.appointmentId,
           fileName: file.originalname,
           filePath: file.path,
           mimeType: file.mimetype,
         }));
-
-        await AppointmentDocument.bulkCreate(docs);
+        await AppointmentDocument.bulkCreate(documents);
       }
 
-      res.status(201).json({
-        success: true,
-        message: "Appointment created successfully",
-        appointment,
-      });
+      res.status(201).json({ success: true, appointment });
     } catch (error) {
-      console.error("Error creating appointment:", error);
+      console.error(error);
       res.status(500).json({ error: "Failed to create appointment" });
     }
 
@@ -97,7 +95,5 @@ export class AppointmentController {
 
 
 }
-function uuidv4() {
-  throw new Error("Function not implemented.");
-}
+
 
