@@ -14,11 +14,13 @@ module.exports = {
     await queryInterface.addColumn("citizens", "email_verification_token", {
       type: DataTypes.STRING,
       allowNull: true,
+      defaultValue: null,
     });
 
     await queryInterface.addColumn("citizens", "email_verification_expires", {
       type: DataTypes.DATE,
       allowNull: true,
+      defaultValue: null,
     });
   },
 
