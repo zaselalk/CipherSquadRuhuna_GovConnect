@@ -5,7 +5,7 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "./sequelize";
 import { CitizenAttributes, CitizenCreationAttributes } from "../types/citizen";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export class Citizen
