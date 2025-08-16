@@ -1,4 +1,6 @@
 import { Appointment } from "../models/Appoinment";
+import { AppointmentDocument } from "../models/association";
+// import { AppointmentDocument } from "../models/appointmentDocument";
 
 export class AppointmentRepository {
     private static instance: AppointmentRepository;
@@ -43,4 +45,16 @@ export class AppointmentRepository {
     public async findAppointmentByReferenceID(referenceId: string): Promise<Appointment | null> {
         return Appointment.findOne({ where: { referenceId } });
     }
+
+     async getAppointmentWithDocuments(referenceId: string) {
+    return await Appointment.findOne({
+      where: { referenceId },
+      include: [
+        {
+          model: AppointmentDocument,
+          as: "documents", // use same alias you defined in associations
+        },
+      ],
+    });
+  }
 }
