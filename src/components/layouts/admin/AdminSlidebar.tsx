@@ -50,8 +50,8 @@ const AdminSidebar: FC = () => {
       permission: "citizen:view",
     },
     {
-      path: "/admin/officerdashboard",
-      label: "Officers",
+      path: "/admin/AppoinmentOfficerDash",
+      label: "Appoinments",
       icon: <FaHouseUser size={20} />,
       permission: "citizen:view",
     },

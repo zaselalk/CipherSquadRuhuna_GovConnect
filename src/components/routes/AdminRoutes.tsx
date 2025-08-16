@@ -10,6 +10,7 @@ import { CitizenListPage } from "../../pages/admin/CitizenListPage";
 import DepartmentPage from "../../pages/admin/DepartmentPage";
 import AdminFeedbackPage from "../../pages/admin/FeedbackAdmin";
 import AdminAuthProvider from "../auth/AuthProvider";
+import OfficerPage from "../../pages/admin/AppoinmentOfficerDash";
 
 export const AdminRoutes = () => {
   return (
@@ -26,15 +27,22 @@ export const AdminRoutes = () => {
             </ProtectedRoutesGuard>
           }
         />
-
-        <Route
+       <Route
+          path="admin/AppoinmentOfficerDash"
+          element={
+            <ProtectedRoutesGuard>
+              <OfficerPage />
+            </ProtectedRoutesGuard>
+          }
+        />
+        {/* <Route
           path="admin/officerdashboard"
           element={
             <ProtectedRoutesGuard>
               <OfficerDashboard />
             </ProtectedRoutesGuard>
           }
-        />
+        /> */}
         <Route
           path="admin/citizen"
           element={
