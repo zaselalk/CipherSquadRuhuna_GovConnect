@@ -33,6 +33,7 @@ module.exports = {
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu", // hashed password for 'cha@123'
           roleId: roleId,
+          phone_number: "0771234567",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -42,6 +43,7 @@ module.exports = {
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu", // hashed password for 'ravi@123'
           roleId: officerRoleId,
+          phone_number: "0777654321",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -51,6 +53,7 @@ module.exports = {
           password:
             "$2b$10$IP4lW4HjfT6BYhUCvnpRkOECkYs8CSzbMVbnJ3LwIV6FAqbTzyUAu", // hashed password for 'cha@123'
           roleId: citizenRoleId,
+          phone_number: "0779876543",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
