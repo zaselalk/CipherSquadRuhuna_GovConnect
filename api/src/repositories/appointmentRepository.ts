@@ -39,4 +39,8 @@ export class AppointmentRepository {
     public async findAppointmentsByUserId(userId: string): Promise<Appointment[]> {
         return Appointment.findAll({ where: { citizenId: userId } });
     }
+
+    public async findAppointmentByReferenceID(referenceId: string): Promise<Appointment | null> {
+        return Appointment.findOne({ where: { referenceId } });
+    }
 }
