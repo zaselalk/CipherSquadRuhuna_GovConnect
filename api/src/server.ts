@@ -18,7 +18,7 @@ import DocumentTypeRouter from "./routes/documenttype.routes";
 import appointmentDocumentRoutes from "./routes/appointmentDocumentRoutes";
 import AppointmentRoutes from "./routes/appointment.routes";
 import AppointmentDocumentRoutes from "./routes/appointmentDocumentRoutes";
-
+import { protectRoute } from "./middleware/authjwt.middleware";
 
 dotenv.config();
 const app: Application = express();
@@ -46,20 +46,23 @@ app.get("/health", (req: Request, res: Response) => {
 
 // Registering routes
 app.use("/auth", AuthRouter);
-app.use("/user", UserRouter);
-app.use("/citizen", CitizenRouter);
+app.use("/user", protectRoute(["Administrator"]), UserRouter);
+app.use("/citizen", protectRoute(["Administrator"]), CitizenRouter);
 app.use("/department", DepartmentRouter);
 app.use("/service-feedback", serviceFeedbackRouter); // Assuming feedback routes are under department
 app.use("/depservice", DepartmentServiceRouter);
 app.use("/feedback", FeedbackRouter); // Assuming feedback routes are under department
 app.use("/citizen-docs", CitizenDocsRouter);
-app.use("/officer", OfficerRouter);
+app.use("/officer", protectRoute(["Administrator"]), OfficerRouter);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/feedback", FeedbackRouter); // Assuming feedback routes are under department
 app.use("/document-types", DocumentTypeRouter);
-app.use("/appointments", AppointmentRoutes);
-app.use("/appointment-documents", AppointmentDocumentRoutes);
-
+app.use("/appointments", protectRoute(["Officer"]), AppointmentRoutes);
+app.use(
+  "/appointment-documents",
+  protectRoute(["Officer"]),
+  AppointmentDocumentRoutes
+);
 
 // error handling middleware
 app.use(expressErrorHandler);
