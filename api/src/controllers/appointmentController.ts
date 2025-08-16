@@ -43,4 +43,10 @@ export class AppointmentController {
     res.json(appointment);
   }
 
+  public async getAppointmentWithDocuments(req: Request, res: Response) {
+    const { referenceId } = req.params;
+    const appointment = await appointmentService.getAppointmentWithDocuments(referenceId);
+    if (!appointment) return res.status(404).json({ message: "Not found" });
+    res.json(appointment);
+  }
 }

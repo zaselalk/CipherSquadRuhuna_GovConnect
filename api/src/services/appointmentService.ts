@@ -31,5 +31,9 @@ export class AppointmentService {
     async getAppointmentByReferenceID(referenceId: string) {
         return this.appointmentRepository.findAppointmentByReferenceID(referenceId);
     }
+
+    async getAppointmentWithDocuments(referenceId: string) {
+        return this.appointmentRepository.getAppointmentWithDocuments(referenceId);
+    }
 }
 
