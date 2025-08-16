@@ -64,7 +64,7 @@ const EmailVerificationSuccessPage: FC = () => {
   }, [token]);
 
   const handleGoToLogin = () => {
-    navigate("/auth/login");
+    navigate("/citizen/login");
   };
 
   const handleResendEmail = async () => {
