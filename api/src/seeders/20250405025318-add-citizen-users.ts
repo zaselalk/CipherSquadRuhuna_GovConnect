@@ -273,6 +273,7 @@ module.exports = {
           address: "5 Old Road, Hambantota",
           contactNumber: "+94777765432",
           NICNumber: "860414765V",
+          email_verified: true,
           createdAt: new Date(),
           updatedAt: new Date(),
           deletedAt: null,
@@ -287,6 +288,7 @@ module.exports = {
           address: "72 Park Road, Jaffna",
           contactNumber: "+94776543289",
           NICNumber: "921230123V",
+          email_verified: true,
           createdAt: new Date(),
           updatedAt: new Date(),
           deletedAt: null,
@@ -301,6 +303,7 @@ module.exports = {
           address: "14 Station Road, Batticaloa",
           contactNumber: "+94761239876",
           NICNumber: "900905456V",
+          email_verified: true,
           createdAt: new Date(),
           updatedAt: new Date(),
           deletedAt: null,
@@ -308,7 +311,9 @@ module.exports = {
       ];
 
       await queryInterface.bulkInsert("citizens", citizens);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   },
 
   async down(queryInterface: QueryInterface) {
