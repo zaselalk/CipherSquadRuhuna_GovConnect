@@ -27,4 +27,9 @@ export class AppointmentService {
     async getAppointmentsByUserId(userId: string) {
         return this.appointmentRepository.findAppointmentsByUserId(userId);
     }
+
+    async getAppointmentByReferenceID(referenceId: string) {
+        return this.appointmentRepository.findAppointmentByReferenceID(referenceId);
+    }
 }
+
