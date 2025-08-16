@@ -47,7 +47,7 @@ app.get("/health", (req: Request, res: Response) => {
 // Registering routes
 app.use("/auth", AuthRouter);
 app.use("/user", protectRoute(["Administrator"]), UserRouter);
-app.use("/citizen", protectRoute(["Administrator"]), CitizenRouter);
+app.use("/citizen", CitizenRouter);
 app.use("/department", DepartmentRouter);
 app.use("/service-feedback", serviceFeedbackRouter); // Assuming feedback routes are under department
 app.use("/depservice", DepartmentServiceRouter);

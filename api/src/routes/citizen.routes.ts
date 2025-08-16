@@ -9,11 +9,16 @@ import {
 import serializeCitizen, {
   requireCitizenAuth,
 } from "../middleware/citizenAuth.middleware";
+import { protectRoute } from "../middleware/authjwt.middleware";
 
 const CitizenRouter: Router = Router();
 const citizenController = new CitizenController();
 
-CitizenRouter.get("/", catchAsync(citizenController.getAllCitizens));
+CitizenRouter.get(
+  "/",
+  protectRoute(["Administrator"]),
+  catchAsync(citizenController.getAllCitizens)
+);
 CitizenRouter.post(
   "/auth/register",
   citizenRegisterValidation,
