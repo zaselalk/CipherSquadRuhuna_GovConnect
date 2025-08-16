@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { Form, Card, Steps, Button, notification, Typography } from "antd";
 import { CalendarOutlined, ArrowLeftOutlined } from "@ant-design/icons";
@@ -9,6 +9,7 @@ import StepConfirmation from "../components/features/appointment-booking/Confirm
 import FormNavigation from "../components/common/FormNavigation";
 import AppointmentSuccess from "../components/features/appointment-booking/AppointmentSuccess";
 import CommonNav from "../components/common/CommonNav";
+import { CitizenService } from "../services/citizen.service";
 
 const AppointmentBookingPage = () => {
   const { serviceId } = useParams<{ serviceId: string }>();
@@ -41,7 +42,7 @@ const AppointmentBookingPage = () => {
     { title: "Personal Information" },
     { title: "Upload Documents" },
     { title: "Confirmation" },
-    { title: "Success" } 
+    { title: "Success" }
   ];
 
   const stepFieldMapping: Record<number, string[]> = {
@@ -70,6 +71,19 @@ const AppointmentBookingPage = () => {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
 
+      // Get all form values before sending to backend
+      const values = form.getFieldsValue();
+      const finalData = { ...appointmentData, ...values, uploadedDocs };
+      
+
+      // Log the data to console
+      console.log("Submitting appointment details:", finalData);
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+
+
       setIsConfirmed(true);
       setCurrentStep(4);
       notification.success({ message: "Appointment Booked Successfully!" });
@@ -80,6 +94,35 @@ const AppointmentBookingPage = () => {
     }
   };
 
+  useEffect(() => {
+  const fetchCitizen = async () => {
+    try {
+      const citizenId = 21; // get logged-in citizen ID
+      // const citizenId = localStorage.getItem("citizenId"); // get logged-in citizen ID
+      if (!citizenId) return;
+
+      // Call your service dynamically
+      const data = await CitizenService.getCitizenById(Number(citizenId));
+
+      // Pre-fill form fields
+      form.setFieldsValue({
+        fullName: data.fullName,
+        nic: data.NICNumber,
+        email: data.email,
+        phone: data.contactNumber,
+        address: data.address,
+      });
+
+      setAppointmentData((prev: any) => ({ ...prev, ...data }));
+    } catch (err) {
+      console.error("Error fetching citizen data:", err);
+    }
+  };
+
+  fetchCitizen();
+}, [form]);
+
+
   const handleGoBack = () => navigate(-1);
 
   const renderStepContent = () => {
@@ -87,7 +130,7 @@ const AppointmentBookingPage = () => {
       case 0: return <StepServiceDate appointmentData={appointmentData} setAppointmentData={setAppointmentData} serviceNames={serviceNames} timeSlots={timeSlots} form={form} />;
       case 1: return <StepPersonalInfo form={form} />;
       case 2: return <StepUploadDocuments uploadedDocs={uploadedDocs} setUploadedDocs={setUploadedDocs} form={form} />;
-      case 3: return <StepConfirmation appointmentData={appointmentData} serviceNames={serviceNames} isSubmitting={isSubmitting} onConfirm={handleSubmit} onPrev={handlePrev}  />;
+      case 3: return <StepConfirmation appointmentData={appointmentData} serviceNames={serviceNames} isSubmitting={isSubmitting} onConfirm={handleSubmit} onPrev={handlePrev} />;
       case 4: return <AppointmentSuccess appointmentData={appointmentData} serviceNames={serviceNames} isConfirmed={isConfirmed} />;
       default: return null;
     }
