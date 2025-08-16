@@ -4,7 +4,6 @@ import LoginPage from "../../pages/admin/LoginPage";
 import ProfilePage from "../../pages/admin/ProfilePage";
 import UsersPage from "../../pages/admin/UsersPage";
 import AnalyticsDashboard from "../../pages/admin/AnalyticalDashbordPage";
-import OfficerDashboard from "../../pages/admin/Officerdashbord";
 import DepartmentServicesPage from "../../pages/admin/DepartmentServicesPage";
 import { CitizenListPage } from "../../pages/admin/CitizenListPage";
 import DepartmentPage from "../../pages/admin/DepartmentPage";
