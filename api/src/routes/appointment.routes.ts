@@ -12,5 +12,6 @@ AppointmentRoutes.get("/:id", catchAsync(appointmentController.getById));
 AppointmentRoutes.post("/", catchAsync(appointmentController.create));
 AppointmentRoutes.put("/:id", catchAsync(appointmentController.update));
 AppointmentRoutes.delete("/:id", catchAsync(appointmentController.delete));
+AppointmentRoutes.get("/user/:userId", catchAsync(appointmentController.getByUserId));
 
 export default AppointmentRoutes;
