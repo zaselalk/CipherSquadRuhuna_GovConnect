@@ -110,13 +110,14 @@ const FeedbackForm: React.FC = () => {
       );
     });
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-blue-100 to-indigo-700">
-        <Spin size="large" tip="Loading..." />
-      </div>
-    );
-  }
+if (loading) {
+  return (
+    <div className="min-h-screen flex justify-center items-center bg-white">
+      <Spin size="large" tip="Loading..." />
+    </div>
+  );
+}
+
 
   return (
     <>
