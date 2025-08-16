@@ -29,4 +29,10 @@ export class AppointmentController {
     await appointmentService.deleteAppointment(req.params.id);
     res.json({ message: "Deleted successfully" });
   }
+
+  // Get appointments by user ID
+  public async getByUserId(req: Request, res: Response) {
+    const appointments = await appointmentService.getAppointmentsByUserId(req.params.userId);
+    res.json(appointments);
+  }
 }
