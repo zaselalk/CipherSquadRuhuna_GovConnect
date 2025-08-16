@@ -1,15 +1,16 @@
-// src/pages/DepartmentPage.tsx
+// src/pages/citizen/DepartmentPage.tsx
 import { useEffect, useState } from "react";
-import { Card, Col, Row, Typography, Button, Spin } from "antd";
+import { useNavigate } from "react-router";
+import { Card, Col, Row, Typography, Button, Spin} from "antd";
 import { FileTextOutlined, CarOutlined, CreditCardOutlined } from "@ant-design/icons";
 import CommonNav from "../../components/common/CommonNav";
 import { DepartmentService } from "../../services/department.service";
 import { DepartmentServicesApi } from "../../services/service.service";
 
-const { Paragraph, Title } = Typography;
+const { Paragraph: TextParagraph, Title } = Typography;
 
 interface Service {
-  id?: number;
+  service_id: number; // updated from id
   dep_id: number;
   name: string;
   description?: string | null;
@@ -41,6 +42,8 @@ const DepartmentPage = () => {
   const [selectedDept, setSelectedDept] = useState<Department | null>(null);
   const [deptServices, setDeptServices] = useState<Service[]>([]);
   const [servicesLoading, setServicesLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   // Fetch all departments
   useEffect(() => {
@@ -77,6 +80,15 @@ const DepartmentPage = () => {
     fetchServicesForDept(dept);
   };
 
+  // Safe navigation function
+  const handleServiceClick = (service: Service) => {
+    if (!service?.service_id) {
+      console.warn("Invalid service ID, cannot navigate");
+      return;
+    }
+    navigate(`/citizen/service-detail/${service.service_id}`);
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <CommonNav />
@@ -104,10 +116,7 @@ const DepartmentPage = () => {
                     cover={<div className={`p-6 ${colors.bgColor}`}>{icon}</div>}
                     onClick={() => handleDeptClick(dept)}
                   >
-                    <Card.Meta
-                      title={dept.name}
-                      // description={dept.description || "No description available"}
-                    />
+                    <Card.Meta title={dept.name} />
                   </Card>
                 </Col>
               );
@@ -122,9 +131,9 @@ const DepartmentPage = () => {
             <Title level={3} className="mb-4">
               {selectedDept.name} - Services
             </Title>
-            <Paragraph className="mb-8">
+            <TextParagraph className="mb-8">
               {selectedDept.description || "No description provided."}
-            </Paragraph>
+            </TextParagraph>
 
             {servicesLoading ? (
               <div className="flex justify-center items-center py-20">
@@ -134,7 +143,6 @@ const DepartmentPage = () => {
               <Row gutter={[24, 24]}>
                 {deptServices.length > 0 ? (
                   deptServices.map((service) => {
-                    // Map service to category for icon/colors
                     const category = service.name.toLowerCase().includes("vehicle")
                       ? "vehicle"
                       : service.name.toLowerCase().includes("tax")
@@ -145,11 +153,12 @@ const DepartmentPage = () => {
                     const icon = iconMap[category] || <FileTextOutlined className={`text-4xl ${colors.iconColor}`} />;
 
                     return (
-                      <Col xs={24} sm={12} md={8} lg={6} key={service.id}>
+                      <Col xs={24} sm={12} md={8} lg={6} key={service.service_id}>
                         <Card
                           hoverable
                           className="text-center cursor-pointer"
                           cover={<div className={`p-6 ${colors.bgColor}`}>{icon}</div>}
+                          onClick={() => handleServiceClick(service)}
                         >
                           <Card.Meta
                             title={service.name}
@@ -160,9 +169,9 @@ const DepartmentPage = () => {
                     );
                   })
                 ) : (
-                  <Paragraph className="text-gray-500 text-center mt-8">
+                  <TextParagraph className="text-gray-500 text-center mt-8">
                     No services available in this department.
-                  </Paragraph>
+                  </TextParagraph>
                 )}
               </Row>
             )}
