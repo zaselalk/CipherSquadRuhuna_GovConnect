@@ -70,7 +70,7 @@ export class UserRepository {
         deletedAt: null, // Exclude soft-deleted users
       },
 
-      attributes: ["id", "name", "email", "createdAt", "updatedAt"],
+      attributes: ["id", "name", "email", "createdAt", "updatedAt", "role"],
     });
   }
 

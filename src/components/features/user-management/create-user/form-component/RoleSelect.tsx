@@ -17,13 +17,13 @@ const RoleSelect = () => {
           optionFilterProp="children"
           allowClear
         >
-          <Option key="admin" value="admin">
+          <Option key="admin" value="Administrator">
             Department Officer
           </Option>
-          <Option key="officer" value="officer">
+          <Option key="officer" value="Officer">
             Admin Officer
           </Option>
-          <Option key="analytics" value="ana">
+          <Option key="analytics" value="Analyst">
             Analytics Viewer
           </Option>
         </Select>

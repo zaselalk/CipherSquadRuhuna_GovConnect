@@ -21,31 +21,24 @@ export const AdminRoutes = () => {
         <Route
           path="admin/analytics"
           element={
-            <ProtectedRoutesGuard>
+            <ProtectedRoutesGuard roles={["Administrator", "Analyst"]}>
               <AnalyticsDashboard />
             </ProtectedRoutesGuard>
           }
         />
-       <Route
+        <Route
           path="admin/AppoinmentOfficerDash"
           element={
-            <ProtectedRoutesGuard>
+            <ProtectedRoutesGuard roles={["Officer"]}>
               <OfficerPage />
             </ProtectedRoutesGuard>
           }
         />
-        {/* <Route
-          path="admin/officerdashboard"
-          element={
-            <ProtectedRoutesGuard>
-              <OfficerDashboard />
-            </ProtectedRoutesGuard>
-          }
-        /> */}
+
         <Route
           path="admin/citizen"
           element={
-            <ProtectedRoutesGuard>
+            <ProtectedRoutesGuard roles={["Administrator"]}>
               <CitizenListPage />
             </ProtectedRoutesGuard>
           }
@@ -54,7 +47,7 @@ export const AdminRoutes = () => {
         <Route
           path="admin/department"
           element={
-            <ProtectedRoutesGuard>
+            <ProtectedRoutesGuard roles={["Administrator", "Analyst"]}>
               <DepartmentPage />
             </ProtectedRoutesGuard>
           }
@@ -64,7 +57,9 @@ export const AdminRoutes = () => {
         <Route
           path="admin/profile"
           element={
-            <ProtectedRoutesGuard>
+            <ProtectedRoutesGuard
+              roles={["Administrator", "Analyst", "Officer"]}
+            >
               <ProfilePage />
             </ProtectedRoutesGuard>
           }
@@ -73,7 +68,7 @@ export const AdminRoutes = () => {
         <Route
           path="admin/department/:id"
           element={
-            <ProtectedRoutesGuard>
+            <ProtectedRoutesGuard roles={["Administrator", "Analyst"]}>
               <DepartmentServicesPage />
             </ProtectedRoutesGuard>
           }
@@ -85,7 +80,7 @@ export const AdminRoutes = () => {
           <Route
             path=""
             element={
-              <ProtectedRoutesGuard>
+              <ProtectedRoutesGuard roles={["Administrator"]}>
                 <UsersPage />
               </ProtectedRoutesGuard>
             }
@@ -94,7 +89,9 @@ export const AdminRoutes = () => {
         <Route
           path="/admin/feedback"
           element={
-            <ProtectedRoutesGuard>
+            <ProtectedRoutesGuard
+              roles={["Administrator", "Analyst", "Officer"]}
+            >
               <AdminFeedbackPage />
             </ProtectedRoutesGuard>
           }

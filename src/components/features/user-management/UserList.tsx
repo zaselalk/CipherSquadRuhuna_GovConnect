@@ -113,7 +113,7 @@ export const UserList: FC = () => {
     {
       title: "Role",
       key: "role",
-      render: (record: User) => record.role.role,
+      render: (record: User) => record.role,
       // sorter: (a: User, b: User) => a.role.role.localeCompare(b.role.role),
     },
     {

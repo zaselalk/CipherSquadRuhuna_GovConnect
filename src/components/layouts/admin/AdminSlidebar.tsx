@@ -1,5 +1,5 @@
-import { FC, useEffect, useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router"; // ✅ fixed import
+import { FC } from "react";
+import { Link, NavLink, useNavigate } from "react-router";
 import { FaHouseUser } from "react-icons/fa";
 import { UserOutlined } from "@ant-design/icons";
 import { HiUsers } from "react-icons/hi";
@@ -11,7 +11,6 @@ const AdminSidebar: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.auth.user);
-  const [navbarArray, setNavbarArray] = useState<string[]>([]);
 
   if (!user) return null; // or a loading spinner, or redirect to login
 
@@ -30,42 +29,36 @@ const AdminSidebar: FC = () => {
       path: "/admin/analytics",
       label: "Analytics",
       icon: <FaHouseUser size={20} />,
-      permission: "citizen:view",
       role: ["Administrator", "Analyst"],
     },
     {
       path: "/admin/citizen",
       label: "Citizens",
       icon: <FaHouseUser size={20} />,
-      permission: "citizen:view",
       role: ["Administrator"],
     },
     {
       path: "/admin/department",
       label: "Departments",
       icon: <FaHouseUser size={20} />,
-      permission: "citizen:view",
       role: ["Administrator", "Analyst"],
     },
     {
       path: "/admin/AppoinmentOfficerDash",
       label: "Appoinments",
       icon: <FaHouseUser size={20} />,
-      permission: "citizen:view",
-      role: ["Administrator", "Officer"],
+      role: ["Officer"],
     },
     {
       path: "/admin/feedback",
       label: "Feedback", // Added feedback menu
       icon: <FaHouseUser size={20} />,
-      permission: "citizen:view",
       role: ["Administrator", "Analyst", "Officer"],
     },
     {
       path: "/admin/users",
       label: "Users",
       icon: <HiUsers size={20} />,
-      permission: "user:view",
       role: ["Administrator"],
     },
   ];
@@ -122,29 +115,6 @@ const AdminSidebar: FC = () => {
                 </NavLink>
               </li>
             ))}
-
-          {/* Admin: Users */}
-          {/* {user?.role === "Administrator" && (
-            <li>
-              <NavLink
-                to="/admin/users"
-                className={({ isActive }) =>
-                  `${navItemClass} ${
-                    isActive
-                      ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg"
-                      : "hover:bg-gradient-to-r hover:from-cyan-500 hover:to-blue-600 hover:text-white"
-                  }`
-                }
-              >
-                <div className="flex items-center gap-3">
-                  <div className="p-1">
-                    <HiUsers size={20} />
-                  </div>
-                  <div>Users</div>
-                </div>
-              </NavLink>
-            </li>
-          )} */}
         </ul>
       </div>
 

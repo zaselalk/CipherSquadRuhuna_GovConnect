@@ -148,7 +148,7 @@ export default class UserService {
         full_name,
         email,
         password,
-        role_id,
+        role: role_id,
         phone_number,
       });
       return response.data;

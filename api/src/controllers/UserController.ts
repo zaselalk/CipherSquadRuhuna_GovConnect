@@ -46,11 +46,11 @@ export class UserController {
     req: Request,
     res: Response
   ): Promise<Response | void> => {
-    const { full_name, role_id, email, password, phone_number } = req.body;
+    const { full_name, role, email, password, phone_number } = req.body;
     try {
       const user = await this.userService.addNewUser(
         full_name,
-        role_id,
+        role,
         email,
         password,
         phone_number
