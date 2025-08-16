@@ -1,4 +1,4 @@
-# GovConnect - The Only Portal for All Government Services
+# GovConnect - Your Gateway to All Government Services
 
 GovConnect is a comprehensive government service portal that enables citizens to access various government services online. The platform provides different interfaces for citizens, officers, administrators, and analysts.
 
