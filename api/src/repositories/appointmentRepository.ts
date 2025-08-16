@@ -43,7 +43,14 @@ export class AppointmentRepository {
     }
 
     public async findAppointmentByReferenceID(referenceId: string): Promise<Appointment | null> {
-        return Appointment.findOne({ where: { referenceId } });
+        return Appointment.findOne({ where: { referenceId } ,
+            include: [
+                {
+                    model: AppointmentDocument,
+                    as: "documents" ,// use the alias defined in associations
+                }
+            ]
+        });
     }
 
      async getAppointmentWithDocuments(referenceId: string) {
