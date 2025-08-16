@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
-import { Form, Card, Steps, Button, notification, Typography, App } from "antd";
+import { Form, Card, Steps, Button, notification, Typography } from "antd";
 import { CalendarOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import StepServiceDate from "../components/features/appointment-booking/ServiceDate";
 import StepPersonalInfo from "../components/features/appointment-booking/PersonalInfo";
@@ -24,7 +24,9 @@ const AppointmentBookingPage = () => {
     originFileObj?: File;
     [key: string]: any;
   }
-  const [uploadedDocs, setUploadedDocs] = useState<Record<string, UploadedDocFile>>({});
+  const [uploadedDocs, setUploadedDocs] = useState<
+    Record<string, UploadedDocFile>
+  >({});
   const [isConfirmed, setIsConfirmed] = useState(false);
 
   const serviceNames: Record<string, string> = {
@@ -39,8 +41,18 @@ const AppointmentBookingPage = () => {
   };
 
   const timeSlots = [
-    "09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
-    "01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM", "03:00 PM", "03:30 PM"
+    "09:00 AM",
+    "09:30 AM",
+    "10:00 AM",
+    "10:30 AM",
+    "11:00 AM",
+    "11:30 AM",
+    "01:00 PM",
+    "01:30 PM",
+    "02:00 PM",
+    "02:30 PM",
+    "03:00 PM",
+    "03:30 PM",
   ];
 
   const steps = [
@@ -48,13 +60,13 @@ const AppointmentBookingPage = () => {
     { title: "Personal Information" },
     { title: "Upload Documents" },
     { title: "Confirmation" },
-    { title: "Success" }
+    { title: "Success" },
   ];
 
   const stepFieldMapping: Record<number, string[]> = {
     0: ["serviceType", "preferredDate", "preferredTime"],
     1: ["fullName", "nic", "email", "phone", "address"],
-    2: ["birthCertificate", "nicCopy", "medicalReport"]
+    2: ["birthCertificate", "nicCopy", "medicalReport"],
   };
 
   const handleNext = async () => {
@@ -70,43 +82,25 @@ const AppointmentBookingPage = () => {
 
   const handlePrev = () => setCurrentStep(currentStep - 1);
 
-  // ✅ Map your department_services IDs
-  const SERVICE_MAP: Record<string, number> = {
-    license: 1,          // Driving License Issuance
-    vehicle: 2,          // Vehicle Registration
-    vehicleTransfer: 3,  // Vehicle Transfer of Ownership
-    nic: 4,              // National Identity Card Issuance
-    nicUpdate: 5,        // NIC Data Update
-    passport: 6,         // Passport Issuance
-    visa: 7,             // Visa Services
-    citizenship: 8,      // Citizenship Services
-    medicalExam: 9,      // Medical Examination Appointments
-    publicHealth: 10,    // Public Health License Application
-    taxpayerReg: 11,     // Taxpayer Registration
-    incomeTax: 12,       // Income Tax Filing
-    taxClearance: 13,    // Tax Clearance Certificate
-  };
-
   // ✅ Map your document_types IDs
   const DOC_TYPE_MAP: Record<string, number> = {
-    nicCopy: 1,             // National Identity Card (NIC)
-    passport: 2,            // Passport
-    drivingLicense: 3,      // Driving License
-    birthCertificate: 4,    // Birth Certificate
+    nicCopy: 1, // National Identity Card (NIC)
+    passport: 2, // Passport
+    drivingLicense: 3, // Driving License
+    birthCertificate: 4, // Birth Certificate
     marriageCertificate: 5, // Marriage Certificate
-    deathCertificate: 6,    // Death Certificate
-    schoolLeaving: 7,       // School Leaving Certificate (OL/AL)
-    degreeDiploma: 8,       // Degree/Diploma Certificates
-    transcripts: 9,         // Academic Transcripts / Mark Sheets
-    landDeeds: 10,          // Land Deeds / Title Documents
-    courtOrders: 11,        // Court Orders / Affidavits
-    medicalReport: 12,      // Medical Certificates
-    vaccination: 13,        // Vaccination Records
-    taxClearance: 14,       // Tax Clearance Certificate
-    policeClearance: 15,    // Police Clearance Certificate
-    bankStatements: 16,     // Bank Statements
+    deathCertificate: 6, // Death Certificate
+    schoolLeaving: 7, // School Leaving Certificate (OL/AL)
+    degreeDiploma: 8, // Degree/Diploma Certificates
+    transcripts: 9, // Academic Transcripts / Mark Sheets
+    landDeeds: 10, // Land Deeds / Title Documents
+    courtOrders: 11, // Court Orders / Affidavits
+    medicalReport: 12, // Medical Certificates
+    vaccination: 13, // Vaccination Records
+    taxClearance: 14, // Tax Clearance Certificate
+    policeClearance: 15, // Police Clearance Certificate
+    bankStatements: 16, // Bank Statements
   };
-
 
   function to24h(time12h: string) {
     // "01:00 PM" -> "13:00:00"
@@ -114,7 +108,9 @@ const AppointmentBookingPage = () => {
     let [hh, mm] = time.split(":").map(Number);
     if (mer.toUpperCase() === "PM" && hh !== 12) hh += 12;
     if (mer.toUpperCase() === "AM" && hh === 12) hh = 0;
-    return `${String(hh).padStart(2, "0")}:${mm.toString().padStart(2, "0")}:00`;
+    return `${String(hh).padStart(2, "0")}:${mm
+      .toString()
+      .padStart(2, "0")}:00`;
   }
   async function handleSubmit() {
     try {
@@ -127,15 +123,16 @@ const AppointmentBookingPage = () => {
       // 1) Convert your serviceType (string) to serviceId (number)
       const serviceId = 1;
       // const serviceId = SERVICE_MAP[finalData.serviceType];
-      if (!serviceId) throw new Error("Unknown serviceType → serviceId mapping");
+      if (!serviceId)
+        throw new Error("Unknown serviceType → serviceId mapping");
 
       // 2) Normalize date/time to what backend expects
-      const appointmentDate = finalData.preferredDate;       // "YYYY-MM-DD"
+      const appointmentDate = finalData.preferredDate; // "YYYY-MM-DD"
       const appointmentTime = to24h(finalData.preferredTime); // "HH:mm:ss"
 
       // 3) Build FormData
       const fd = new FormData();
-      fd.append("citizenId", String(1));            // logged-in citizen id
+      fd.append("citizenId", String(1)); // logged-in citizen id
       fd.append("serviceId", String(2));
       fd.append("appointmentDate", appointmentDate);
       fd.append("appointmentTime", appointmentTime);
@@ -143,21 +140,21 @@ const AppointmentBookingPage = () => {
       // 4) Append files + matching documentId array
       //    IMPORTANT: Order matters. The i-th documentId pairs with the i-th file.
       //    Only append when a file actually exists (originFileObj).
-      const docEntries: [string, UploadedDocFile][] = Object.entries(finalData.uploadedDocs || {});
+      const docEntries: [string, UploadedDocFile][] = Object.entries(
+        finalData.uploadedDocs || {}
+      );
       for (const [docType, fileObj] of docEntries) {
         const file = (fileObj as UploadedDocFile)?.originFileObj; // AntD Upload file
         if (file) {
-          fd.append("documents", file);                          // matches upload.array("documents")
+          fd.append("documents", file); // matches upload.array("documents")
           fd.append("documentId", String(DOC_TYPE_MAP[docType])); // results in req.body.documentId as an array
         }
       }
 
       // 5) Send to backend
-      const res=await AppointmentService.createAppointment(fd);
+      const res = await AppointmentService.createAppointment(fd);
 
       console.log("Appointment created:", res);
-
-    
 
       setIsConfirmed(true);
       setCurrentStep(4);
@@ -170,13 +167,11 @@ const AppointmentBookingPage = () => {
     }
   }
 
-
   const citizenId = useAppSelector((state) => state.citizenAuth.citizen);
 
   useEffect(() => {
     const fetchCitizen = async () => {
       try {
-
         // const citizenId = 21; // get logged-in citizen ID
         // const citizenId = localStorage.getItem("citizenId"); // get logged-in citizen ID
         if (!citizenId) return;
@@ -202,39 +197,90 @@ const AppointmentBookingPage = () => {
     fetchCitizen();
   }, [form]);
 
-
   const handleGoBack = () => navigate(-1);
 
   const renderStepContent = () => {
     switch (currentStep) {
-      case 0: return <StepServiceDate appointmentData={appointmentData} setAppointmentData={setAppointmentData} serviceNames={serviceNames} timeSlots={timeSlots} form={form} />;
-      case 1: return <StepPersonalInfo form={form} />;
-      case 2: return <StepUploadDocuments uploadedDocs={uploadedDocs} setUploadedDocs={setUploadedDocs} form={form} />;
-      case 3: return <StepConfirmation appointmentData={appointmentData} serviceNames={serviceNames} isSubmitting={isSubmitting} onConfirm={handleSubmit} onPrev={handlePrev} />;
-      case 4: return <AppointmentSuccess appointmentData={appointmentData} serviceNames={serviceNames} isConfirmed={isConfirmed} />;
-      default: return null;
+      case 0:
+        return (
+          <StepServiceDate
+            appointmentData={appointmentData}
+            setAppointmentData={setAppointmentData}
+            serviceNames={serviceNames}
+            timeSlots={timeSlots}
+            form={form}
+          />
+        );
+      case 1:
+        return <StepPersonalInfo form={form} />;
+      case 2:
+        return (
+          <StepUploadDocuments
+            uploadedDocs={uploadedDocs}
+            setUploadedDocs={setUploadedDocs}
+            form={form}
+          />
+        );
+      case 3:
+        return (
+          <StepConfirmation
+            appointmentData={appointmentData}
+            serviceNames={serviceNames}
+            isSubmitting={isSubmitting}
+            onConfirm={handleSubmit}
+            onPrev={handlePrev}
+          />
+        );
+      case 4:
+        return (
+          <AppointmentSuccess
+            appointmentData={appointmentData}
+            serviceNames={serviceNames}
+            isConfirmed={isConfirmed}
+          />
+        );
+      default:
+        return null;
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
       <CommonNav />
-      <div className="mx-auto px-4 py-8" style={{ maxWidth: '1000px' }}>
-        <Button type="text" icon={<ArrowLeftOutlined />} onClick={handleGoBack} className="mb-6">Back</Button>
+      <div className="mx-auto px-4 py-8" style={{ maxWidth: "1000px" }}>
+        <Button
+          type="text"
+          icon={<ArrowLeftOutlined />}
+          onClick={handleGoBack}
+          className="mb-6"
+        >
+          Back
+        </Button>
 
         <Card className="mb-8 text-center">
           <CalendarOutlined className="text-5xl text-black mb-4" />
-          <Typography.Title level={1} style={{ fontWeight: 'bold', color: 'black' }}>
+          <Typography.Title
+            level={1}
+            style={{ fontWeight: "bold", color: "black" }}
+          >
             Book an Appointment
           </Typography.Title>
           <Typography.Paragraph className="!text-lg !text-gray-600">
-            Schedule your visit for {serviceNames[serviceId || ""] || "government services"}
+            Schedule your visit for{" "}
+            {serviceNames[serviceId || ""] || "government services"}
           </Typography.Paragraph>
         </Card>
 
-        <Card className="mb-8"><Steps current={currentStep} items={steps} /></Card>
+        <Card className="mb-8">
+          <Steps current={currentStep} items={steps} />
+        </Card>
 
-        <Form form={form} layout="vertical" size="large" initialValues={{ serviceType: serviceId }}>
+        <Form
+          form={form}
+          layout="vertical"
+          size="large"
+          initialValues={{ serviceType: serviceId }}
+        >
           {renderStepContent()}
         </Form>
 
