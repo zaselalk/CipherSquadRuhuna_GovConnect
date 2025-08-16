@@ -23,4 +23,8 @@ export class AppointmentService {
     async deleteAppointment(id: string) {
         return this.appointmentRepository.deleteAppointment(id);
     }
+
+    async getAppointmentsByUserId(userId: string) {
+        return this.appointmentRepository.findAppointmentsByUserId(userId);
+    }
 }
