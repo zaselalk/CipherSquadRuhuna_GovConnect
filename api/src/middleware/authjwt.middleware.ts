@@ -11,22 +11,22 @@ export const protectRoute =
       return;
     }
 
-    let user = req.user;
+    // let user = req.user;
 
-    if (user.role) {
-      // pharse the role string
-      user.role.permission = JSON.parse(user.role.permission);
+    // if (user.role) {
+    //   // pharse the role string
+    //   user.role.permission = JSON.parse(user.role.permission);
 
-      // check if user has permission to access the route
-      if (!user.role.permission.includes(permissions)) {
-        res.status(403).json({
-          message: "Forbidden",
-          status: 403,
-        });
+    //   // check if user has permission to access the route
+    //   if (!user.role.permission.includes(permissions)) {
+    //     res.status(403).json({
+    //       message: "Forbidden",
+    //       status: 403,
+    //     });
 
-        return;
-      }
-    }
+    //     return;
+    //   }
+    // }
 
     next();
   };
