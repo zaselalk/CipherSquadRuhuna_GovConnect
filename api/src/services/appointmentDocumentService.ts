@@ -24,5 +24,8 @@ export class AppointmentDocumentService {
    return this.appointmentDocumentRepository.deleteDocument(id);
  }
 
+  async getDocumentByReferenceID(referenceId: string) {
+    return this.appointmentDocumentRepository.findDocumentsByReferenceID(referenceId);
+  }
  
 }
