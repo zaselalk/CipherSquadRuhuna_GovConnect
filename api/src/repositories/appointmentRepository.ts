@@ -1,5 +1,5 @@
-import { Appointment } from "../models/Appoinment";
-import { AppointmentDocument } from "../models/association";
+
+import { Appointment, AppointmentDocument } from "../models/association";
 // import { AppointmentDocument } from "../models/appointmentDocument";
 
 export class AppointmentRepository {
