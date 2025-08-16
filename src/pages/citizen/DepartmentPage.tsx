@@ -1,7 +1,6 @@
-// src/pages/citizen/DepartmentPage.tsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { Card, Col, Row, Typography, Button, Spin} from "antd";
+import { Card, Col, Row, Typography, Button, Spin } from "antd";
 import { FileTextOutlined, CarOutlined, CreditCardOutlined } from "@ant-design/icons";
 import CommonNav from "../../components/common/CommonNav";
 import { DepartmentService } from "../../services/department.service";
@@ -10,7 +9,7 @@ import { DepartmentServicesApi } from "../../services/service.service";
 const { Paragraph: TextParagraph, Title } = Typography;
 
 interface Service {
-  service_id: number; // updated from id
+  service_id: number;
   dep_id: number;
   name: string;
   description?: string | null;
@@ -23,7 +22,7 @@ interface Department {
   link?: string;
 }
 
-// Icons and colors mapping based on department
+// Icons and colors mapping for services
 const iconMap: Record<string, React.ReactNode> = {
   documents: <FileTextOutlined className="text-4xl text-blue-600" />,
   tax: <CreditCardOutlined className="text-4xl text-green-600" />,
@@ -80,14 +79,13 @@ const DepartmentPage = () => {
     fetchServicesForDept(dept);
   };
 
-  // Safe navigation function
   const handleServiceClick = (service: Service) => {
-    if (!service?.service_id) {
-      console.warn("Invalid service ID, cannot navigate");
-      return;
-    }
+    if (!service?.service_id) return;
     navigate(`/citizen/service-detail/${service.service_id}`);
   };
+
+  // Optional: background colors for department logos
+  const deptBgColors = ["#e0f2ff" ];
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -104,17 +102,29 @@ const DepartmentPage = () => {
           </div>
         ) : !selectedDept ? (
           <Row gutter={[24, 24]}>
-            {departments.map((dept) => {
-              const colors = colorMap[dept.link || ""] || { bgColor: "bg-gray-100", iconColor: "text-gray-600" };
-              const icon = iconMap[dept.link || ""] || <FileTextOutlined className={`text-4xl ${colors.iconColor}`} />;
+            {departments.map((dept, index) => {
+              const bgColor = deptBgColors[index % deptBgColors.length];
+              const logoSrc = "/images/logo.png"; // your logo path
 
               return (
                 <Col xs={24} sm={12} md={8} lg={6} key={dept.dep_id}>
                   <Card
                     hoverable
-                    className="text-center cursor-pointer"
-                    cover={<div className={`p-6 ${colors.bgColor}`}>{icon}</div>}
+                    className="text-center cursor-pointer shadow-lg hover:shadow-2xl transition-transform transform hover:scale-105 "
                     onClick={() => handleDeptClick(dept)}
+                    cover={
+                      <div
+                        className="flex justify-center items-center rounded-t-md"
+                        style={{ backgroundColor: bgColor, minHeight: 120, padding: "16px" }}
+                      >
+                        
+                       <img
+                        src={logoSrc}
+                        alt={dept.name}
+                        className="w-16 h-16 object-contain mx-auto"
+                    />
+                  </div>
+                    }
                   >
                     <Card.Meta title={dept.name} />
                   </Card>

@@ -165,9 +165,9 @@ const CitizenDashboardPage = () => {
     }
   }, [location]);
 
-  const handleBookNew = () => navigate("/citizen/dashboard/service-selection");
-  const handleViewAppointment = (id: string) =>
-    alert(`View or reschedule appointment ${id}`);
+  const handleBookNew = () => navigate("/citizen/departments");
+  const handleViewAppointment = (id: string) => alert(`View or reschedule appointment ${id}`);
+
 
   if (loading) {
     return (
