@@ -2,9 +2,10 @@
 import { AppointmentRepository } from '../repositories/appointmentRepository';
 
 export class AppointmentService {
+    [x: string]: any;
     constructor(private appointmentRepository = AppointmentRepository.getInstance()) {}
 
-    async createAppointment(data: any) {
+    async createAppointment(data: any, p0?: { transaction: any; }) {
         return this.appointmentRepository.createAppointment(data);
     }
 
