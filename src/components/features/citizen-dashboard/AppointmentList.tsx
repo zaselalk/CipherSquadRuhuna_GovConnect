@@ -63,9 +63,11 @@ const AppointmentList: React.FC<AppointmentListProps> = ({
     if (type === "past" && userId) {
       const fetchFeedbacks = async () => {
         try {
+          console.log("Fetching feedbacks for userId:", userId);
           const data = await ServiceFeedbackService.getFeedbacksByUserId(
             userId
           );
+          console.log("Fetched feedbacks:", data);
           setFeedbacks(data);
         } catch (error: any) {
           console.error("Error fetching feedbacks:", error);
@@ -76,6 +78,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({
   }, [type, userId, appointments]);
 
   const handleFeedbackClick = (appointment: Appointment) => {
+    console.log("Opening feedback modal for appointment:", appointment);
     setSelectedAppointment(appointment);
     const existing = feedbacks.find((f) => f.appointmentId === appointment.id);
     setRating(existing?.rating || 0);
@@ -84,6 +87,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({
   };
 
   const handleSubmitFeedback = async () => {
+    console.log("Submitting feedback for appointment:", selectedAppointment);
     if (rating === 0) {
       message.warning("Please provide a rating before submitting.");
       return;
