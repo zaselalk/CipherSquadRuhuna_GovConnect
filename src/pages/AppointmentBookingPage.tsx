@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
-import { Form, Card, Steps, Button, notification, Typography } from "antd";
+import { Form, Card, Steps, Button, notification, Typography, App } from "antd";
 import { CalendarOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import StepServiceDate from "../components/features/appointment-booking/ServiceDate";
 import StepPersonalInfo from "../components/features/appointment-booking/PersonalInfo";
@@ -10,6 +10,8 @@ import FormNavigation from "../components/common/FormNavigation";
 import AppointmentSuccess from "../components/features/appointment-booking/AppointmentSuccess";
 import CommonNav from "../components/common/CommonNav";
 import { CitizenService } from "../services/citizen.service";
+import { useAppSelector } from "../hooks/state/hooks";
+import { AppointmentService } from "../services/appoinment";
 
 const AppointmentBookingPage = () => {
   const { serviceId } = useParams<{ serviceId: string }>();
@@ -18,7 +20,11 @@ const AppointmentBookingPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [appointmentData, setAppointmentData] = useState<any>({});
-  const [uploadedDocs, setUploadedDocs] = useState<any>({});
+  interface UploadedDocFile {
+    originFileObj?: File;
+    [key: string]: any;
+  }
+  const [uploadedDocs, setUploadedDocs] = useState<Record<string, UploadedDocFile>>({});
   const [isConfirmed, setIsConfirmed] = useState(false);
 
   const serviceNames: Record<string, string> = {
@@ -64,63 +70,137 @@ const AppointmentBookingPage = () => {
 
   const handlePrev = () => setCurrentStep(currentStep - 1);
 
-  const handleSubmit = async () => {
+  // ✅ Map your department_services IDs
+  const SERVICE_MAP: Record<string, number> = {
+    license: 1,          // Driving License Issuance
+    vehicle: 2,          // Vehicle Registration
+    vehicleTransfer: 3,  // Vehicle Transfer of Ownership
+    nic: 4,              // National Identity Card Issuance
+    nicUpdate: 5,        // NIC Data Update
+    passport: 6,         // Passport Issuance
+    visa: 7,             // Visa Services
+    citizenship: 8,      // Citizenship Services
+    medicalExam: 9,      // Medical Examination Appointments
+    publicHealth: 10,    // Public Health License Application
+    taxpayerReg: 11,     // Taxpayer Registration
+    incomeTax: 12,       // Income Tax Filing
+    taxClearance: 13,    // Tax Clearance Certificate
+  };
+
+  // ✅ Map your document_types IDs
+  const DOC_TYPE_MAP: Record<string, number> = {
+    nicCopy: 1,             // National Identity Card (NIC)
+    passport: 2,            // Passport
+    drivingLicense: 3,      // Driving License
+    birthCertificate: 4,    // Birth Certificate
+    marriageCertificate: 5, // Marriage Certificate
+    deathCertificate: 6,    // Death Certificate
+    schoolLeaving: 7,       // School Leaving Certificate (OL/AL)
+    degreeDiploma: 8,       // Degree/Diploma Certificates
+    transcripts: 9,         // Academic Transcripts / Mark Sheets
+    landDeeds: 10,          // Land Deeds / Title Documents
+    courtOrders: 11,        // Court Orders / Affidavits
+    medicalReport: 12,      // Medical Certificates
+    vaccination: 13,        // Vaccination Records
+    taxClearance: 14,       // Tax Clearance Certificate
+    policeClearance: 15,    // Police Clearance Certificate
+    bankStatements: 16,     // Bank Statements
+  };
+
+
+  function to24h(time12h: string) {
+    // "01:00 PM" -> "13:00:00"
+    const [time, mer] = time12h.trim().split(" ");
+    let [hh, mm] = time.split(":").map(Number);
+    if (mer.toUpperCase() === "PM" && hh !== 12) hh += 12;
+    if (mer.toUpperCase() === "AM" && hh === 12) hh = 0;
+    return `${String(hh).padStart(2, "0")}:${mm.toString().padStart(2, "0")}:00`;
+  }
+  async function handleSubmit() {
     try {
       await form.validateFields();
       setIsSubmitting(true);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // Get all form values before sending to backend
-      const values = form.getFieldsValue();
-      const finalData = { ...appointmentData, ...values, uploadedDocs };
-      
+      const values = form.getFieldsValue(); // includes personal info step
+      const finalData = { ...appointmentData, ...values, uploadedDocs }; // for debugging if needed
 
-      // Log the data to console
-      console.log("Submitting appointment details:", finalData);
+      // 1) Convert your serviceType (string) to serviceId (number)
+      const serviceId = 1;
+      // const serviceId = SERVICE_MAP[finalData.serviceType];
+      if (!serviceId) throw new Error("Unknown serviceType → serviceId mapping");
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // 2) Normalize date/time to what backend expects
+      const appointmentDate = finalData.preferredDate;       // "YYYY-MM-DD"
+      const appointmentTime = to24h(finalData.preferredTime); // "HH:mm:ss"
 
+      // 3) Build FormData
+      const fd = new FormData();
+      fd.append("citizenId", String(1));            // logged-in citizen id
+      fd.append("serviceId", String(2));
+      fd.append("appointmentDate", appointmentDate);
+      fd.append("appointmentTime", appointmentTime);
 
+      // 4) Append files + matching documentId array
+      //    IMPORTANT: Order matters. The i-th documentId pairs with the i-th file.
+      //    Only append when a file actually exists (originFileObj).
+      const docEntries: [string, UploadedDocFile][] = Object.entries(finalData.uploadedDocs || {});
+      for (const [docType, fileObj] of docEntries) {
+        const file = (fileObj as UploadedDocFile)?.originFileObj; // AntD Upload file
+        if (file) {
+          fd.append("documents", file);                          // matches upload.array("documents")
+          fd.append("documentId", String(DOC_TYPE_MAP[docType])); // results in req.body.documentId as an array
+        }
+      }
+
+      // 5) Send to backend
+      const res=await AppointmentService.createAppointment(fd);
+
+      console.log("Appointment created:", res);
+
+    
 
       setIsConfirmed(true);
       setCurrentStep(4);
       notification.success({ message: "Appointment Booked Successfully!" });
-    } catch {
-      notification.error({ message: "Please complete all required fields." });
+    } catch (e: any) {
+      console.error("Submit error:", e);
+      // notification.error({ message: e?.message || "Please complete all required fields." });
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }
+
+
+  const citizenId = useAppSelector((state) => state.citizenAuth.citizen);
 
   useEffect(() => {
-  const fetchCitizen = async () => {
-    try {
-      const citizenId = 21; // get logged-in citizen ID
-      // const citizenId = localStorage.getItem("citizenId"); // get logged-in citizen ID
-      if (!citizenId) return;
+    const fetchCitizen = async () => {
+      try {
 
-      // Call your service dynamically
-      const data = await CitizenService.getCitizenById(Number(citizenId));
+        // const citizenId = 21; // get logged-in citizen ID
+        // const citizenId = localStorage.getItem("citizenId"); // get logged-in citizen ID
+        if (!citizenId) return;
 
-      // Pre-fill form fields
-      form.setFieldsValue({
-        fullName: data.fullName,
-        nic: data.NICNumber,
-        email: data.email,
-        phone: data.contactNumber,
-        address: data.address,
-      });
+        // Call your service dynamically
+        const data = await CitizenService.getCitizenById(Number(citizenId));
 
-      setAppointmentData((prev: any) => ({ ...prev, ...data }));
-    } catch (err) {
-      console.error("Error fetching citizen data:", err);
-    }
-  };
+        // Pre-fill form fields
+        form.setFieldsValue({
+          fullName: data.fullName,
+          nic: data.NICNumber,
+          email: data.email,
+          phone: data.contactNumber,
+          address: data.address,
+        });
 
-  fetchCitizen();
-}, [form]);
+        setAppointmentData((prev: any) => ({ ...prev, ...data }));
+      } catch (err) {
+        console.error("Error fetching citizen data:", err);
+      }
+    };
+
+    fetchCitizen();
+  }, [form]);
 
 
   const handleGoBack = () => navigate(-1);
