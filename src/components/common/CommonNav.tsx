@@ -40,7 +40,7 @@ const CommonNav = () => {
         <NavLink to="/citizen/departments">Departments</NavLink>
       </Menu.Item>
       <Menu.Item key="roster" icon={<ClockCircleOutlined />}>
-        <NavLink to="/citizen/roster">Roster</NavLink>
+        <NavLink to="/citizen/roster-login">Roster</NavLink>
       </Menu.Item>
     </Menu>
   );
