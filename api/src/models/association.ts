@@ -1,5 +1,5 @@
 import sequelize from ".";
-import { Appointment } from "./Appoinment";
+import { Appointment } from "./appoinment";
 import { AppointmentDocument } from "./appointmentDocument";
 
 // Import models
