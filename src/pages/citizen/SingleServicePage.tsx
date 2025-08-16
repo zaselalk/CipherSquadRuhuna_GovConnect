@@ -62,7 +62,17 @@ const SingleServiceDetailPage = () => {
   const [loading, setLoading] = useState(true);
 
   const handleGoBack = () => navigate(-1);
-  const handleBookAppointment = () => alert("Book Appointment clicked");
+  
+  const handleBookAppointment = () => {
+  if (service) {
+    navigate(`/services/${service.service_id}/book-appointment`, {
+      state: {
+        serviceId: service.service_id,
+        serviceName: service.name,
+      },
+    });
+  }
+};
 
   useEffect(() => {
     const fetchData = async () => {
