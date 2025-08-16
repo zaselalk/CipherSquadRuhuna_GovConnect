@@ -1,0 +1,76 @@
+name: govconnect-app
+
+services:
+  # Database service
+  database:
+    image: mysql:8.0
+    container_name: govconnect-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: govconnect
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - govconnect-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Backend API service
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: govconnect-api
+    restart: always
+    environment:
+      NODE_ENV: development
+      APPLICATION_PORT: 3001
+      DATABASE_USER: user
+      DATABASE_PASSWORD: password
+      DATABASE_NAME: govconnect
+      DATABASE_HOST: database
+      DATABASE_PORT: 3306
+      JWT_SECRET_ADMIN: OKZXxPmVEsYAPmqVaLtdjIRAQmMDG0DZRu8gXYS+gHmCCkcBhfbJEGNkeOdcxba1
+      JWT_SECRET_CITIZEN: JWT_SECRET_CITIZEN+gHmCCkcBhfbJEGNkeOdcxba2
+    ports:
+      - "3001:3001"
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - ./api/uploads:/app/uploads
+    networks:
+      - govconnect-network
+
+  # Frontend service
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: govconnect-frontend
+    restart: always
+    environment:
+      VITE_BACKEND_URL: http://localhost:3001
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+    networks:
+      - govconnect-network
+
+volumes:
+  mysql-data:
+
+networks:
+  govconnect-network:
+    driver: bridge
