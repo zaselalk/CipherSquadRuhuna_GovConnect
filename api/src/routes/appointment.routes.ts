@@ -15,5 +15,6 @@ AppointmentRoutes.delete("/:id", catchAsync(appointmentController.delete));
 AppointmentRoutes.get("/user/:userId", catchAsync(appointmentController.getByUserId));
 AppointmentRoutes.get("/reference/:referenceId", catchAsync(appointmentController.getByReferenceID));
 AppointmentRoutes.get("/documents/:referenceId", catchAsync(appointmentController.getAppointmentWithDocuments));
+AppointmentRoutes.post("/with-documents", catchAsync(appointmentController.createAppointmentWithDocuments));
 
 export default AppointmentRoutes;
