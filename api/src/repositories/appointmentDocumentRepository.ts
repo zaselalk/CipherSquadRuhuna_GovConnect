@@ -43,4 +43,8 @@ export class AppointmentDocumentRepository {
     return false;
   }
 
+  public async findDocumentsByReferenceID(referenceId: string): Promise<AppointmentDocument | null> {
+    return AppointmentDocument.findOne({ where: { appointmentReferenceId: referenceId } });
+  }
+
 }
