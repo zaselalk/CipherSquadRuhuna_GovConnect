@@ -1,7 +1,9 @@
+import { Appointment, AppointmentDocument, Citizen } from "../models/association";
 import sequelize from "../models/sequelize";
 import { AppointmentDocumentService } from "../services/appointmentDocumentService";
 import { AppointmentService } from "../services/appointmentService";
 import { Request, Response } from "express";
+
 
 const appointmentService = new AppointmentService();
 const appointmentDocumentService = new AppointmentDocumentService();
@@ -54,70 +56,48 @@ export class AppointmentController {
     res.json(appointment);
   }
 
-  public async createAppointmentWithDocuments(req: Request, res: Response) {
-    // const t = await appointmentService.sequelize.transaction(); // Start transaction
-    const t = await sequelize.transaction();
+
+  async createAppointmentWithDocuments(req: Request, res: Response) {
     try {
-      // 1️⃣ Save Appointment
-      const { citizenId, serviceId, appointmentDate, appointmentTime } = req.body;
+      const { citizenId, serviceId, appointmentDate, appointmentTime, referenceId } = req.body;
 
-      console.log("Request body:", req.body);
-      console.log("Files:", req.files);
-      const appointment = await appointmentService.createAppointment(
-        {
-          citizenId,
-          serviceId,
-          appointmentDate,
-          appointmentTime,
-          referenceId: `REF-${Date.now()}` // Generate unique reference
-        },
-        { transaction: t }
-      );
+      
 
-      // 2️⃣ Save Appointment Documents
-      const files = req.files as Express.Multer.File[];
-      let documents: any[] = [];
+      const appointment = await Appointment.create({
+        citizenId,
+        serviceId,
+        appointmentDate,
+        appointmentTime,
+        referenceId, // null නොවී save වෙනවා
+      });
 
-      if (files && files.length > 0) {
-        documents = await Promise.all(
-          files.map((file) =>
-            appointmentDocumentService.createDocument(
-              {
-                appointmentReferenceId: appointment.referenceId,
-                citizenId: citizenId,
-                documentId: req.body.documentId, // you may pass doc type id from body
-                fileName: file.originalname,
-                filePath: file.path,
-                mimeType: file.mimetype,
-              },
-              { transaction: t }
-            )
-          )
-        );
+      // File upload තියෙනවද බලන්න
+      if (Array.isArray(req.files) && req.files.length > 0) {
+        const docs = req.files.map((file) => ({
+          appointmentId: appointment.appointmentId,
+          fileName: file.originalname,
+          filePath: file.path,
+          mimeType: file.mimetype,
+        }));
+
+        await AppointmentDocument.bulkCreate(docs);
       }
 
-      // 3️⃣ Commit Transaction
-      await t.commit();
-
-      return res.status(201).json({
-        message: "Appointment with documents created successfully",
-        status: 201,
-        error: null,
-        data: {
-          appointment,
-          documents,
-        },
+      res.status(201).json({
+        success: true,
+        message: "Appointment created successfully",
+        appointment,
       });
     } catch (error) {
-      await t.rollback();
-      console.error(error);
-      return res.status(500).json({
-        message: "Failed to create appointment with documents",
-        status: 500,
-        error,
-        data: null,
-      });
+      console.error("Error creating appointment:", error);
+      res.status(500).json({ error: "Failed to create appointment" });
     }
-  }
+
+  };
+
 
 }
+function uuidv4() {
+  throw new Error("Function not implemented.");
+}
+
