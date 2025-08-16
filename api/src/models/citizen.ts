@@ -23,6 +23,9 @@ export class Citizen
   public createdAt!: Date;
   public updatedAt!: Date;
   public deletedAt!: Date | null;
+  public email_verified!: boolean;
+  public email_verification_token?: string;
+  public email_verification_expires?: Date;
 
   /**
    * Verify the password
@@ -103,6 +106,19 @@ Citizen.init(
       type: DataTypes.DATE,
       allowNull: true,
       defaultValue: null,
+    },
+    email_verified: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    email_verification_token: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    email_verification_expires: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
   },
 

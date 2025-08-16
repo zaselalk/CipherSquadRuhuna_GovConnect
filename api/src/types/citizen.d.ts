@@ -10,6 +10,9 @@ export interface CitizenAttributes {
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
+  email_verified?: boolean;
+  email_verification_token?: string;
+  email_verification_expires?: Date;
 }
 
 export type CitizenCreationAttributes = Omit<
