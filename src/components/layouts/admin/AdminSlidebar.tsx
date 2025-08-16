@@ -48,8 +48,8 @@ const AdminSidebar: FC = () => {
       role: ["Administrator", "Analyst"],
     },
     {
-      path: "/admin/officerdashboard",
-      label: "Officers",
+      path: "/admin/AppoinmentOfficerDash",
+      label: "Appoinments",
       icon: <FaHouseUser size={20} />,
       permission: "citizen:view",
       role: ["Administrator", "Officer"],
