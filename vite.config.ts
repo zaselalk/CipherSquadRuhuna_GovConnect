@@ -8,4 +8,24 @@ export default defineConfig({
   test: {
     exclude: ["api/**", "node_modules/**"],
   },
+  server: {
+    host: "0.0.0.0",
+    port: 5173,
+    allowedHosts: [
+      "localhost",
+      "127.0.0.1",
+      "govconnect.live",
+      ".govconnect.live", // This allows subdomains too
+    ],
+  },
+  preview: {
+    host: "0.0.0.0",
+    port: 5173,
+    allowedHosts: [
+      "localhost",
+      "127.0.0.1",
+      "govconnect.live",
+      ".govconnect.live", // This allows subdomains too
+    ],
+  },
 });
