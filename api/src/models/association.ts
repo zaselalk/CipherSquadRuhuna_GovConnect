@@ -1,4 +1,6 @@
 import sequelize from ".";
+import { Appointment } from "./appoinment";
+import { AppointmentDocument } from "./appointmentDocument";
 
 // Import models
 import { Citizen } from "./citizen";
@@ -47,6 +49,19 @@ Department.hasMany(DepartmentService, { foreignKey: "dep_id", as: "services" });
 DepartmentService.belongsTo(Department, { foreignKey: "dep_id", as: "department" });
 
 
-// Exporting models and sequelize instance
-export { sequelize, Citizen, CitizenDocs, DocumentType, Department, DepartmentService };
 
+// Associations
+Appointment.hasMany(AppointmentDocument, {
+  foreignKey: "appointmentReferenceId",
+  sourceKey: "referenceId",
+  as: "documents",
+});
+
+AppointmentDocument.belongsTo(Appointment, {
+  foreignKey: "appointmentReferenceId",
+  targetKey: "referenceId",
+  as: "appointment",
+});
+
+// Exporting models and sequelize instance
+export { sequelize, Citizen, CitizenDocs, DocumentType, Department, DepartmentService ,Appointment,AppointmentDocument};
