@@ -142,7 +142,7 @@ const OfficerDashboard: React.FC = () => {
     <DashboardContainer>
       <div className="max-w-[1100px] mx-auto  min-h-screen">
         <h1 className="text-[#0052cc] text-2xl font-bold mb-4">
-          Officer Dashboard
+          Appointments{" "}
         </h1>
 
         {/* Filters */}

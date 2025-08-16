@@ -1,7 +1,8 @@
 import { FC, useEffect, useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router"; // ✅ fixed import
+import { Link, NavLink, useNavigate } from "react-router";
 import { FaHouseUser } from "react-icons/fa";
 import { UserOutlined } from "@ant-design/icons";
+import { HiOutlineCalendarDateRange } from "react-icons/hi2";
 import { HiUsers } from "react-icons/hi";
 import { LogOut } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/state/hooks";
@@ -51,9 +52,9 @@ const AdminSidebar: FC = () => {
     },
     {
       path: "/admin/officerdashboard",
-      label: "Officers",
-      icon: <FaHouseUser size={20} />,
-      permission: "citizen:view",
+      label: "Appointments",
+      icon: <HiOutlineCalendarDateRange size={20} />,
+      permission: "appointment:view",
     },
     {
       path: "/admin/feedback",
