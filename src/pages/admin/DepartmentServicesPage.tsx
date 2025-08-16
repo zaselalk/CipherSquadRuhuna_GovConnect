@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Form, message, Spin } from "antd";
-import { useParams } from "react-router";
+import React, { useState } from "react";
+import { Form, message } from "antd";
 import DepartmentServicesHeader from "../../components/department/DepartmentServicesHeader";
 import DepartmentServicesGrid from "../../components/department/DepartmentServicesGrid";
 import DepartmentServicesModal from "../../components/department/DepartmentServicesModal";
 import { DashboardContainer } from "../../components/layouts/overlays/DashboardContainer";
-import { DepartmentService, DepartmentServicesApi } from "../../services/service.service";
-
 
 interface Service {
   id: number;
@@ -18,43 +15,41 @@ interface Service {
   capacity: number;
 }
 
-const DepartmentServicesPage: React.FC = () => {
-  const { departmentId } = useParams<{ departmentId: string }>();
-  const depIdNumber = Number(departmentId);
 
-  const [services, setServices] = useState<Service[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+const DepartmentServicesPage: React.FC = () => {
+  const [services, setServices] = useState<Service[]>([
+    {
+      id: 1,
+      name: "Passport Renewal",
+      documents: ["National Identity Card (NIC)", "Birth Certificate"],
+      description: "Renewal of passports for citizens",
+      availableDays: ["Mon", "Wed", "Fri"],
+      duration: 1,
+      capacity: 20,
+    },
+    {
+      id: 2,
+      name: "Driving License Application",
+      documents: ["National Identity Card (NIC)", "Medical Certificates"],
+      description: "Apply for a new driving license",
+      availableDays: ["Tue", "Thu"],
+      duration: 0.5,
+      capacity: 15,
+    },
+    {
+      id: 3,
+      name: "Birth Certificate Registration",
+      documents: ["Birth Certificate", "Marriage Certificate"],
+      description: "Register a new birth certificate",
+      availableDays: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+      duration: 0.75,
+      capacity: 30,
+    },
+  ]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
   const [form] = Form.useForm();
-
-  // Fetch department-specific services
-  const fetchServices = async () => {
-    try {
-      setIsLoading(true);
-      if (!depIdNumber) throw new Error("Department ID not found");
-      const data = await DepartmentServicesApi.getServicesByDepartment(depIdNumber);
-      const mappedServices: Service[] = data.map((s) => ({
-        id: s.service_id,
-        name: s.name,
-        documents: s.doc_id ? s.doc_id.split(",") : [],
-        description: s.description || "",
-        availableDays: [], // populate if backend provides
-        duration: 1,       // default or from backend
-        capacity: 10,      // default or from backend
-      }));
-      setServices(mappedServices);
-    } catch (error) {
-      console.error(error);
-      message.error("Failed to load services");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchServices();
-  }, [depIdNumber]);
 
   const openAddModal = () => {
     setEditingService(null);
@@ -68,46 +63,35 @@ const DepartmentServicesPage: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (id: number) => {
-    try {
-      await DepartmentServicesApi.deleteServiceById(id);
-      setServices((prev) => prev.filter((s) => s.id !== id));
-      message.success("Service deleted successfully");
-    } catch {
-      message.error("Failed to delete service");
-    }
+  const handleDelete = (id: number) => {
+    setServices(services.filter((s) => s.id !== id));
+    message.success("Service deleted successfully");
   };
 
-  const handleSave = async () => {
-    try {
-      const values = await form.validateFields();
-      const serviceData: Partial<DepartmentService> = {
+  const handleSave = () => {
+    form.validateFields().then((values) => {
+      const serviceData: Service = {
+        id: editingService ? editingService.id : Date.now(),
         name: values.name,
-        doc_id: values.documents?.join(",") || "",
+        documents: values.documents || [],
         description: values.description,
-        dep_id: depIdNumber,
+        availableDays: values.availableDays || [],
+        duration: values.duration,
+        capacity: values.capacity,
       };
 
       if (editingService) {
-        await DepartmentServicesApi.updateServiceById(editingService.id, serviceData);
         setServices((prev) =>
-          prev.map((s) => (s.id === editingService.id ? { ...s, ...values } : s))
+          prev.map((s) => (s.id === editingService.id ? serviceData : s))
         );
         message.success("Service updated successfully");
       } else {
-        await DepartmentServicesApi.addService(serviceData);
-        fetchServices(); // Refresh list after adding
+        setServices((prev) => [...prev, serviceData]);
         message.success("Service added successfully");
       }
-
       setIsModalOpen(false);
-    } catch {
-      message.error("Failed to save service");
-    }
+    });
   };
-
-  if (isLoading)
-    return <Spin size="large" style={{ margin: "50px auto", display: "block" }} />;
 
   return (
     <DashboardContainer>
@@ -124,6 +108,7 @@ const DepartmentServicesPage: React.FC = () => {
         setIsModalOpen={setIsModalOpen}
         handleSave={handleSave}
       />
+
     </DashboardContainer>
   );
 };
