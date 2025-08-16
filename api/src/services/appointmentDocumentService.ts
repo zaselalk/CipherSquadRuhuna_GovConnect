@@ -4,7 +4,7 @@ import { AppointmentDocumentRepository } from "../repositories/appointmentDocume
 export class AppointmentDocumentService {
  constructor(private appointmentDocumentRepository = AppointmentDocumentRepository.getInstance()) {}
 
- async createDocument(data: any) {
+ async createDocument(data: any, p0?: { transaction: any; }) {
    return this.appointmentDocumentRepository.createDocument(data);
  }
 
