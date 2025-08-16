@@ -86,7 +86,7 @@ export const UserList: FC = () => {
       return (
         user.name.toLowerCase().includes(searchLower) ||
         user.email.toLowerCase().includes(searchLower) ||
-        user.role.role.toLowerCase().includes(searchLower)
+        user.role.toLowerCase().includes(searchLower)
       );
     }) || [];
 
@@ -113,8 +113,8 @@ export const UserList: FC = () => {
     {
       title: "Role",
       key: "role",
-      render: (record: User) => record.role.role,
-      // sorter: (a: User, b: User) => a.role.role.localeCompare(b.role.role),
+      render: (record: User) => record.role,
+      sorter: (a: User, b: User) => a.role.localeCompare(b.role),
     },
     {
       title: "Actions",

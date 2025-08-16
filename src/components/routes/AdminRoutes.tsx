@@ -4,12 +4,12 @@ import LoginPage from "../../pages/admin/LoginPage";
 import ProfilePage from "../../pages/admin/ProfilePage";
 import UsersPage from "../../pages/admin/UsersPage";
 import AnalyticsDashboard from "../../pages/admin/AnalyticalDashbordPage";
-import OfficerDashboard from "../../pages/admin/Officerdashbord";
 import DepartmentServicesPage from "../../pages/admin/DepartmentServicesPage";
 import { CitizenListPage } from "../../pages/admin/CitizenListPage";
 import DepartmentPage from "../../pages/admin/DepartmentPage";
 import AdminFeedbackPage from "../../pages/admin/FeedbackAdmin";
 import AdminAuthProvider from "../auth/AuthProvider";
+import OfficerPage from "../../pages/admin/AppoinmentOfficerDash";
 
 export const AdminRoutes = () => {
   return (
@@ -21,24 +21,24 @@ export const AdminRoutes = () => {
         <Route
           path="admin/analytics"
           element={
-            <ProtectedRoutesGuard>
+            <ProtectedRoutesGuard roles={["Administrator", "Analyst"]}>
               <AnalyticsDashboard />
+            </ProtectedRoutesGuard>
+          }
+        />
+        <Route
+          path="admin/AppoinmentOfficerDash"
+          element={
+            <ProtectedRoutesGuard roles={["Officer"]}>
+              <OfficerPage />
             </ProtectedRoutesGuard>
           }
         />
 
         <Route
-          path="admin/officerdashboard"
-          element={
-            <ProtectedRoutesGuard>
-              <OfficerDashboard />
-            </ProtectedRoutesGuard>
-          }
-        />
-        <Route
           path="admin/citizen"
           element={
-            <ProtectedRoutesGuard>
+            <ProtectedRoutesGuard roles={["Administrator"]}>
               <CitizenListPage />
             </ProtectedRoutesGuard>
           }
@@ -47,7 +47,7 @@ export const AdminRoutes = () => {
         <Route
           path="admin/department"
           element={
-            <ProtectedRoutesGuard>
+            <ProtectedRoutesGuard roles={["Administrator", "Analyst"]}>
               <DepartmentPage />
             </ProtectedRoutesGuard>
           }
@@ -57,7 +57,9 @@ export const AdminRoutes = () => {
         <Route
           path="admin/profile"
           element={
-            <ProtectedRoutesGuard>
+            <ProtectedRoutesGuard
+              roles={["Administrator", "Analyst", "Officer"]}
+            >
               <ProfilePage />
             </ProtectedRoutesGuard>
           }
@@ -66,7 +68,7 @@ export const AdminRoutes = () => {
         <Route
           path="admin/department/:id"
           element={
-            <ProtectedRoutesGuard>
+            <ProtectedRoutesGuard roles={["Administrator", "Analyst"]}>
               <DepartmentServicesPage />
             </ProtectedRoutesGuard>
           }
@@ -78,7 +80,7 @@ export const AdminRoutes = () => {
           <Route
             path=""
             element={
-              <ProtectedRoutesGuard>
+              <ProtectedRoutesGuard roles={["Administrator"]}>
                 <UsersPage />
               </ProtectedRoutesGuard>
             }
@@ -87,7 +89,9 @@ export const AdminRoutes = () => {
         <Route
           path="/admin/feedback"
           element={
-            <ProtectedRoutesGuard>
+            <ProtectedRoutesGuard
+              roles={["Administrator", "Analyst", "Officer"]}
+            >
               <AdminFeedbackPage />
             </ProtectedRoutesGuard>
           }

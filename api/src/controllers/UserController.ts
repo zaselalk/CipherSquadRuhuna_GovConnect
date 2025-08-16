@@ -23,17 +23,17 @@ export class UserController {
    * @param res - The HTTP response object.
    * @returns A response with a success message and user data.
    */
-  register = async (req: Request, res: Response): Promise<Response | void> => {
-    const { name, email, password } = req.body;
-    const user = await this.userService.registerUser(name, email, password);
-    return res.json({
-      message: "User registered successfully",
-      data: {
-        name: user.name,
-        email: user.email,
-      },
-    });
-  };
+  // register = async (req: Request, res: Response): Promise<Response | void> => {
+  //   const { name, email, password } = req.body;
+  //   const user = await this.userService.registerUser(name, email, password);
+  //   return res.json({
+  //     message: "User registered successfully",
+  //     data: {
+  //       name: user.name,
+  //       email: user.email,
+  //     },
+  //   });
+  // };
 
   /**
    * Adds a new user with a specific role.
@@ -46,11 +46,11 @@ export class UserController {
     req: Request,
     res: Response
   ): Promise<Response | void> => {
-    const { full_name, role_id, email, password, phone_number } = req.body;
+    const { full_name, role, email, password, phone_number } = req.body;
     try {
       const user = await this.userService.addNewUser(
         full_name,
-        role_id,
+        role,
         email,
         password,
         phone_number
@@ -61,7 +61,6 @@ export class UserController {
         error: null,
         data: {
           full_name: user.name,
-          role_id: user.roleId,
           email: user.email,
         },
       });
@@ -160,38 +159,6 @@ export class UserController {
     const user = await this.userService.updateUserFullNameById(
       parseInt(id),
       full_name
-    );
-    if (!user) {
-      return res.status(404).json({
-        message: "User not found",
-        status: 404,
-        error: null,
-        data: null,
-      });
-    }
-    return res.status(200).json({
-      message: "User updated successfully",
-      status: 200,
-      error: null,
-      data: user,
-    });
-  };
-
-  /**
-   * Updates a user's role by ID.
-   * @param req - The HTTP request object containing the user ID and new role ID.
-   * @param res - The HTTP response object.
-   * @returns A response with the updated user data or an error message if not found.
-   */
-  updateUserRoleById = async (
-    req: Request,
-    res: Response
-  ): Promise<Response | void> => {
-    const { id } = req.params;
-    const { role_id } = req.body;
-    const user = await this.userService.updateUserRoleById(
-      parseInt(id),
-      role_id
     );
     if (!user) {
       return res.status(404).json({

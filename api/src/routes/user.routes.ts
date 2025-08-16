@@ -4,7 +4,6 @@ import catchAsync from "../util/catchAsync";
 import {
   userFullNameUpdateValidation,
   userPasswordUpdateValidation,
-  userRoleUpdateValidation,
   userDeleteValidation,
   userRegisterValidation,
 } from "../validation/user";
@@ -25,12 +24,6 @@ UserRouter.put(
   "/:id/name",
   userFullNameUpdateValidation,
   catchAsync(userController.updateUserFullNameById)
-);
-
-UserRouter.put(
-  "/:id/role",
-  userRoleUpdateValidation,
-  catchAsync(userController.updateUserRoleById)
 );
 
 UserRouter.put(

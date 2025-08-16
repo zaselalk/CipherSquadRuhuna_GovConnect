@@ -1,14 +1,10 @@
 import { Form, Select } from "antd";
-import { userRole } from "../../../../../services/types/user-role.types";
-import { useRoles } from "../../../../../hooks/useRoles";
+
 const { Option } = Select;
 
 const RoleSelect = () => {
-  const { data: roles = [], isLoading, error } = useRoles();
   return (
     <>
-      {isLoading && <p>Loading...</p>}
-      {error && <p>Error: {error.message}</p>}
       <Form.Item
         label="Role"
         name="role"
@@ -21,11 +17,15 @@ const RoleSelect = () => {
           optionFilterProp="children"
           allowClear
         >
-          {roles.map((role: userRole) => (
-            <Option key={role.id} value={role.id}>
-              {role.role}
-            </Option>
-          ))}
+          <Option key="admin" value="Administrator">
+            Department Officer
+          </Option>
+          <Option key="officer" value="Officer">
+            Admin Officer
+          </Option>
+          <Option key="analytics" value="Analyst">
+            Analytics Viewer
+          </Option>
         </Select>
       </Form.Item>
     </>

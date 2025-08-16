@@ -3,7 +3,6 @@ import { auditLogger } from "./middleware/auditLogger.middleware";
 import dotenv from "dotenv";
 import AuthRouter from "./routes/auth.routes";
 import cors from "cors";
-import RoleRouter from "./routes/role.routes";
 import UserRouter from "./routes/user.routes";
 import serializeUser from "./middleware/serializeuser.middleware";
 import expressErrorHandler from "./util/expressErrorHandler";
@@ -17,13 +16,7 @@ import FeedbackRouter from "./routes/generalFeedback.routes";
 import DepartmentServiceRouter from "./routes/DepService.routes";
 import DocumentTypeRouter from "./routes/documenttype.routes";
 
-// import "./models/association"; // Import associations to ensure they are registered
-
 dotenv.config();
-
-// env variables
-const PORT: number =
-  parseInt(process.env.APPLICATION_PORT as string, 10) || 3001;
 const app: Application = express();
 
 app.use(express.json());
@@ -49,7 +42,6 @@ app.get("/health", (req: Request, res: Response) => {
 
 // Registering routes
 app.use("/auth", AuthRouter);
-app.use("/role", RoleRouter);
 app.use("/user", UserRouter);
 app.use("/citizen", CitizenRouter);
 app.use("/department", DepartmentRouter);
